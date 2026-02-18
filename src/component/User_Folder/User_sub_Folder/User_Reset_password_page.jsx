@@ -39,7 +39,7 @@ const User_Reset_password_page = () => {
     
     
     
-          <h2 className="text-xl sm:text-2xl font-bold my-8 text-center">
+          <h2 className="text-xl sm:text-2xl font-bold mt-15 mb-10 text-center">
             Password Reset Form
           </h2>
     
