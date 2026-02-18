@@ -17,6 +17,7 @@ const Login_page = () => {
     }
 
     if(user==="admin" && password === "admin123"){
+      localStorage.setItem("user",user);
       navigate("/home");
       return;
     }
@@ -33,6 +34,7 @@ const Login_page = () => {
       const data =await response.json();
 
       if(data.success) {
+        localStorage.setItem("user",user);
         navigate("/home");
       }
       else {
@@ -93,12 +95,7 @@ const Login_page = () => {
               >
               Login
             </button>
-                         
-            <button
-              type="submit"
-              className="w-full bg-amber-500 text-xl text-purple-600 font-semibold py-2 rounded-lg hover:bg-orange-500 cursor-pointer">
-              Cancel
-            </button>
+            
           </div>
       </div>
     </div>
