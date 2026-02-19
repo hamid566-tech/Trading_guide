@@ -12,6 +12,7 @@ import Applicant_Form_page from '../Applicant_Folder/Applicant_Form_Folder/Appli
 import User_page from '../User_Folder/User_page'
 import User_Reset_password_page from '../User_Folder/User_sub_Folder/User_Reset_password_page'
 import User_create_page from '../User_Folder/User_sub_Folder/User_create_page'
+import First_page from '../First_Folder/First_page'
 
 const Home_page = () => {
   return (
@@ -21,7 +22,8 @@ const Home_page = () => {
 
       <div className="flex-1 flex items-center justify-center p-4">
         <Routes>
-          <Route index element={<Navigate to='rent'/>}/>
+          {/* <Route index element={<Navigate to='rent'/>}/> */}
+          <Route path='/' element={<First_page/>}/>
 
           <Route path='rent/*' element={<Rent_page/>}/>
           <Route path='rent/rent_form' element={<Rent_Form_page/>}/>

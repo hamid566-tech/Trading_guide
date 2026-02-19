@@ -8,6 +8,8 @@ const Login_page = () => {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const handle_Login =async() =>{
 
@@ -78,12 +80,23 @@ const Login_page = () => {
             <div>
               <label className="block text-white mb-2">Password</label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 className="w-full px-4 py-2 rounded-lg bg-white/30 text-white placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-white"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <div className="flex items-center gap-2 mt-2">
+                <input
+                  type="checkbox"
+                  checked={showPassword}
+                  onChange={() => setShowPassword(!showPassword)}
+                  className="w-4 h-4 cursor-pointer"
+                />
+                <label className="text-white text-sm cursor-pointer">
+                  Show Password
+                </label>
+              </div>
             </div>
 
             <span className='text-red-300 text-center'>{error}</span>

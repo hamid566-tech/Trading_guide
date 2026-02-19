@@ -4,6 +4,7 @@ import { User } from "lucide-react";
 
 
 function Header_page() {
+
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
@@ -18,6 +19,15 @@ function Header_page() {
     { name: "Applicant", path: "/home/applicant"  },
     { name: "User", path: "/home/user" },
   ];
+
+  const isFormPage =
+    location.pathname.includes("rent_form") ||
+    location.pathname.includes("mortgage_form") ||
+    location.pathname.includes("saleable_form") ||
+    location.pathname.includes("applicant_form") ||
+    location.pathname.includes("reset_password") ||
+    location.pathname.includes("user_create_form");
+
 
   const changeLanguage = (lang) => {
     setLanguage(lang);
@@ -56,8 +66,8 @@ function Header_page() {
             
             const isActive = item.path && location.pathname.startsWith(item.path);
             return(
-                <span key={i} className={`cursor-pointer transition border-b-2 ${ isActive ? 'text-yellow-300 border-yellow-300' : 'hover:text-yellow-300  border-transparent hover:border-yellow-300'}`}
-                onClick={()=>item.path && navigate(item.path)}>
+                <span key={i} className={` transition border-b-2 ${isActive ? 'text-yellow-300 border-yellow-300' : 'border-transparent'} ${isFormPage ? 'opacity-40 cursor-not-allowed' : ' cursor-pointer hover:text-yellow-300 hover:border-yellow-300'}`}
+                onClick={()=>{if(!isFormPage && item.path){ navigate(item.path)}}}>
                     {item.name}
                 </span>
                 
@@ -134,8 +144,8 @@ function Header_page() {
             return(
                 <div
                 key={i}
-                onClick={() => item.path && navigate(item.path)}
-                className={`cursor-pointer ${ isActive ? 'text-yellow-300 border-yellow-300' : 'hover:text-yellow-300  border-transparent hover:border-yellow-300'}`}
+                onClick={()=>{if(!isFormPage && item.path){ navigate(item.path)}}}
+                className={` transition border-b-2 ${isActive ? 'text-yellow-300 border-yellow-300' : 'border-transparent'} ${isFormPage ? 'opacity-40 cursor-not-allowed' : ' cursor-pointer hover:text-yellow-300 hover:border-yellow-300'}`}
                 >
                 {item.name}
                 </div>
