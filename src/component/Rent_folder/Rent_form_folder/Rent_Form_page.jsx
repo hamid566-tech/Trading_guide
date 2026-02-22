@@ -21,10 +21,10 @@ const Rent_Form_page = () => {
         {label:"Appartment Features", type:"text", placeholder:"Enter Appartment Features"},
         {label:"City Features", type:"text", placeholder:"Enter City Features"},
         {label:"Date", type:"text", placeholder:"Enter Date"},
-        {label:"Elevator", type:"checkbox"},
-        {label:"Heating", type:"checkbox"},
-        {label:"Electric Meter", type:"checkbox"},
-        {label:"Roof", type:"checkbox"},
+        {label:"Elevator", type:"select"},
+        {label:"Heating", type:"select"},
+        {label:"Electric Meter", type:"select"},
+        {label:"Roof", type:"select"},
         {label:"Price", type:"text", placeholder:"Enter Price"},
         {label:"Final Price", type:"text", placeholder:"Enter Final Price"},
     ]);
@@ -55,7 +55,7 @@ const Rent_Form_page = () => {
 
 
 
-      <h2 className="text-xl sm:text-2xl font-bold mt-15 mb-10 text-center">
+      <h2 className="text-xl sm:text-2xl font-bold mt-15 md:mt-0 mb-10 text-center">
         Rent Form
       </h2>
 
@@ -115,44 +115,42 @@ const Rent_Form_page = () => {
         
         {fields.map((t, index) => (
 
-                <div key={index} className="flex flex-col gap-2">
+            <div key={index} className="flex flex-col gap-2">
 
-                    {t.type === "checkbox" ? (
+                <label className="text-sm font-semibold">
+                {t.label}
+                </label>
 
-                    <label className="flex items-center gap-3 text-sm  sm:justify-center font-semibold cursor-pointer">
-                        <input
-                        type="checkbox"
-                        className="w-5 h-5 accent-yellow-400 cursor-pointer"
-                        />
-                        {t.label}
-                    </label>
+                {t.type === "select" ? (
 
-                    ) : (
+                <select
+                    className="px-4 py-2 rounded-lg bg-white/30 text-white
+                            focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                >
+                    <option value="" className="text-black">
+                    Select {t.label}
+                    </option>
+                    <option value="Yes" className="text-black">Yes</option>
+                    <option value="No" className="text-black">No</option>
+                </select>
 
-                    <>
-                        <label className="text-sm font-semibold">
-                        {t.label}
-                        </label>
+                ) : (
 
-                        <input
-                        type={t.type}
-                        placeholder={t.placeholder}
-                        className="px-4 py-2 rounded-lg bg-white/30 
-                                    placeholder-white/70 text-white
-                                    focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                        />
-                    </>
+                <input
+                    type={t.type}
+                    placeholder={t.placeholder}
+                    className="px-4 py-2 rounded-lg bg-white/30
+                            placeholder-white/70 text-white
+                            focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                />
 
-                    )}
+                )}
 
-                </div>
+            </div>
 
-        ))}
-
-        
+            ))}
 
       </div>
-
       {/* Submit Button */}
       <div className="flex flex-col sm:flex-row justify-center gap-6 mt-10">
         {/* Submit */}

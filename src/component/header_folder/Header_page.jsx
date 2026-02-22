@@ -20,13 +20,19 @@ function Header_page() {
     { name: "User", path: "/home/user" },
   ];
 
-  const isFormPage =
-    location.pathname.includes("rent_form") ||
-    location.pathname.includes("mortgage_form") ||
-    location.pathname.includes("saleable_form") ||
-    location.pathname.includes("applicant_form") ||
-    location.pathname.includes("reset_password") ||
-    location.pathname.includes("user_create_form");
+  const disableHeaderPages = [
+    "rent_form",
+    "mortgage_form",
+    "saleable_form",
+    "applicant_form",
+    "reset_password",
+    "user_create_form",
+    "rent_report"
+  ];
+
+  const isFormPage = disableHeaderPages.some(page =>
+    location.pathname.includes(page)
+  );
 
 
   const changeLanguage = (lang) => {

@@ -13,6 +13,7 @@ import User_page from '../User_Folder/User_page'
 import User_Reset_password_page from '../User_Folder/User_sub_Folder/User_Reset_password_page'
 import User_create_page from '../User_Folder/User_sub_Folder/User_create_page'
 import First_page from '../First_Folder/First_page'
+import Rent_Report_page from '../Rent_folder/Rent_form_folder/Rent_Report_page'
 
 const Home_page = () => {
   return (
@@ -27,6 +28,7 @@ const Home_page = () => {
 
           <Route path='rent/*' element={<Rent_page/>}/>
           <Route path='rent/rent_form' element={<Rent_Form_page/>}/>
+          <Route path='rent/rent_report' element={<Rent_Report_page/>}/>
           <Route path='mortgage/*' element={<Mortgage_page/>}/>
           <Route path='mortgage/mortgage_form' element={<Mortgage_Form_page/>}/>
           <Route path='saleable/*' element={<Saleable_Page/>}/>
