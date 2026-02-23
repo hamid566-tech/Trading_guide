@@ -19,7 +19,7 @@ const ReportTable = ({ columns, data }) => {
             data.map((row, i) => (
               <tr key={i} className="border-t border-white/20 hover:bg-white/10">
                 {columns.map((col) => (
-                  <td key={col.accessor} className="p-3 break-words">
+                  <td key={col.accessor} className="p-3 wrap-break-word">
                     {row[col.accessor]}
                   </td>
                 ))}
