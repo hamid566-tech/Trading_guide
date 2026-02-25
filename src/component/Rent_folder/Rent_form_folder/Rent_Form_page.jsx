@@ -4,30 +4,106 @@ import { useNavigate } from 'react-router-dom';
 
 const Rent_Form_page = () => {
 
+    const [id,setID]=useState('');
+    const [idError,setIDError] = useState('');
+    const [errors, setErrors] = useState({});
+    const [formData, setFormData] = useState({});
+    const [status,setStatus] =useState('');
+
     const navigate=useNavigate();
     
     const [fields,setFields]=useState([
-        {label:"Name", type:"text", placeholder:"Enter Name"},
-        {label:"FName", type:"text", placeholder:"Enter Father Name"},
-        {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number"},
-        {label:"phone", type:"text", placeholder:"Enter Phone Number"},
-        {label:"Address", type:"text", placeholder:"Enter Address Number"},
-        {label:"Rooms", type:"text", placeholder:"Enter Rooms Number"},
-        {label:"Appartment", type:"text", placeholder:"Enter Appartment Number"},
-        {label:"Qawala", type:"text", placeholder:"Enter Qawala"},
-        {label:"Bathrooms", type:"text", placeholder:"Enter Bathroom Number"},
-        {label:"Area", type:"text", placeholder:"Enter Area"},
-        {label:"Nature", type:"text", placeholder:"Enter Nature"},
-        {label:"Appartment Features", type:"text", placeholder:"Enter Appartment Features"},
-        {label:"City Features", type:"text", placeholder:"Enter City Features"},
-        {label:"Date", type:"text", placeholder:"Enter Date"},
-        {label:"Elevator", type:"select"},
-        {label:"Heating", type:"select"},
-        {label:"Electric Meter", type:"select"},
-        {label:"Roof", type:"select"},
-        {label:"Price", type:"text", placeholder:"Enter Price"},
-        {label:"Final Price", type:"text", placeholder:"Enter Final Price"},
+        {label:"Name", type:"text", placeholder:"Enter Name", required:true},
+        {label:"FName", type:"text", placeholder:"Enter Father Name", required:true},
+        {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number", required:true},
+        {label:"phone", type:"text", placeholder:"Enter Phone Number", required:true},
+        {label:"Address", type:"text", placeholder:"Enter Address Number", required:true},
+        {label:"Rooms", type:"text", placeholder:"Enter Rooms Number", required:true},
+        {label:"Appartment", type:"text", placeholder:"Enter Appartment Number", required:true},
+        {label:"Qawala", type:"text", placeholder:"Enter Qawala", required:true},
+        {label:"Bathrooms", type:"text", placeholder:"Enter Bathroom Number", required:true},
+        {label:"Area", type:"text", placeholder:"Enter Area", required:true},
+        {label:"Nature", type:"text", placeholder:"Enter Nature", required:true},
+        {label:"Appartment Features", type:"text", placeholder:"Enter Appartment Features", required:true},
+        {label:"City Features", type:"text", placeholder:"Enter City Features", required:true},
+        {label:"Date", type:"text", placeholder:"Enter Date", required:true},
+        {label:"Elevator", type:"select", required:true},
+        {label:"Heating", type:"select", required:true},
+        {label:"Electric Meter", type:"select", required:true},
+        {label:"Roof", type:"select", required:true},
+        {label:"Price", type:"text", placeholder:"Enter Price", required:true},
+        {label:"Final Price", type:"text", placeholder:"Enter Final Price", required:false},
     ]);
+
+    const handlSearch=()=>{
+        if(!id.trim()){
+            setIDError('ضرورت به ID است');
+        }
+        else{
+            setIDError('');
+        }
+    }
+
+    const handleSubmit = () => {
+
+        // 1️⃣ اول بررسی ID
+        if (id.trim()) {
+            alert("صفحه نیاز به بازدید مجدد دارد");
+            return;
+        }
+
+        // 2️⃣ بررسی فیلدها
+        let newErrors = {};
+
+        if (!status) {
+            newErrors.status = "انتخاب Status لازمی است";
+        }
+
+        fields.forEach((field) => {
+            if (field.required && (!formData[field.label] || !formData[field.label].trim())) {
+                newErrors[field.label] = "این فیلد لازمی است";
+            }
+        });
+
+        setErrors(newErrors);
+
+        // 3️⃣ اگر هیچ خطا نبود → ارسال به سرور
+        if (Object.keys(newErrors).length === 0) {
+
+            fetch("http://localhost:5000/api/rents/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    ...formData,
+                    status
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("فورم موفقانه ثبت شد ✅");
+
+                    // اختیاری: پاک کردن فورم بعد از ثبت
+                    setFormData({});
+                    setStatus("");
+                } else {
+                    alert("خطا در ثبت معلومات ❌");
+                }
+            })
+            .catch(err => {
+                console.error("Error:", err);
+                alert("مشکل در اتصال به سرور ❌");
+            });
+
+        }
+    };
+
+    const getTodayShamsi = () => {
+        const date = new Date();
+        return new Intl.DateTimeFormat("fa-IR-u-nu-latn").format(date);
+    };
 
   return (
     
@@ -65,22 +141,30 @@ const Rent_Form_page = () => {
             <div className="w-full max-w-md">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
 
-                <label className="sm:w-24 text-sm font-semibold">
-                    ID :
-                </label>
+                    <label className="sm:w-24 text-sm font-semibold">
+                        ID :
+                    </label>
 
-                <div className="flex flex-col sm:flex-row w-full gap-3">
-                    <input
-                    type="text"
-                    placeholder="Enter ID"
-                    className="flex-1 px-4 py-2 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    />
+                    <div className="flex flex-col sm:flex-row w-full gap-3">
+                        
+                        <input
+                        type="text"
+                        placeholder="Enter ID"
+                        value={id}
+                        onChange={e => setID(e.target.value)}
+                        className="flex-1 px-4 py-2 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        />
+                        
+                        {
+                        idError && <p className=' text-red-300 text-sm mt-1'>{idError}</p>
+                        }
 
-                    <button
-                    className="px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 hover:scale-105 transition duration-300 flex items-center justify-center">
-                    <Search size={18} color="white" />
-                    </button>
-                </div>
+                        <button 
+                        onClick={handlSearch}
+                        className="px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 hover:scale-105 transition duration-300 flex items-center justify-center">
+                        <Search size={18} color="white" />
+                        </button>
+                    </div>
 
                 </div>
             </div>
@@ -94,13 +178,22 @@ const Rent_Form_page = () => {
                 </label>
 
                 <select
-                    className=" w-full sm:flex px-4 py-2 rounded-lg bg-white/30 text-white 
-                 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    className={`w-full sm:flex px-4 py-2 rounded-lg bg-white/30 text-white 
+                    focus:outline-none
+                    ${errors.status ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400"}`}
                 >
                     <option value="" className="text-black">Select Status</option>
                     <option value="available" className="text-black">Available</option>
                     <option value="unavailable" className="text-black">Unavailable</option>
                 </select>
+
+                {errors.status && (
+                    <p className="text-red-400 text-sm font-medium">
+                        {errors.status}
+                    </p>
+                )}
 
                 </div>
             </div>
@@ -122,27 +215,51 @@ const Rent_Form_page = () => {
                 </label>
 
                 {t.type === "select" ? (
-
-                <select
-                    className="px-4 py-2 rounded-lg bg-white/30 text-white
-                            focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                >
-                    <option value="" className="text-black">
-                    Select {t.label}
-                    </option>
-                    <option value="Yes" className="text-black">Yes</option>
-                    <option value="No" className="text-black">No</option>
-                </select>
-
+                    <>
+                        <select
+                            value={formData[t.label] || ""}
+                            onChange={(e) => setFormData({ ...formData, [t.label]: e.target.value })}
+                            className={`px-4 py-2 rounded-lg bg-white/30 text-white ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:outline-none focus:ring-2 focus:ring-yellow-400"}`}
+                        >
+                            <option value="" className="text-black">
+                            Select {t.label}
+                            </option>
+                            <option value="Yes" className="text-black">Yes</option>
+                            <option value="No" className="text-black">No</option>
+                        </select>
+                        {
+                            errors[t.label] && (
+                                <p className='text-red-400 text-sm font-medium'>{errors[t.label]}</p>
+                            )
+                        }
+                    </>
                 ) : (
+                    <>
+                        <input
+                            type={t.type}
+                            placeholder={t.placeholder}
+                            value={formData[t.label] || ""}
+                            onChange={(e)=> setFormData({...formData,[t.label]:e.target.value})}
+                            readOnly={t.label === "Date"}
+                            onFocus={() => {
+                                if (t.label === "Date" && !formData[t.label]) {
+                                    setFormData({
+                                        ...formData,
+                                        [t.label]: getTodayShamsi()
+                                    });
+                                }
+                            }}
+                            className={`px-4 py-2 rounded-lg bg-white/30
+                                    placeholder-white/70 text-white
+                                    focus:outline-none ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}
+                        />
 
-                <input
-                    type={t.type}
-                    placeholder={t.placeholder}
-                    className="px-4 py-2 rounded-lg bg-white/30
-                            placeholder-white/70 text-white
-                            focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                />
+                        {
+                            errors[t.label] && (
+                                <p className='text-red-400 text-sm font-medium'>{errors[t.label]}</p>
+                            )
+                        }
+                    </>
 
                 )}
 
@@ -154,7 +271,9 @@ const Rent_Form_page = () => {
       {/* Submit Button */}
       <div className="flex flex-col sm:flex-row justify-center gap-6 mt-10">
         {/* Submit */}
-        <button className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold hover:scale-105 hover:shadow-green-500/40 transition duration-300 shadow-lg cursor-pointer">
+        <button 
+        onClick={handleSubmit}
+        className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold hover:scale-105 hover:shadow-green-500/40 transition duration-300 shadow-lg cursor-pointer">
             Submit
         </button>
 
