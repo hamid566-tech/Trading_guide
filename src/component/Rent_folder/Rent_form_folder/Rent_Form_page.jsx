@@ -121,6 +121,9 @@ const Rent_Form_page = () => {
 
         // 3️⃣ اگر هیچ خطا نبود → ارسال به سرور
         if (Object.keys(newErrors).length === 0) {
+            
+            const confirmSubmit = window.confirm("آیا مطمئن هستید که فورم ثبت شود؟");
+            if (!confirmSubmit) return;
 
             fetch("http://localhost:5000/api/rents/add", {
                 method: "POST",
@@ -158,6 +161,37 @@ const Rent_Form_page = () => {
             alert("اول ID را جستجو کن ⚠️");
             return;
         }
+
+        // 1️⃣ فعال کردن حالت submit برای نمایش خطاها
+        setMode('edit');
+
+        let newErrors = {};
+
+        // 2️⃣ بررسی Status
+        if (!status) {
+            newErrors.status = "انتخاب Status لازمی است";
+        }
+
+        // 3️⃣ بررسی فیلدهای ضروری
+        fields.forEach((field) => {
+            if (
+                field.required &&
+                (!formData[field.label] || !formData[field.label].trim())
+            ) {
+                newErrors[field.label] = "این فیلد لازمی است";
+            }
+        });
+
+        setErrors(newErrors);
+
+        // 4️⃣ اگر خطا وجود دارد → توقف
+        if (Object.keys(newErrors).length > 0) {
+            return;
+        }
+
+        // 5️⃣ اگر همه چیز درست است → تاییدیه بگیر
+        const confirmUpdate = window.confirm("آیا مطمئن هستید که معلومات اپدیت شود؟");
+        if (!confirmUpdate) return;
 
         try {
 
