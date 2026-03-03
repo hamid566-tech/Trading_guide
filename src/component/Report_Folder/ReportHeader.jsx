@@ -14,7 +14,7 @@ const ReportHeader = ({ title, reportId }) => {
       <div className="fixed top-6 left-6 z-50">
         <button
           onClick={() => navigate(-1)}
-          className="group p-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg hover:bg-white/20 hover:scale-95 transition-all"
+          className="group p-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg hover:bg-white/20 hover:scale-95 transition-all cursor-pointer"
         >
           <ArrowLeft
             size={20}
