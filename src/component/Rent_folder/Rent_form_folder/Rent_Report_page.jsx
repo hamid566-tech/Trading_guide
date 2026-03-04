@@ -3,12 +3,14 @@ import ReportFilters from "../../Report_Folder/ReportFilters";
 import ReportTable from "../../Report_Folder/ReportTable";
 import { generateReportPDF } from "../../Report_Folder/generateReportPDF";
 import ReportHeader from "../../Report_Folder/ReportHeader";
+import moment from "moment-jalaali";
 
 const Rent_Report_page = () => {
   const [filters, setFilters] = useState({});
   const [filteredData, setFilteredData] = useState([]);
 
   const handleChange = (e) => {
+
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
@@ -34,8 +36,8 @@ const Rent_Report_page = () => {
     { name: "bathrooms", label: "Bathrooms", type: "text" },
     { name: "area", label: "Area", type: "text" },
     { name: "price", label: "Price", type: "text" },
-    { name: "startDate", label: "Start Date", type: "date" },
-    { name: "endDate", label: "End Date", type: "date" },
+    { name: "startDate", label: "Start Date", type: "text" },
+    { name: "endDate", label: "End Date", type: "text" },
     { name: "elevator", label: "Elevator", type: "select", options: ["Yes", "No"] },
     { name: "heating", label: "Heating", type: "select", options: ["Yes", "No"] },
     { name: "electric_meter", label: "Electric Meter", type: "select", options: ["Yes", "No"] },
@@ -67,17 +69,53 @@ const Rent_Report_page = () => {
     { header: "Final Price", accessor: "final_price" },
   ];
 
-  const handleSearch = async () => {
-    const query = new URLSearchParams(filters).toString();
-    try {
-      const res = await fetch(`http://localhost:5000/api/rents?${query}`);
-      const result = await res.json();
-      if (result.success) setFilteredData(result.data);
-    } catch (error) {
-      console.error("Search Error:", error);
-    }
-  };
+  // const handleSearch = async () => {
+  //   const query = new URLSearchParams(filters).toString();
+  //   try {
+  //     const res = await fetch(`http://localhost:5000/api/rents?${query}`);
+  //     const result = await res.json();
+  //     if (result.success) setFilteredData(result.data);
+  //   } catch (error) {
+  //     console.error("Search Error:", error);
+  //   }
+  // };
 
+//   const handleSearch = async () => {
+//   const queryFilters = { ...filters };
+
+//   if (filters.startDate) {
+//     queryFilters.startDate = moment(filters.startDate, "jYYYY/jMM/jDD").format("YYYY/MM/DD");
+//   }
+//   if (filters.endDate) {
+//     queryFilters.endDate = moment(filters.endDate, "jYYYY/jMM/jDD").format("YYYY/MM/DD");
+//   }
+
+//   const query = new URLSearchParams(queryFilters).toString();
+
+//   try {
+//     const res = await fetch(`http://localhost:5000/api/rents?${query}`);
+//     const result = await res.json();
+//     if (result.success) setFilteredData(result.data);
+//   } catch (error) {
+//     console.error("Search Error:", error);
+//   }
+// };
+
+const handleSearch = async () => {
+  const queryFilters = { ...filters };
+
+  // حذف moment و تبدیل تاریخ
+  const query = new URLSearchParams(queryFilters).toString();
+
+  try {
+    const res = await fetch(`http://localhost:5000/api/rents?${query}`);
+    const result = await res.json();
+    if (result.success) setFilteredData(result.data);
+  } catch (error) {
+    console.error("Search Error:", error);
+  }
+};
+  
   return (
     <div className="mt-24 max-w-full px-4 sm:px-6 lg:px-8">
       <div className="bg-white/10 backdrop-blur-xl rounded-2xl text-white shadow-2xl border border-white/20 p-6">
