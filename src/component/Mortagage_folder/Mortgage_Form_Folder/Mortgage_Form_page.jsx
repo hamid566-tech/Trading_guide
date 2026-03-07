@@ -4,30 +4,82 @@ import { useNavigate } from 'react-router-dom';
 
 const Mortgage_Form_page = () => {
 
+    const [id,setID]=useState('');
+    const [mode, setMode] = useState('');
+    const [status,setStatus] =useState('');
+    const [formData, setFormData] = useState({});
+    const [errors, setErrors] = useState({});
+
     const navigate=useNavigate();
     
     const [fields,setFields]=useState([
-        {label:"Name", type:"text", placeholder:"Enter Name"},
-        {label:"FName", type:"text", placeholder:"Enter Father Name"},
-        {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number"},
-        {label:"phone", type:"text", placeholder:"Enter Phone Number"},
-        {label:"Address", type:"text", placeholder:"Enter Address Number"},
-        {label:"Rooms", type:"text", placeholder:"Enter Rooms Number"},
-        {label:"Appartment", type:"text", placeholder:"Enter Appartment Number"},
-        {label:"Qawala", type:"text", placeholder:"Enter Qawala"},
-        {label:"Bathrooms", type:"text", placeholder:"Enter Bathroom Number"},
-        {label:"Area", type:"text", placeholder:"Enter Area"},
-        {label:"Nature", type:"text", placeholder:"Enter Nature"},
-        {label:"Appartment Features", type:"text", placeholder:"Enter Appartment Features"},
-        {label:"City Features", type:"text", placeholder:"Enter City Features"},
-        {label:"Date", type:"text", placeholder:"Enter Date"},
-        {label:"Elevator", type:"select"},
-        {label:"Heating", type:"select"},
-        {label:"Electric Meter", type:"select"},
-        {label:"Roof", type:"select"},
-        {label:"Price", type:"text", placeholder:"Enter Price"},
-        {label:"Final Price", type:"text", placeholder:"Enter Final Price"},
+        {label:"Name", type:"text", placeholder:"Enter Name", required:true},
+        {label:"FName", type:"text", placeholder:"Enter Father Name", required:true},
+        {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number", required:true},
+        {label:"phone", type:"tel", inputMode:"numeric", placeholder:"Enter Phone Number", required:true},
+        {label:"Address", type:"text", placeholder:"Enter Address Number", required:true},
+        {label:"Rooms", type:"text", placeholder:"Enter Rooms Number", required:true},
+        {label:"Appartment", type:"text", placeholder:"Enter Appartment Number", required:true},
+        {label:"Qawala", type:"text", placeholder:"Enter Qawala", required:true},
+        {label:"Bathrooms", type:"text", placeholder:"Enter Bathroom Number", required:true},
+        {label:"Area", type:"text", placeholder:"Enter Area", required:true},
+        {label:"Nature", type:"text", placeholder:"Enter Nature", required:true},
+        {label:"Appartment Features", type:"text", placeholder:"Enter Appartment Features", required:true},
+        {label:"City Features", type:"text", placeholder:"Enter City Features", required:true},
+        {label:"Date", type:"text", placeholder:"Enter Date", required:true},
+        {label:"Elevator", type:"select", required:true},
+        {label:"Heating", type:"select", required:true},
+        {label:"Electric Meter", type:"select", required:true},
+        {label:"Roof", type:"select", required:true},
+        {label:"Price", type:"text", placeholder:"Enter Price", required:true},
+        {label:"Final Price", type:"text", placeholder:"Enter Final Price", required:false},
     ]);
+
+    const handleSubmit = () => {
+        if (id.trim()) {
+            alert("⚠️ فیلد ID باید خالی باشد تا فورم ثبت شود.");
+            return;
+        }
+        setMode('submit');
+        let newErrors = {};
+
+        if(!status) {
+            newErrors.status="انتخاب Status لازمی است";
+        }
+
+        fields.forEach((field)=>{
+            if (field.required && (!formData[field.label] || !formData[field.label].trim())){
+                newErrors[field.label]='این فیلد لازمی است';
+            }
+        });
+
+        setErrors(newErrors);
+
+        if(Object.keys(newErrors).length === 0){
+            const confirmSubmit = window.confirm("آیا مطمئن هستید که فورم ثبت شود؟");
+            if(!confirmSubmit) return;
+            
+            fetch("http://localhost:5000/api/mortgage/add",{
+                method: 'POST',
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({...formData, status})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success){
+                    alert("فورم موفقانه ثبت شد ✅ ID: " + data.id);
+                    setFormData({});
+                    setStatus("");
+                }else {
+                    alert("خطا در ثبت معلومات ❌");
+                }
+            })
+            .catch(err => {
+                console.error("Error: ",err);
+                alert("مشکل در اتصال به سرور ❌");
+            })
+        }
+    }
 
 
   return (
@@ -89,18 +141,26 @@ const Mortgage_Form_page = () => {
             <div className="w-full max-w-md">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
 
-                <label className="sm:w-24 text-sm font-semibold">
-                    Status :
-                </label>
+                    <label className="sm:w-24 text-sm font-semibold">
+                        Status :
+                    </label>
 
-                <select
-                    className=" w-full sm:flex px-4 py-2 rounded-lg bg-white/30 text-white 
-                 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                >
-                    <option value="" className="text-black">Select Status</option>
-                    <option value="available" className="text-black">Available</option>
-                    <option value="unavailable" className="text-black">Unavailable</option>
-                </select>
+                    <select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    className={`w-full sm:flex px-4 py-2 rounded-lg bg-white/30 text-white 
+                    focus:outline-none
+                    ${errors.status ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400"}`}
+                    >
+                        <option value="" className="text-black">Select Status</option>
+                        <option value="available" className="text-black">Available</option>
+                        <option value="unavailable" className="text-black">Unavailable</option>
+                    </select>
+                    {errors.status && (
+                        <p className="text-red-400 text-sm font-medium">
+                            {errors.status}
+                        </p>
+                    )}
 
                 </div>
             </div>
@@ -122,28 +182,34 @@ const Mortgage_Form_page = () => {
                 </label>
 
                 {t.type === "select" ? (
-
-                <select
-                    className="px-4 py-2 rounded-lg bg-white/30 text-white
-                            focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                >
-                    <option value="" className="text-black">
-                    Select {t.label}
-                    </option>
-                    <option value="Yes" className="text-black">Yes</option>
-                    <option value="No" className="text-black">No</option>
-                </select>
-
+                <>
+                    <select
+                    value={formData[t.label] || ""}
+                    onChange={(e) => setFormData({ ...formData, [t.label]: e.target.value })}
+                    className={`px-4 py-2 rounded-lg bg-white/30 text-white ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:outline-none focus:ring-2 focus:ring-yellow-400"}`}
+                    >
+                        <option value="" className="text-black">
+                        Select {t.label}
+                        </option>
+                        <option value="Yes" className="text-black">Yes</option>
+                        <option value="No" className="text-black">No</option>
+                    </select>
+                    {errors[t.label] && (<p className='text-red-400 text-sm font-medium'>{errors[t.label]}</p>)}
+                </>
                 ) : (
-
-                <input
+                <>
+                    <input
                     type={t.type}
                     placeholder={t.placeholder}
-                    className="px-4 py-2 rounded-lg bg-white/30
-                            placeholder-white/70 text-white
-                            focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                />
-
+                    value={formData[t.label] || ""}
+                    onChange={(e)=> setFormData({...formData,[t.label]:e.target.value})}
+                    className={`px-4 py-2 rounded-lg bg-white/30
+                            placeholder-white/40 text-white
+                            focus:outline-none ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}
+                    />
+                    
+                {errors[t.label] && (<p className='text-red-400 text-sm font-medium'>{errors[t.label]}</p>)}
+                </>
                 )}
 
             </div>
@@ -157,17 +223,23 @@ const Mortgage_Form_page = () => {
       {/* Submit Button */}
       <div className="flex flex-col sm:flex-row justify-center gap-6 mt-10">
         {/* Submit */}
-        <button className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold hover:scale-105 hover:shadow-green-500/40 transition duration-300 shadow-lg cursor-pointer">
+        <button
+        onClick={handleSubmit}
+        className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold hover:scale-105 hover:shadow-green-500/40 transition duration-300 shadow-lg cursor-pointer">
             Submit
         </button>
 
         {/* Update */}
-        <button className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-blue-400 to-indigo-600 rounded-lg font-semibold hover:scale-105 hover:shadow-blue-500/40 transition duration-300 shadow-lg cursor-pointer">
+        <button 
+        // onClick={handleUpdate}
+        className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-blue-400 to-indigo-600 rounded-lg font-semibold hover:scale-105 hover:shadow-blue-500/40 transition duration-300 shadow-lg cursor-pointer">
             Update
         </button>
 
         {/* Delete */}
-        <button className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-red-400 to-red-600 rounded-lg font-semibold hover:scale-105 hover:shadow-red-500/40 transition duration-300 shadow-lg cursor-pointer">
+        <button 
+        // onClick={handleDelete}
+        className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-red-400 to-red-600 rounded-lg font-semibold hover:scale-105 hover:shadow-red-500/40 transition duration-300 shadow-lg cursor-pointer">
             Delete
         </button>
       </div>
