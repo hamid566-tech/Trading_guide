@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { ArrowLeft, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import moment from "moment-jalaali";
 
 const Rent_Form_page = () => {
 
@@ -210,6 +211,11 @@ const Rent_Form_page = () => {
 
             if (data.success) {
                 alert("معلومات موفقانه اپدیت شد ✅");
+                setFormData({});
+                setStatus("");
+                setID("");
+                setMode("");
+                setErrors({});
             } else {
                 alert("اپدیت انجام نشد ❌");
             }
@@ -257,10 +263,6 @@ const Rent_Form_page = () => {
     }
 };
 
-    const getTodayShamsi = () => {
-        const date = new Date();
-        return new Intl.DateTimeFormat("fa-IR-u-nu-latn").format(date);
-    };
 
   return (
     
@@ -405,14 +407,17 @@ const Rent_Form_page = () => {
                             type={t.type}
                             placeholder={t.placeholder}
                             value={formData[t.label] || ""}
-                            onChange={(e)=> setFormData({...formData,[t.label]:e.target.value})}
+                            onChange={(e)=> {
+                                let value =e.target.value;
+                                if(t.label === "phone" || t.label === "Price" || t.label === "Final Price"){
+                                    value = value.replace(/[^0-9]/g,'');
+                                }
+                                setFormData({...formData,[t.label]:value})}}
                             readOnly={t.label === "Date"}
                             onFocus={() => {
                                 if (t.label === "Date" && !formData[t.label]) {
-                                    setFormData({
-                                        ...formData,
-                                        [t.label]: getTodayShamsi()
-                                    });
+                                    const today = moment().format("jYYYY/jMM/jDD");
+                                    setFormData({...formData,[t.label]:today});
                                 }
                             }}
                             className={`px-4 py-2 rounded-lg bg-white/30

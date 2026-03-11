@@ -1,11 +1,13 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import moment from "moment-jalaali";
+
 
 const ReportHeader = ({ title, reportId }) => {
   const navigate = useNavigate();
 
-  const today = new Date().toLocaleString();
+  const today = moment().format("jYYYY/jMM/jDD  HH:mm");
 
   return (
     <div className="relative mb-10">

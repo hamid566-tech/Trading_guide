@@ -14,6 +14,10 @@ import User_Reset_password_page from '../User_Folder/User_sub_Folder/User_Reset_
 import User_create_page from '../User_Folder/User_sub_Folder/User_create_page'
 import First_page from '../First_Folder/First_page'
 import Rent_Report_page from '../Rent_folder/Rent_form_folder/Rent_Report_page'
+import Mortgage_Report_page from '../Mortagage_folder/Mortgage_Form_Folder/Mortgage_Report_page'
+import Training from '../training/Training'
+import Shamsy_insert from '../training/Shamsy_insert'
+import Shamsy_report from '../training/Shamsy_report'
 
 const Home_page = () => {
   return (
@@ -31,6 +35,7 @@ const Home_page = () => {
           <Route path='rent/rent_report' element={<Rent_Report_page/>}/>
           <Route path='mortgage/*' element={<Mortgage_page/>}/>
           <Route path='mortgage/mortgage_form' element={<Mortgage_Form_page/>}/>
+          <Route path='mortgage/mortgage_report' element={<Mortgage_Report_page/>}/>
           <Route path='saleable/*' element={<Saleable_Page/>}/>
           <Route path='saleable/saleable_form' element={<Saleable_Form_page/>}/>
           <Route path='applicant/*' element={<Applicant_page/>}/>
@@ -38,6 +43,9 @@ const Home_page = () => {
           <Route path='user/*' element={<User_page/>}/>
           <Route path='user/reset_password' element={<User_Reset_password_page/>}/>
           <Route path='user/user_create_form' element={<User_create_page/>}/>
+          <Route path='train/*' element={<Training/>}/>
+          <Route path='train/shamsy_form' element={<Shamsy_insert/>}/>
+          <Route path='train/shamsy_report' element={<Shamsy_report/>}/>
         </Routes>
       </div>
 

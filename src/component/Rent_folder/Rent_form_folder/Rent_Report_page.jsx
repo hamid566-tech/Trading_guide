@@ -119,6 +119,7 @@ const handleSearch = async () => {
   return (
     <div className="mt-24 max-w-full px-4 sm:px-6 lg:px-8">
       <div className="bg-white/10 backdrop-blur-xl rounded-2xl text-white shadow-2xl border border-white/20 p-6">
+       
         <ReportHeader title="Rent Report 📊" reportId="r_001" />
 
         <ReportFilters fields={fields} filters={filters} onChange={handleChange} />

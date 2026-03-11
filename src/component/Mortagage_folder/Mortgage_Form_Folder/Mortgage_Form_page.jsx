@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { ArrowLeft, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import moment from "moment-jalaali";
 
 const Mortgage_Form_page = () => {
 
     const [id,setID]=useState('');
+    const [idError,setIDError] = useState('');
     const [mode, setMode] = useState('');
     const [status,setStatus] =useState('');
     const [formData, setFormData] = useState({});
@@ -35,6 +37,55 @@ const Mortgage_Form_page = () => {
         {label:"Final Price", type:"text", placeholder:"Enter Final Price", required:false},
     ]);
 
+    const handleSearch=async ()=>{
+        if(!id.trim()){
+            setIDError('ضرورت به ID است');
+            setMode("");
+            return;
+        }
+        else{
+            setIDError('');
+        }
+        try{
+            const res = await fetch(`http://localhost:5000/api/mortgage/${id}`);
+            const data = await res.json();
+
+            if(data.success) {
+                setFormData({
+                    "Name": data.mortgage.name || "",
+                    "FName": data.mortgage.fname || "",
+                    "Tazkira": data.mortgage.tazkira || "",
+                    "phone": data.mortgage.phone || "",
+                    "Address": data.mortgage.address || "",
+                    "Rooms": data.mortgage.rooms || "",
+                    "Appartment": data.mortgage.appartment || "",
+                    "Qawala": data.mortgage.qawala || "",
+                    "Bathrooms": data.mortgage.bathrooms || "",
+                    "Area": data.mortgage.area || "",
+                    "Nature": data.mortgage.nature || "",
+                    "Appartment Features": data.mortgage.appartment_features || "",
+                    "City Features": data.mortgage.city_features || "",
+                    "Date": data.mortgage.date || "",
+                    "Elevator": data.mortgage.elevator || "",
+                    "Heating": data.mortgage.heating || "",
+                    "Electric Meter": data.mortgage.electric_meter || "",
+                    "Roof": data.mortgage.roof || "",
+                    "Price": data.mortgage.price || "",
+                    "Final Price": data.mortgage.final_price || ""
+                });
+                setStatus(data.mortgage.status || "");
+                setMode('edit');
+            }else {
+                alert("ID پیدا نشد ❌");
+                setFormData({});
+                setStatus("");
+                setMode("");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
     const handleSubmit = () => {
         if (id.trim()) {
             alert("⚠️ فیلد ID باید خالی باشد تا فورم ثبت شود.");
@@ -42,23 +93,18 @@ const Mortgage_Form_page = () => {
         }
         setMode('submit');
         let newErrors = {};
-
         if(!status) {
             newErrors.status="انتخاب Status لازمی است";
         }
-
         fields.forEach((field)=>{
             if (field.required && (!formData[field.label] || !formData[field.label].trim())){
                 newErrors[field.label]='این فیلد لازمی است';
             }
         });
-
         setErrors(newErrors);
-
         if(Object.keys(newErrors).length === 0){
             const confirmSubmit = window.confirm("آیا مطمئن هستید که فورم ثبت شود؟");
             if(!confirmSubmit) return;
-            
             fetch("http://localhost:5000/api/mortgage/add",{
                 method: 'POST',
                 headers: {"Content-Type":"application/json"},
@@ -78,6 +124,79 @@ const Mortgage_Form_page = () => {
                 console.error("Error: ",err);
                 alert("مشکل در اتصال به سرور ❌");
             })
+        }
+    }
+
+    const handleUpdate = async ()=>{
+        if(!id.trim()) {
+            alert("اول ID را جستجو کن ⚠️");
+            return;
+        }
+        setMode('edit');
+        let newErrors={};
+        if(!status){
+            newErrors.status="انتخاب Status لازمی است";
+        }
+        fields.forEach((field)=>{
+            if(field.required && (!formData[field.label] || !formData[field.label].trim())){
+                newErrors[field.label]="این فیلد لازمی است";
+            }
+        });
+        setErrors(newErrors);
+        if(Object.keys(newErrors).length >0){
+            return;
+        }
+        const confirmUpdate =window.confirm("آیا مطمئن هستید که معلومات اپدیت شود؟");
+        if(!confirmUpdate) return;
+
+        try{
+            const res = await fetch(`http://localhost:5000/api/mortgage/${id}`,{
+                method:"PUT",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({...formData, status})
+            });
+            const data = await res.json();
+            if(data.success) {
+                alert("معلومات موفقانه اپدیت شد ✅");
+                setFormData({});
+                setStatus("");
+                setID("");
+                setMode("");
+                setErrors({});
+            }else{
+                alert("اپدیت انجام نشد ❌");
+            }
+        }catch (error) {
+            console.error("Error:",error);
+            alert("مشکل در اتصال به سرور ❌");
+        }
+    }
+
+    const handleDelete = async () =>{
+        if(!id.trim()){
+            alert("اول ID را جستجو کن ⚠️");
+            return;
+        }
+        const confirmDelete = window.confirm("آیا مطمئن هستید که این رکورد حذف شود؟");
+        if(!confirmDelete) return;
+        
+        try{
+            const res = await fetch(`http://localhost:5000/api/mortgage/${id}`,{
+                method:'DELETE'
+            });
+            const data = await res.json();
+            if(data.success){
+                alert("رکورد موفقانه حذف شد ✅");
+                setFormData({});
+            setStatus("");
+            setID("");
+            setMode("");
+            } else{
+                alert("رکورد پیدا نشد ❌");
+            }
+        } catch (error){
+            console.error("Error:",error);
+            alert("مشکل در اتصال به سرور ❌");
         }
     }
 
@@ -125,11 +244,23 @@ const Mortgage_Form_page = () => {
                     <input
                     type="text"
                     placeholder="Enter ID"
+                    value={id}
+                    onChange={(e) => {
+                        const value = e.target.value.replace(/[^0-9]/g, "");
+                        setID(value);
+                        if (value.trim()) {
+                            setMode(""); 
+                        }
+                        setIDError("");
+                    }}
                     className="flex-1 px-4 py-2 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     />
+                    {idError && <p className=' text-red-300 text-sm mt-1'>{idError}</p>}
 
                     <button
-                    className="px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 hover:scale-105 transition duration-300 flex items-center justify-center">
+                    onClick={handleSearch}
+                    disabled={mode === "submit"}
+                    className={`px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 ${mode === "submit" ? "opacity-50 cursor-not-allowed" : "hover:scale-105"} transition duration-300 flex items-center justify-center`}>
                     <Search size={18} color="white" />
                     </button>
                 </div>
@@ -202,7 +333,19 @@ const Mortgage_Form_page = () => {
                     type={t.type}
                     placeholder={t.placeholder}
                     value={formData[t.label] || ""}
-                    onChange={(e)=> setFormData({...formData,[t.label]:e.target.value})}
+                    onChange={(e)=> {
+                        let value =e.target.value;
+                        if(t.label === "phone" || t.label === "Price" || t.label === "Final Price"){
+                            value = value.replace(/[^0-9]/g,'');
+                        }
+                        setFormData({...formData,[t.label]:value})}}
+                    readOnly={t.label === "Date"}
+                    onFocus={() => {
+                                if (t.label === "Date" && !formData[t.label]) {
+                                    const today = moment().format("jYYYY/jMM/jDD");
+                                    setFormData({...formData,[t.label]:today});
+                                }
+                            }}
                     className={`px-4 py-2 rounded-lg bg-white/30
                             placeholder-white/40 text-white
                             focus:outline-none ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}
@@ -225,21 +368,24 @@ const Mortgage_Form_page = () => {
         {/* Submit */}
         <button
         onClick={handleSubmit}
-        className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold hover:scale-105 hover:shadow-green-500/40 transition duration-300 shadow-lg cursor-pointer">
+        disabled={mode === "edit" || idError !== ""}
+        className={`w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold ${mode === "edit" || idError !=="" ? "opacity-50 cursor-not-allowed" : "hover:scale-105 hover:shadow-green-500/40transition duration-300 shadow-lg cursor-pointer"} `}>
             Submit
         </button>
 
         {/* Update */}
         <button 
-        // onClick={handleUpdate}
-        className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-blue-400 to-indigo-600 rounded-lg font-semibold hover:scale-105 hover:shadow-blue-500/40 transition duration-300 shadow-lg cursor-pointer">
+        onClick={handleUpdate}
+        disabled={mode !== "edit"}
+        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${mode !== "edit" ? "bg-gray-400 cursor-not-allowed opacity-50" : "bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer"}`}>
             Update
         </button>
 
         {/* Delete */}
         <button 
-        // onClick={handleDelete}
-        className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-red-400 to-red-600 rounded-lg font-semibold hover:scale-105 hover:shadow-red-500/40 transition duration-300 shadow-lg cursor-pointer">
+        onClick={handleDelete}
+        disabled={mode !== "edit"}
+        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${mode !== "edit" ? "bg-gray-400 opacity-50 cursor-not-allowed" : "bg-linear-to-r from-red-400 to-red-600 hover:scale-105 hover:shadow-red-500/40 cursor-pointer"}`}>
             Delete
         </button>
       </div>
