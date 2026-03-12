@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { ArrowLeft, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment-jalaali';
+import { useEffect } from 'react';
+
 
 const Saleable_Form_page = () => {
 
@@ -91,21 +93,37 @@ const Saleable_Form_page = () => {
             alert("⚠️ فیلد ID باید خالی باشد تا فورم ثبت شود.");
             return;
         }
+
         setMode('submit');
+
         let newErrors = {};
-        if(!status) {
-            newErrors.status="انتخاب Status لازمی است";
-        }
-        fields.forEach((field)=>{
-            if (field.required && (!formData[field.label] || !formData[field.label].trim())){
-                newErrors[field.label]='این فیلد لازمی است';
+        // ولیدیشن بقیه فیلدهای ضروری
+        fields.forEach((field) => {
+            if (field.required && (!formData[field.label] || !formData[field.label].trim())) {
+                newErrors[field.label] = "این فیلد لازمی است";
             }
         });
+
         setErrors(newErrors);
-        if(Object.keys(newErrors).length === 0){
+
+        if (Object.keys(newErrors).length === 0) {
+            // بررسی Final Price
+            if (!formData["Final Price"] || formData["Final Price"].trim() === "") {
+                const addFinalPrice = window.confirm(
+                    "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟"
+                );
+                if (addFinalPrice) {
+                    // تمرکز روی فیلد Final Price تا کاربر مقدار وارد کند
+                    const finalInput = document.querySelector('input[placeholder="Enter Final Price"]');
+                    finalInput?.focus();
+                    return; // توقف Submit تا کاربر مقدار وارد کند
+                }
+            }
+
             const confirmSubmit = window.confirm("آیا مطمئن هستید که فورم ثبت شود؟");
-            if(!confirmSubmit) return;
-            fetch("http://localhost:5000/api/saleable/add",{
+            if (!confirmSubmit) return;
+
+            fetch("http://localhost:5000/api/saleable/add", {
                 method: 'POST',
                 headers: {"Content-Type":"application/json"},
                 body: JSON.stringify({...formData, status})
@@ -123,34 +141,47 @@ const Saleable_Form_page = () => {
             .catch(err => {
                 console.error("Error: ",err);
                 alert("مشکل در اتصال به سرور ❌");
-            })
+            });
         }
     }
 
-    const handleUpdate = async ()=>{
+    const handleUpdate = async () => {
         if(!id.trim()) {
             alert("اول ID را جستجو کن ⚠️");
             return;
         }
+
         setMode('edit');
         let newErrors={};
-        if(!status){
-            newErrors.status="انتخاب Status لازمی است";
-        }
+
+        // ولیدیشن فیلدهای ضروری
         fields.forEach((field)=>{
-            if(field.required && (!formData[field.label] || !formData[field.label].trim())){
-                newErrors[field.label]="این فیلد لازمی است";
+            if (field.required && (!formData[field.label] || !formData[field.label].trim())) {
+                newErrors[field.label] = "این فیلد لازمی است";
             }
         });
-        setErrors(newErrors);
-        if(Object.keys(newErrors).length >0){
-            return;
-        }
-        const confirmUpdate =window.confirm("آیا مطمئن هستید که معلومات اپدیت شود؟");
-        if(!confirmUpdate) return;
 
-        try{
-            const res = await fetch(`http://localhost:5000/api/saleable/${id}`,{
+        setErrors(newErrors);
+
+        if(Object.keys(newErrors).length > 0) return;
+
+        // بررسی Final Price
+        if (!formData["Final Price"] || formData["Final Price"].trim() === "") {
+            const addFinalPrice = window.confirm(
+                "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟"
+            );
+            if (addFinalPrice) {
+                const finalInput = document.querySelector('input[placeholder="Enter Final Price"]');
+                finalInput?.focus();
+                return; // توقف Update تا کاربر مقدار وارد کند
+            }
+        }
+
+        const confirmUpdate = window.confirm("آیا مطمئن هستید که معلومات اپدیت شود؟");
+        if (!confirmUpdate) return;
+
+        try {
+            const res = await fetch(`http://localhost:5000/api/saleable/${id}`, {
                 method:"PUT",
                 headers:{"Content-Type":"application/json"},
                 body:JSON.stringify({...formData, status})
@@ -163,10 +194,10 @@ const Saleable_Form_page = () => {
                 setID("");
                 setMode("");
                 setErrors({});
-            }else{
+            } else {
                 alert("اپدیت انجام نشد ❌");
             }
-        }catch (error) {
+        } catch (error) {
             console.error("Error:",error);
             alert("مشکل در اتصال به سرور ❌");
         }
@@ -199,6 +230,17 @@ const Saleable_Form_page = () => {
             alert("مشکل در اتصال به سرور ❌");
         }
     }
+
+    // اضافه کنید بعد از تعریف useState برای formData و status
+
+    useEffect(() => {
+    // وقتی Final Price تغییر کرد
+    if (formData["Final Price"] && formData["Final Price"].trim() !== "") {
+        setStatus("unavailable"); // اگر پر باشد، وضعیت unavailable
+    } else {
+        setStatus("available"); // اگر خالی باشد، وضعیت available
+    }
+    }, [formData["Final Price"]]);
 
   return (
     <div className="mt-24 w-full max-w-5xl mx-auto bg-white/20 backdrop-blur-md shadow-2xl rounded-2xl p-6 sm:p-10 text-white border border-white/30">
@@ -271,19 +313,16 @@ const Saleable_Form_page = () => {
                 <div className="w-full max-w-md">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
     
-                    <label className="sm:w-24 text-sm font-semibold">
-                        Status :
-                    </label>
+                        <label className="sm:w-24 text-sm font-semibold">
+                            Status :
+                        </label>
     
-                    <select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                    className={`w-full sm:flex px-4 py-2 rounded-lg bg-white/30 text-white focus:outline-none ${errors.status ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400"}`}>
-                        <option value="" className="text-black">Select Status</option>
-                        <option value="available" className="text-black">Available</option>
-                        <option value="unavailable" className="text-black">Unavailable</option>
-                    </select>
-                    {errors.status && (<p className="text-red-400 text-sm font-medium">{errors.status}</p>)}
+                        <input
+                        type="text"
+                        value={status}
+                        readOnly
+                        className="w-full px-4 py-2 rounded-lg bg-white/20 text-white opacity-70 cursor-not-allowed focus:outline-none"
+                        />
     
                     </div>
                 </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { ArrowLeft, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import moment from "moment-jalaali";
+import { useEffect } from 'react';
 
 const Rent_Form_page = () => {
 
@@ -96,8 +97,6 @@ const Rent_Form_page = () => {
     }
 
     const handleSubmit = () => {
-
-        // 1️⃣ اول بررسی ID
         if (id.trim()) {
             alert("⚠️ فیلد ID باید خالی باشد تا فورم ثبت شود.");
             return;
@@ -105,13 +104,8 @@ const Rent_Form_page = () => {
 
         setMode('submit');
 
-        // 2️⃣ بررسی فیلدها
         let newErrors = {};
-
-        if (!status) {
-            newErrors.status = "انتخاب Status لازمی است";
-        }
-
+        // ولیدیشن بقیه فیلدهای ضروری
         fields.forEach((field) => {
             if (field.required && (!formData[field.label] || !formData[field.label].trim())) {
                 newErrors[field.label] = "این فیلد لازمی است";
@@ -120,96 +114,88 @@ const Rent_Form_page = () => {
 
         setErrors(newErrors);
 
-        // 3️⃣ اگر هیچ خطا نبود → ارسال به سرور
         if (Object.keys(newErrors).length === 0) {
-            
+            // بررسی Final Price
+            if (!formData["Final Price"] || formData["Final Price"].trim() === "") {
+                const addFinalPrice = window.confirm(
+                    "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟"
+                );
+                if (addFinalPrice) {
+                    // تمرکز روی فیلد Final Price تا کاربر مقدار وارد کند
+                    const finalInput = document.querySelector('input[placeholder="Enter Final Price"]');
+                    finalInput?.focus();
+                    return; // توقف Submit تا کاربر مقدار وارد کند
+                }
+            }
+
             const confirmSubmit = window.confirm("آیا مطمئن هستید که فورم ثبت شود؟");
             if (!confirmSubmit) return;
 
             fetch("http://localhost:5000/api/rents/add", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    ...formData,
-                    status
-                })
+                method: 'POST',
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({...formData, status})
             })
             .then(res => res.json())
             .then(data => {
-                if (data.success) {
+                if(data.success){
                     alert("فورم موفقانه ثبت شد ✅ ID: " + data.id);
-
-                    // اختیاری: پاک کردن فورم بعد از ثبت
                     setFormData({});
                     setStatus("");
-                } else {
+                }else {
                     alert("خطا در ثبت معلومات ❌");
                 }
             })
             .catch(err => {
-                console.error("Error:", err);
+                console.error("Error: ",err);
                 alert("مشکل در اتصال به سرور ❌");
             });
-
         }
-    };
+    }
 
     const handleUpdate = async () => {
-
-        if (!id.trim()) {
+        if(!id.trim()) {
             alert("اول ID را جستجو کن ⚠️");
             return;
         }
 
-        // 1️⃣ فعال کردن حالت submit برای نمایش خطاها
         setMode('edit');
+        let newErrors={};
 
-        let newErrors = {};
-
-        // 2️⃣ بررسی Status
-        if (!status) {
-            newErrors.status = "انتخاب Status لازمی است";
-        }
-
-        // 3️⃣ بررسی فیلدهای ضروری
-        fields.forEach((field) => {
-            if (
-                field.required &&
-                (!formData[field.label] || !formData[field.label].trim())
-            ) {
+        // ولیدیشن فیلدهای ضروری
+        fields.forEach((field)=>{
+            if (field.required && (!formData[field.label] || !formData[field.label].trim())) {
                 newErrors[field.label] = "این فیلد لازمی است";
             }
         });
 
         setErrors(newErrors);
 
-        // 4️⃣ اگر خطا وجود دارد → توقف
-        if (Object.keys(newErrors).length > 0) {
-            return;
+        if(Object.keys(newErrors).length > 0) return;
+
+        // بررسی Final Price
+        if (!formData["Final Price"] || formData["Final Price"].trim() === "") {
+            const addFinalPrice = window.confirm(
+                "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟"
+            );
+            if (addFinalPrice) {
+                const finalInput = document.querySelector('input[placeholder="Enter Final Price"]');
+                finalInput?.focus();
+                return; // توقف Update تا کاربر مقدار وارد کند
+            }
         }
 
-        // 5️⃣ اگر همه چیز درست است → تاییدیه بگیر
         const confirmUpdate = window.confirm("آیا مطمئن هستید که معلومات اپدیت شود؟");
         if (!confirmUpdate) return;
 
         try {
-
             const res = await fetch(`http://localhost:5000/api/rents/${id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    ...formData,
-                    status
-                })
+                method:"PUT",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({...formData, status})
             });
-
             const data = await res.json();
-
-            if (data.success) {
+            if(data.success) {
                 alert("معلومات موفقانه اپدیت شد ✅");
                 setFormData({});
                 setStatus("");
@@ -219,12 +205,11 @@ const Rent_Form_page = () => {
             } else {
                 alert("اپدیت انجام نشد ❌");
             }
-
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Error:",error);
             alert("مشکل در اتصال به سرور ❌");
         }
-    };
+    }
 
     const handleDelete = async () => {
 
@@ -262,6 +247,15 @@ const Rent_Form_page = () => {
         alert("مشکل در اتصال به سرور ❌");
     }
 };
+
+    useEffect(() => {
+        // وقتی Final Price تغییر کرد
+        if (formData["Final Price"] && formData["Final Price"].trim() !== "") {
+            setStatus("unavailable"); // اگر پر باشد، وضعیت unavailable
+        } else {
+            setStatus("available"); // اگر خالی باشد، وضعیت available
+        }
+    }, [formData["Final Price"]]);
 
 
   return (
@@ -341,27 +335,16 @@ const Rent_Form_page = () => {
             <div className="w-full max-w-md">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
 
-                <label className="sm:w-24 text-sm font-semibold">
-                    Status :
-                </label>
+                    <label className="sm:w-24 text-sm font-semibold">
+                        Status :
+                    </label>
 
-                <select
+                    <input
+                    type="text"
                     value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                    className={`w-full sm:flex px-4 py-2 rounded-lg bg-white/30 text-white 
-                    focus:outline-none
-                    ${errors.status ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400"}`}
-                >
-                    <option value="" className="text-black">Select Status</option>
-                    <option value="available" className="text-black">Available</option>
-                    <option value="unavailable" className="text-black">Unavailable</option>
-                </select>
-
-                {errors.status && (
-                    <p className="text-red-400 text-sm font-medium">
-                        {errors.status}
-                    </p>
-                )}
+                    readOnly
+                    className="w-full px-4 py-2 rounded-lg bg-white/20 text-white opacity-70 cursor-not-allowed focus:outline-none"
+                    />
 
                 </div>
             </div>
