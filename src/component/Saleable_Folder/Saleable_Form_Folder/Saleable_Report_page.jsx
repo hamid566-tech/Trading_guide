@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import ReportHeader from '../../Report_Folder/ReportHeader'
 import ReportFilters from '../../Report_Folder/ReportFilters'
 import ReportTable from '../../Report_Folder/ReportTable';
+import { generateReportPDF } from '../../Report_Folder/generateReportPDF';
 
 const Saleable_Report_page = () => {
 
@@ -87,7 +88,7 @@ const Saleable_Report_page = () => {
           </button>
 
           <button
-            onClick={() => generateReportPDF(columns, filteredData, filters, "Mortgage Report")}
+            onClick={() => generateReportPDF(columns, filteredData, filters, "Saleable Report")}
             className="relative overflow-hidden px-6 py-2 bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 
             rounded-lg font-semibold text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
           >

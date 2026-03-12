@@ -8,20 +8,10 @@ import persian_en from "react-date-object/locales/persian_en";
 
 const ReportFilters = ({ fields, filters, onChange }) => {
 
-  // // تبدیل اعداد فارسی به انگلیسی
-  // const persianToEnglish = (str) => {
-  //   if (!str) return "";
-  //   const persianNumbers = "۰۱۲۳۴۵۶۷۸۹";
-  //   const englishNumbers = "0123456789";
-
-  //   return str.replace(/[۰-۹]/g, (d) =>
-  //     englishNumbers[persianNumbers.indexOf(d)]
-  //   );
-  // };
 
   // تغییر فیلدهای متنی
   const handleTextChange = (name, value) => {
-    const newValue = persianToEnglish(value);
+    const newValue = value
     onChange({ target: { name, value: newValue } });
   };
 

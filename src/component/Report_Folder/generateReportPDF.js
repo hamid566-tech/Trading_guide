@@ -2,17 +2,19 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import "../../fonts/Vazirmatn-Regular-normal";
 import "../../fonts/Vazirmatn-Bold-normal";
+import moment from "moment-jalaali";
+moment.loadPersian({ dialect: "persian-modern" });
 
 export const generateReportPDF = (columns, data, filters, title = "Report") => {
   const doc = new jsPDF({ orientation: "landscape" });
   doc.setFont("Vazirmatn", "normal");
   
   const pageWidth = doc.internal.pageSize.getWidth(); // اندازه عرض صفحه
-  const today = new Date().toLocaleString();
+  const today = moment().format("jYYYY/jMM/jDD HH:mm");
 
   // 📅 تاریخ (بالا سمت چپ)
   doc.setFontSize(10);
-  doc.text(today, 10, 10);
+  doc.text(today, 10, 25);
 
   // 📌 عنوان (مرکز صفحه)
   doc.setFontSize(12);
@@ -20,7 +22,7 @@ export const generateReportPDF = (columns, data, filters, title = "Report") => {
 
   // 🧾 بخش فیلترها
   doc.setFontSize(10);
-  let currentY = 18; // موقعیت شروع عمودی
+  let currentY = 33; // موقعیت شروع عمودی
 
   Object.keys(filters).forEach((key) => {
     if (filters[key]) {
@@ -35,22 +37,25 @@ export const generateReportPDF = (columns, data, filters, title = "Report") => {
   const totalFinalPrice = data.reduce((sum, row) => sum + Number(row.final_price || 0),0);
 
   // متن کاملاً به راست تراز شود (10 واحد فاصله از لبه)
+
+  const summaryY = 33;
+
   doc.text(
     `Total Records: ${totalRecords}`,
     pageWidth - 10,
-    currentY + 4,
+    summaryY,
     { align: "right" }
   );
   doc.text(
     `Total Price: ${totalPrice.toLocaleString()}`,
     pageWidth - 10,
-    currentY + 10,
+    summaryY + 6,
     { align: "right" }
   );
   doc.text(
     `Total Final Price: ${totalFinalPrice.toLocaleString()}`,
     pageWidth - 10,
-    currentY + 16,
+    summaryY + 12,
     { align: "right" }
   );
 
@@ -62,12 +67,19 @@ export const generateReportPDF = (columns, data, filters, title = "Report") => {
     head: [columns.map(col => col.header)],
     body: tableData,
     theme: "grid",
+    margin: { left: 10, right: 10 },
+    tableWidth: "auto",
+
     styles: {
       font: "Vazirmatn",
       fontStyle: "normal",  
-      fontSize: 8,
+      fontSize: 6,
       halign: "center",
       valign: "middle",
+      cellWidth: "auto",
+      overflow: "linebreak",
+      minCellHeight: 8,
+      cellPadding: 2,
       lineWidth: 0.1,
       lineColor: [0, 0, 0],
       textColor: 0,
