@@ -9,11 +9,7 @@ const Mortgage_Report_page = () => {
     
     const [filters, setFilters] = useState({});
     const [filteredData, setFilteredData] = useState([]);
-  
-    const handleChange = (e) => {
-      setFilters({ ...filters, [e.target.name]: e.target.value });
-    };
-  
+    const handleChange = (e) => {setFilters({ ...filters, [e.target.name]: e.target.value });};
     const totalRecords = filteredData.length;
     const totalPrice = filteredData.reduce((sum, row) => sum + Number(row.price || 0),0);
     const totalFinalPrice = filteredData.reduce((sum, row) => sum + Number(row.final_price || 0),0);

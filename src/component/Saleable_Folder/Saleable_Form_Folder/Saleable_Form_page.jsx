@@ -1,33 +1,204 @@
 import React, { useState } from 'react'
 import { ArrowLeft, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment-jalaali';
 
 const Saleable_Form_page = () => {
+
+    const [id,setID]=useState('');
+    const [idError,setIDError] = useState('');
+    const [mode, setMode] = useState('');
+    const [status,setStatus] =useState('');
+    const [formData, setFormData] = useState({});
+    const [errors, setErrors] = useState({});
 
     const navigate=useNavigate();
     
     const [fields,setFields]=useState([
-        {label:"Name", type:"text", placeholder:"Enter Name"},
-        {label:"FName", type:"text", placeholder:"Enter Father Name"},
-        {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number"},
-        {label:"phone", type:"text", placeholder:"Enter Phone Number"},
-        {label:"Address", type:"text", placeholder:"Enter Address Number"},
-        {label:"Rooms", type:"text", placeholder:"Enter Rooms Number"},
-        {label:"Appartment", type:"text", placeholder:"Enter Appartment Number"},
-        {label:"Qawala", type:"text", placeholder:"Enter Qawala"},
-        {label:"Bathrooms", type:"text", placeholder:"Enter Bathroom Number"},
-        {label:"Area", type:"text", placeholder:"Enter Area"},
-        {label:"Nature", type:"text", placeholder:"Enter Nature"},
-        {label:"Appartment Features", type:"text", placeholder:"Enter Appartment Features"},
-        {label:"City Features", type:"text", placeholder:"Enter City Features"},
-        {label:"Date", type:"text", placeholder:"Enter Date"},
-        {label:"Elevator", type:"select"},
-        {label:"Heating", type:"select"},
-        {label:"Electric Meter", type:"select"},
-        {label:"Roof", type:"select"},
-        {label:"Price", type:"text", placeholder:"Enter Price"},
-        {label:"Final Price", type:"text", placeholder:"Enter Final Price"},
+        {label:"Name", type:"text", placeholder:"Enter Name", required:true},
+        {label:"FName", type:"text", placeholder:"Enter Father Name", required:true},
+        {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number", required:true},
+        {label:"phone", type:"tel", inputMode:"numeric", placeholder:"Enter Phone Number", required:true},
+        {label:"Address", type:"text", placeholder:"Enter Address Number", required:true},
+        {label:"Rooms", type:"text", placeholder:"Enter Rooms Number", required:true},
+        {label:"Appartment", type:"text", placeholder:"Enter Appartment Number", required:true},
+        {label:"Qawala", type:"text", placeholder:"Enter Qawala", required:true},
+        {label:"Bathrooms", type:"text", placeholder:"Enter Bathroom Number", required:true},
+        {label:"Area", type:"text", placeholder:"Enter Area", required:true},
+        {label:"Nature", type:"text", placeholder:"Enter Nature", required:true},
+        {label:"Appartment Features", type:"text", placeholder:"Enter Appartment Features", required:true},
+        {label:"City Features", type:"text", placeholder:"Enter City Features", required:true},
+        {label:"Date", type:"text", placeholder:"Enter Date", required:true},
+        {label:"Elevator", type:"select", required:true},
+        {label:"Heating", type:"select", required:true},
+        {label:"Electric Meter", type:"select", required:true},
+        {label:"Roof", type:"select", required:true},
+        {label:"Price", type:"text", placeholder:"Enter Price", required:true},
+        {label:"Final Price", type:"text", placeholder:"Enter Final Price", required:false},
     ]);
+
+    const handleSearch=async ()=>{
+        if(!id.trim()){
+            setIDError('ضرورت به ID است');
+            setMode("");
+            return;
+        }
+        else{
+            setIDError('');
+        }
+        try{
+            const res = await fetch(`http://localhost:5000/api/saleable/${id}`);
+            const data = await res.json();
+
+            if(data.success) {
+                setFormData({
+                    "Name": data.saleable.name || "",
+                    "FName": data.saleable.fname || "",
+                    "Tazkira": data.saleable.tazkira || "",
+                    "phone": data.saleable.phone || "",
+                    "Address": data.saleable.address || "",
+                    "Rooms": data.saleable.rooms || "",
+                    "Appartment": data.saleable.appartment || "",
+                    "Qawala": data.saleable.qawala || "",
+                    "Bathrooms": data.saleable.bathrooms || "",
+                    "Area": data.saleable.area || "",
+                    "Nature": data.saleable.nature || "",
+                    "Appartment Features": data.saleable.appartment_features || "",
+                    "City Features": data.saleable.city_features || "",
+                    "Date": data.saleable.date || "",
+                    "Elevator": data.saleable.elevator || "",
+                    "Heating": data.saleable.heating || "",
+                    "Electric Meter": data.saleable.electric_meter || "",
+                    "Roof": data.saleable.roof || "",
+                    "Price": data.saleable.price || "",
+                    "Final Price": data.saleable.final_price || ""
+                });
+                setStatus(data.saleable.status || "");
+                setMode('edit');
+            }else {
+                alert("ID پیدا نشد ❌");
+                setFormData({});
+                setStatus("");
+                setMode("");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    const handleSubmit = () => {
+        if (id.trim()) {
+            alert("⚠️ فیلد ID باید خالی باشد تا فورم ثبت شود.");
+            return;
+        }
+        setMode('submit');
+        let newErrors = {};
+        if(!status) {
+            newErrors.status="انتخاب Status لازمی است";
+        }
+        fields.forEach((field)=>{
+            if (field.required && (!formData[field.label] || !formData[field.label].trim())){
+                newErrors[field.label]='این فیلد لازمی است';
+            }
+        });
+        setErrors(newErrors);
+        if(Object.keys(newErrors).length === 0){
+            const confirmSubmit = window.confirm("آیا مطمئن هستید که فورم ثبت شود؟");
+            if(!confirmSubmit) return;
+            fetch("http://localhost:5000/api/saleable/add",{
+                method: 'POST',
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({...formData, status})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success){
+                    alert("فورم موفقانه ثبت شد ✅ ID: " + data.id);
+                    setFormData({});
+                    setStatus("");
+                }else {
+                    alert("خطا در ثبت معلومات ❌");
+                }
+            })
+            .catch(err => {
+                console.error("Error: ",err);
+                alert("مشکل در اتصال به سرور ❌");
+            })
+        }
+    }
+
+    const handleUpdate = async ()=>{
+        if(!id.trim()) {
+            alert("اول ID را جستجو کن ⚠️");
+            return;
+        }
+        setMode('edit');
+        let newErrors={};
+        if(!status){
+            newErrors.status="انتخاب Status لازمی است";
+        }
+        fields.forEach((field)=>{
+            if(field.required && (!formData[field.label] || !formData[field.label].trim())){
+                newErrors[field.label]="این فیلد لازمی است";
+            }
+        });
+        setErrors(newErrors);
+        if(Object.keys(newErrors).length >0){
+            return;
+        }
+        const confirmUpdate =window.confirm("آیا مطمئن هستید که معلومات اپدیت شود؟");
+        if(!confirmUpdate) return;
+
+        try{
+            const res = await fetch(`http://localhost:5000/api/saleable/${id}`,{
+                method:"PUT",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({...formData, status})
+            });
+            const data = await res.json();
+            if(data.success) {
+                alert("معلومات موفقانه اپدیت شد ✅");
+                setFormData({});
+                setStatus("");
+                setID("");
+                setMode("");
+                setErrors({});
+            }else{
+                alert("اپدیت انجام نشد ❌");
+            }
+        }catch (error) {
+            console.error("Error:",error);
+            alert("مشکل در اتصال به سرور ❌");
+        }
+    }
+
+    const handleDelete = async () =>{
+        if(!id.trim()){
+            alert("اول ID را جستجو کن ⚠️");
+            return;
+        }
+        const confirmDelete = window.confirm("آیا مطمئن هستید که این رکورد حذف شود؟");
+        if(!confirmDelete) return;
+        
+        try{
+            const res = await fetch(`http://localhost:5000/api/saleable/${id}`,{
+                method:'DELETE'
+            });
+            const data = await res.json();
+            if(data.success){
+            alert("رکورد موفقانه حذف شد ✅");
+            setFormData({});
+            setStatus("");
+            setID("");
+            setMode("");
+            } else{
+                alert("رکورد پیدا نشد ❌");
+            }
+        } catch (error){
+            console.error("Error:",error);
+            alert("مشکل در اتصال به سرور ❌");
+        }
+    }
 
   return (
     <div className="mt-24 w-full max-w-5xl mx-auto bg-white/20 backdrop-blur-md shadow-2xl rounded-2xl p-6 sm:p-10 text-white border border-white/30">
@@ -72,11 +243,23 @@ const Saleable_Form_page = () => {
                         <input
                         type="text"
                         placeholder="Enter ID"
+                        value={id}
+                        onChange={(e) => {
+                            const value = e.target.value.replace(/[^0-9]/g, "");
+                            setID(value);
+                            if (value.trim()) {
+                                setMode(""); 
+                            }
+                            setIDError("");
+                        }}
                         className="flex-1 px-4 py-2 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
                         />
+                        {idError && <p className=' text-red-300 text-sm mt-1'>{idError}</p>}
     
                         <button
-                        className="px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 hover:scale-105 transition duration-300 flex items-center justify-center">
+                        onClick={handleSearch}
+                        disabled={mode === "submit"}
+                        className={`px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 ${mode === "submit" ? "opacity-50 cursor-not-allowed" : "hover:scale-105"} transition duration-300 flex items-center justify-center`}>
                         <Search size={18} color="white" />
                         </button>
                     </div>
@@ -93,13 +276,14 @@ const Saleable_Form_page = () => {
                     </label>
     
                     <select
-                        className=" w-full sm:flex px-4 py-2 rounded-lg bg-white/30 text-white 
-                     focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    >
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    className={`w-full sm:flex px-4 py-2 rounded-lg bg-white/30 text-white focus:outline-none ${errors.status ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400"}`}>
                         <option value="" className="text-black">Select Status</option>
                         <option value="available" className="text-black">Available</option>
                         <option value="unavailable" className="text-black">Unavailable</option>
                     </select>
+                    {errors.status && (<p className="text-red-400 text-sm font-medium">{errors.status}</p>)}
     
                     </div>
                 </div>
@@ -122,25 +306,41 @@ const Saleable_Form_page = () => {
 
                 {t.type === "select" ? (
 
-                <select
-                    className="px-4 py-2 rounded-lg bg-white/30 text-white
-                            focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                >
-                    <option value="" className="text-black"> Select {t.label}</option>
-                    <option value="Yes" className="text-black">Yes</option>
-                    <option value="No" className="text-black">No</option>
-                </select>
+                <>
+                    <select
+                    value={formData[t.label] || ""}
+                    onChange={(e) => setFormData({ ...formData, [t.label]: e.target.value })}
+                    className={`px-4 py-2 rounded-lg bg-white/30 text-white ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:outline-none focus:ring-2 focus:ring-yellow-400"}`}>
+                        <option value="" className="text-black"> Select {t.label}</option>
+                        <option value="Yes" className="text-black">Yes</option>
+                        <option value="No" className="text-black">No</option>
+                    </select>
+                    {errors[t.label] && (<p className='text-red-400 text-sm font-medium'>{errors[t.label]}</p>)}
+                </>
 
                 ) : (
 
-                <input
+                <>
+                    <input
                     type={t.type}
                     placeholder={t.placeholder}
-                    className="px-4 py-2 rounded-lg bg-white/30
-                            placeholder-white/70 text-white
-                            focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                />
-
+                    value={formData[t.label] || ""}
+                    onChange={(e)=> {
+                        let value =e.target.value;
+                        if(t.label === "phone" || t.label === "Price" || t.label === "Final Price"){
+                            value = value.replace(/[^0-9]/g,'');
+                        }
+                        setFormData({...formData,[t.label]:value})}}
+                    readOnly={t.label === "Date"}
+                    onFocus={() => {
+                                if (t.label === "Date" && !formData[t.label]) {
+                                    const today = moment().format("jYYYY/jMM/jDD");
+                                    setFormData({...formData,[t.label]:today});
+                                }
+                            }}
+                    className={`px-4 py-2 rounded-lg bg-white/30 placeholder-white/40 text-whitefocus:outline-none ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}/>
+                    {errors[t.label] && (<p className='text-red-400 text-sm font-medium'>{errors[t.label]}</p>)}
+                </>
                 )}
 
             </div>
@@ -154,17 +354,26 @@ const Saleable_Form_page = () => {
           {/* Submit Button */}
           <div className="flex flex-col sm:flex-row justify-center gap-6 mt-10">
             {/* Submit */}
-            <button className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold hover:scale-105 hover:shadow-green-500/40 transition duration-300 shadow-lg cursor-pointer">
+            <button
+            onClick={handleSubmit}
+            disabled={mode === "edit" || idError !== ""}
+            className={`w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold ${mode === "edit" || idError !=="" ? "opacity-50 cursor-not-allowed" : "hover:scale-105 hover:shadow-green-500/40transition duration-300 shadow-lg cursor-pointer"} `}>
                 Submit
             </button>
     
             {/* Update */}
-            <button className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-blue-400 to-indigo-600 rounded-lg font-semibold hover:scale-105 hover:shadow-blue-500/40 transition duration-300 shadow-lg cursor-pointer">
+            <button 
+            onClick={handleUpdate}
+            disabled={mode !== "edit"}
+            className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${mode !== "edit" ? "bg-gray-400 cursor-not-allowed opacity-50" : "bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer"}`}>
                 Update
             </button>
     
             {/* Delete */}
-            <button className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-red-400 to-red-600 rounded-lg font-semibold hover:scale-105 hover:shadow-red-500/40 transition duration-300 shadow-lg cursor-pointer">
+            <button 
+            onClick={handleDelete}
+            disabled={mode !== "edit"}
+            className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${mode !== "edit" ? "bg-gray-400 opacity-50 cursor-not-allowed" : "bg-linear-to-r from-red-400 to-red-600 hover:scale-105 hover:shadow-red-500/40 cursor-pointer"}`}>
                 Delete
             </button>
           </div>

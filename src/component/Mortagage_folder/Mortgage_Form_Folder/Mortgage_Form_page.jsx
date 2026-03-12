@@ -186,8 +186,8 @@ const Mortgage_Form_page = () => {
             });
             const data = await res.json();
             if(data.success){
-                alert("رکورد موفقانه حذف شد ✅");
-                setFormData({});
+            alert("رکورد موفقانه حذف شد ✅");
+            setFormData({});
             setStatus("");
             setID("");
             setMode("");
@@ -279,19 +279,12 @@ const Mortgage_Form_page = () => {
                     <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className={`w-full sm:flex px-4 py-2 rounded-lg bg-white/30 text-white 
-                    focus:outline-none
-                    ${errors.status ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400"}`}
-                    >
+                    className={`w-full sm:flex px-4 py-2 rounded-lg bg-white/30 text-white focus:outline-none ${errors.status ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400"}`}>
                         <option value="" className="text-black">Select Status</option>
                         <option value="available" className="text-black">Available</option>
                         <option value="unavailable" className="text-black">Unavailable</option>
                     </select>
-                    {errors.status && (
-                        <p className="text-red-400 text-sm font-medium">
-                            {errors.status}
-                        </p>
-                    )}
+                    {errors.status && (<p className="text-red-400 text-sm font-medium">{errors.status}</p>)}
 
                 </div>
             </div>
@@ -317,11 +310,8 @@ const Mortgage_Form_page = () => {
                     <select
                     value={formData[t.label] || ""}
                     onChange={(e) => setFormData({ ...formData, [t.label]: e.target.value })}
-                    className={`px-4 py-2 rounded-lg bg-white/30 text-white ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:outline-none focus:ring-2 focus:ring-yellow-400"}`}
-                    >
-                        <option value="" className="text-black">
-                        Select {t.label}
-                        </option>
+                    className={`px-4 py-2 rounded-lg bg-white/30 text-white ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:outline-none focus:ring-2 focus:ring-yellow-400"}`}>
+                        <option value="" className="text-black">Select {t.label}</option>
                         <option value="Yes" className="text-black">Yes</option>
                         <option value="No" className="text-black">No</option>
                     </select>
@@ -346,10 +336,7 @@ const Mortgage_Form_page = () => {
                                     setFormData({...formData,[t.label]:today});
                                 }
                             }}
-                    className={`px-4 py-2 rounded-lg bg-white/30
-                            placeholder-white/40 text-white
-                            focus:outline-none ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}
-                    />
+                    className={`px-4 py-2 rounded-lg bg-white/30 placeholder-white/40 text-white focus:outline-none ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}/>
                     
                 {errors[t.label] && (<p className='text-red-400 text-sm font-medium'>{errors[t.label]}</p>)}
                 </>

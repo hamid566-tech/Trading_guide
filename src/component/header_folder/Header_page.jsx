@@ -24,12 +24,14 @@ function Header_page() {
 
   const disableHeaderPages = [
     "rent_form",
+    "rent_report",
     "mortgage_form",
+    "mortgage_report",
     "saleable_form",
+    "saleable_report",
     "applicant_form",
     "reset_password",
     "user_create_form",
-    "rent_report"
   ];
 
   const isFormPage = disableHeaderPages.some(page =>

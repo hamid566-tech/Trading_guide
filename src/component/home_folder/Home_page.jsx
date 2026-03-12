@@ -18,6 +18,7 @@ import Mortgage_Report_page from '../Mortagage_folder/Mortgage_Form_Folder/Mortg
 import Training from '../training/Training'
 import Shamsy_insert from '../training/Shamsy_insert'
 import Shamsy_report from '../training/Shamsy_report'
+import Saleable_Report_page from '../Saleable_Folder/Saleable_Form_Folder/Saleable_Report_page'
 
 const Home_page = () => {
   return (
@@ -38,6 +39,7 @@ const Home_page = () => {
           <Route path='mortgage/mortgage_report' element={<Mortgage_Report_page/>}/>
           <Route path='saleable/*' element={<Saleable_Page/>}/>
           <Route path='saleable/saleable_form' element={<Saleable_Form_page/>}/>
+          <Route path='saleable/saleable_report' element={<Saleable_Report_page/>}/>
           <Route path='applicant/*' element={<Applicant_page/>}/>
           <Route path='applicant/applicant_form' element={<Applicant_Form_page/>}/>
           <Route path='user/*' element={<User_page/>}/>
