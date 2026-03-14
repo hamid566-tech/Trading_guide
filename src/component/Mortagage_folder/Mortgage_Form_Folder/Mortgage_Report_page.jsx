@@ -1,9 +1,9 @@
 import React from 'react'
 import { useState } from 'react';
-import ReportHeader from '../../Report_Folder/ReportHeader';
-import ReportFilters from '../../Report_Folder/ReportFilters';
-import ReportTable from '../../Report_Folder/ReportTable';
-import { generateReportPDF } from '../../Report_Folder/generateReportPDF';
+import ReportHeader from '../../Report_Folder/Report1/ReportHeader';
+import ReportFilters from '../../Report_Folder/Report1/ReportFilters';
+import ReportTable from '../../Report_Folder/Report1/ReportTable';
+import { generateReportPDF } from '../../Report_Folder/Report1/generateReportPDF';
 
 const Mortgage_Report_page = () => {
     

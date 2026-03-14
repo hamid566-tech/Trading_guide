@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import ReportFilters from "../../Report_Folder/ReportFilters";
-import ReportTable from "../../Report_Folder/ReportTable";
-import { generateReportPDF } from "../../Report_Folder/generateReportPDF";
-import ReportHeader from "../../Report_Folder/ReportHeader";
+import ReportFilters from "../../Report_Folder/Report1/ReportFilters";
+import ReportTable from "../../Report_Folder/Report1/ReportTable";
+import { generateReportPDF } from "../../Report_Folder/Report1/generateReportPDF";
+import ReportHeader from "../../Report_Folder/Report1/ReportHeader";
 import moment from "moment-jalaali";
 
 const Rent_Report_page = () => {

@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import "../../fonts/Vazirmatn-Regular-normal";
-import "../../fonts/Vazirmatn-Bold-normal";
+import "../../../fonts/Vazirmatn-Regular-normal";
+import "../../../fonts/Vazirmatn-Bold-normal";
 import moment from "moment-jalaali";
 moment.loadPersian({ dialect: "persian-modern" });
 

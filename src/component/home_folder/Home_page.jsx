@@ -19,6 +19,7 @@ import Training from '../training/Training'
 import Shamsy_insert from '../training/Shamsy_insert'
 import Shamsy_report from '../training/Shamsy_report'
 import Saleable_Report_page from '../Saleable_Folder/Saleable_Form_Folder/Saleable_Report_page'
+import Applicant_Report_page from '../Applicant_Folder/Applicant_Form_Folder/Applicant_Report_page'
 
 const Home_page = () => {
   return (
@@ -42,6 +43,7 @@ const Home_page = () => {
           <Route path='saleable/saleable_report' element={<Saleable_Report_page/>}/>
           <Route path='applicant/*' element={<Applicant_page/>}/>
           <Route path='applicant/applicant_form' element={<Applicant_Form_page/>}/>
+          <Route path='applicant/applicant_report' element={<Applicant_Report_page/>}/>
           <Route path='user/*' element={<User_page/>}/>
           <Route path='user/reset_password' element={<User_Reset_password_page/>}/>
           <Route path='user/user_create_form' element={<User_create_page/>}/>

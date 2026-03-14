@@ -1,19 +1,207 @@
 import React, { useState } from 'react'
 import { ArrowLeft, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment-jalaali';
 
 const Applicant_Form_page = () => {
 
-  const navigate=useNavigate();
-    
+    const [id,setID]=useState('');
+    const [idError,setIDError] = useState('');
+    const [mode, setMode] = useState('');
+    const [status,setStatus] =useState('');
+    const [formData, setFormData] = useState({});
+    const [errors, setErrors] = useState({});
+
+    const navigate=useNavigate();
+
     const [fields,setFields]=useState([
-        {label:"Name", type:"text", placeholder:"Enter Name"},
-        {label:"FName", type:"text", placeholder:"Enter Father Name"},
-        {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number"},
-        {label:"phone", type:"text", placeholder:"Enter Phone Number"},
-        {label:"Property Type", type:"text", placeholder:"Enter Property Type"},
-        {label:"Property Location", type:"text", placeholder:"Enter Property Location"},
+        {label:"Name", type:"text", placeholder:"Enter Name", required:true},
+        {label:"FName", type:"text", placeholder:"Enter Father Name", required:true},
+        {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number", required:true},
+        {label:"Phone", type:"text", placeholder:"Enter Phone Number", required:true},
+        {label:"Date", type:"text", placeholder:"Enter Date Number", required:true},
+        {label:"Property Type", type:"text", placeholder:"Enter Property Type", required:true},
+        {label:"Property Location", type:"text", placeholder:"Enter Property Location", required:true},
     ]);
+
+    const handleSearch=async ()=>{
+        if(!id.trim()){
+            setIDError('ضرورت به ID است');
+            setMode("");
+            return;
+        }
+        else{
+            setIDError('');
+        }
+        try{
+            const res = await fetch(`http://localhost:5000/api/applicant/${id}`);
+            const data = await res.json();
+
+            if(data.success) {
+                setFormData({
+                    "Name": data.applicant.name || "",
+                    "FName": data.applicant.fname || "",
+                    "Tazkira": data.applicant.tazkira || "",
+                    "Phone": data.applicant.phone || "",
+                    "Date": data.applicant.date || "",
+                    "Property Type": data.applicant.property_type || "",
+                    "Property Location": data.applicant.property_location || "",
+                });
+                // setStatus(data.mortgage.status || "");
+                setMode('edit');
+            }else {
+                alert("ID پیدا نشد ❌");
+                setFormData({});
+                // setStatus("");
+                setMode("");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    const handleSubmit = () => {
+        if (id.trim()) {
+            alert("⚠️ فیلد ID باید خالی باشد تا فورم ثبت شود.");
+            return;
+        }
+
+        setMode('submit');
+
+        let newErrors = {};
+        // ولیدیشن بقیه فیلدهای ضروری
+        fields.forEach((field) => {
+            if (field.required && (!formData[field.label] || !formData[field.label].trim())) {
+                newErrors[field.label] = "این فیلد لازمی است";
+            }
+        });
+
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length === 0) {
+            // // بررسی Final Price
+            // if (!formData["Final Price"] || formData["Final Price"].trim() === "") {
+            //     const addFinalPrice = window.confirm(
+            //         "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟"
+            //     );
+            //     if (addFinalPrice) {
+            //         // تمرکز روی فیلد Final Price تا کاربر مقدار وارد کند
+            //         const finalInput = document.querySelector('input[placeholder="Enter Final Price"]');
+            //         finalInput?.focus();
+            //         return; // توقف Submit تا کاربر مقدار وارد کند
+            //     }
+            // }
+
+            const confirmSubmit = window.confirm("آیا مطمئن هستید که فورم ثبت شود؟");
+            if (!confirmSubmit) return;
+
+            fetch("http://localhost:5000/api/applicant/add", {
+                method: 'POST',
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({...formData, status})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success){
+                    alert("فورم موفقانه ثبت شد ✅ ID: " + data.id);
+                    setFormData({});
+                    setStatus("");
+                }else {
+                    alert("خطا در ثبت معلومات ❌");
+                }
+            })
+            .catch(err => {
+                console.error("Error: ",err);
+                alert("مشکل در اتصال به سرور ❌");
+            });
+        }
+    }
+
+    const handleUpdate = async () => {
+        if(!id.trim()) {
+            alert("اول ID را جستجو کن ⚠️");
+            return;
+        }
+
+        setMode('edit');
+        let newErrors={};
+
+        // ولیدیشن فیلدهای ضروری
+        fields.forEach((field)=>{
+            if (field.required && (!formData[field.label] || !formData[field.label].trim())) {
+                newErrors[field.label] = "این فیلد لازمی است";
+            }
+        });
+
+        setErrors(newErrors);
+
+        if(Object.keys(newErrors).length > 0) return;
+
+        // // بررسی Final Price
+        // if (!formData["Final Price"] || formData["Final Price"].trim() === "") {
+        //     const addFinalPrice = window.confirm(
+        //         "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟"
+        //     );
+        //     if (addFinalPrice) {
+        //         const finalInput = document.querySelector('input[placeholder="Enter Final Price"]');
+        //         finalInput?.focus();
+        //         return; // توقف Update تا کاربر مقدار وارد کند
+        //     }
+        // }
+
+        const confirmUpdate = window.confirm("آیا مطمئن هستید که معلومات اپدیت شود؟");
+        if (!confirmUpdate) return;
+
+        try {
+            const res = await fetch(`http://localhost:5000/api/applicant/${id}`, {
+                method:"PUT",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({...formData, status})
+            });
+            const data = await res.json();
+            if(data.success) {
+                alert("معلومات موفقانه اپدیت شد ✅");
+                setFormData({});
+                // setStatus("");
+                setID("");
+                setMode("");
+                setErrors({});
+            } else {
+                alert("اپدیت انجام نشد ❌");
+            }
+        } catch (error) {
+            console.error("Error:",error);
+            alert("مشکل در اتصال به سرور ❌");
+        }
+    }
+
+    const handleDelete = async () =>{
+        if(!id.trim()){
+            alert("اول ID را جستجو کن ⚠️");
+            return;
+        }
+        const confirmDelete = window.confirm("آیا مطمئن هستید که این رکورد حذف شود؟");
+        if(!confirmDelete) return;
+        
+        try{
+            const res = await fetch(`http://localhost:5000/api/applicant/${id}`,{
+                method:'DELETE'
+            });
+            const data = await res.json();
+            if(data.success){
+            alert("رکورد موفقانه حذف شد ✅");
+            setFormData({});
+            // setStatus("");
+            setID("");
+            setMode("");
+            } else{
+                alert("رکورد پیدا نشد ❌");
+            }
+        } catch (error){
+            console.error("Error:",error);
+            alert("مشکل در اتصال به سرور ❌");
+        }
+    }
   
   return (
     <div className="mt-24 w-full max-w-5xl mx-auto bg-white/20 backdrop-blur-md shadow-2xl rounded-2xl p-6 sm:p-10 text-white border border-white/30">
@@ -58,11 +246,23 @@ const Applicant_Form_page = () => {
                         <input
                         type="text"
                         placeholder="Enter ID"
+                        value={id}
+                        onChange={(e) => {
+                            const value = e.target.value.replace(/[^0-9]/g, "");
+                            setID(value);
+                            if (value.trim()) {
+                                setMode(""); 
+                            }
+                            setIDError("");
+                        }}
                         className="flex-1 px-4 py-2 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
                         />
+                        {idError && <p className=' text-red-300 text-sm mt-1'>{idError}</p>}
     
                         <button
-                        className="px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 hover:scale-105 transition duration-300 flex items-center justify-center">
+                        onClick={handleSearch}
+                        disabled={mode === "submit"}
+                        className={`px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 ${mode === "submit" ? "opacity-50 cursor-not-allowed" : "hover:scale-105"} transition duration-300 flex items-center justify-center`}>
                         <Search size={18} color="white" />
                         </button>
                     </div>
@@ -82,19 +282,6 @@ const Applicant_Form_page = () => {
     
                     <div key={index} className="flex flex-col gap-2">
     
-                        {t.type === "checkbox" ? (
-    
-                        <label className="flex items-center gap-3 text-sm  sm:justify-center font-semibold cursor-pointer">
-                            <input
-                            type="checkbox"
-                            className="w-5 h-5 accent-yellow-400 cursor-pointer"
-                            />
-                            {t.label}
-                        </label>
-    
-                        ) : (
-    
-                        <>
                             <label className="text-sm font-semibold">
                             {t.label}
                             </label>
@@ -102,14 +289,24 @@ const Applicant_Form_page = () => {
                             <input
                             type={t.type}
                             placeholder={t.placeholder}
-                            className="px-4 py-2 rounded-lg bg-white/30 
-                                        placeholder-white/70 text-white
-                                        focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                            />
-                        </>
-    
-                        )}
-    
+                            value={formData[t.label] || ""}
+                            onChange={(e)=> {
+                                let value =e.target.value;
+                                if(t.label === "Phone"){
+                                    value = value.replace(/[^0-9]/g,'');
+                                }
+                                setFormData({...formData,[t.label]:value})}}
+                            readOnly={t.label === "Date"}
+                            onFocus={() => {
+                                        if (t.label === "Date" && !formData[t.label]) {
+                                            const today = moment().format("jYYYY/jMM/jDD");
+                                            setFormData({...formData,[t.label]:today});
+                                        }
+                                    }}
+                            className={`px-4 py-2 rounded-lg bg-white/30 placeholder-white/40 text-white focus:outline-none ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}/>
+                            
+                            {errors[t.label] && (<p className='text-red-400 text-sm font-medium'>{errors[t.label]}</p>)}
+                            
                     </div>
     
             ))}
@@ -121,17 +318,26 @@ const Applicant_Form_page = () => {
           {/* Submit Button */}
           <div className="flex flex-col sm:flex-row justify-center gap-6 mt-10">
             {/* Submit */}
-            <button className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold hover:scale-105 hover:shadow-green-500/40 transition duration-300 shadow-lg cursor-pointer">
+            <button 
+            onClick={handleSubmit}
+            disabled={mode === "edit" || idError !== ""}
+            className={`w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold ${mode === "edit" || idError !=="" ? "opacity-50 cursor-not-allowed" : "hover:scale-105 hover:shadow-green-500/40transition duration-300 shadow-lg cursor-pointer"} `}>
                 Submit
             </button>
     
             {/* Update */}
-            <button className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-blue-400 to-indigo-600 rounded-lg font-semibold hover:scale-105 hover:shadow-blue-500/40 transition duration-300 shadow-lg cursor-pointer">
+            <button 
+            onClick={handleUpdate}
+            disabled={mode !== "edit"}
+            className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${mode !== "edit" ? "bg-gray-400 cursor-not-allowed opacity-50" : "bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer"}`}>
                 Update
             </button>
     
             {/* Delete */}
-            <button className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-red-400 to-red-600 rounded-lg font-semibold hover:scale-105 hover:shadow-red-500/40 transition duration-300 shadow-lg cursor-pointer">
+            <button 
+            onClick={handleDelete}
+            disabled={mode !== "edit"}
+            className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${mode !== "edit" ? "bg-gray-400 opacity-50 cursor-not-allowed" : "bg-linear-to-r from-red-400 to-red-600 hover:scale-105 hover:shadow-red-500/40 cursor-pointer"}`}>
                 Delete
             </button>
           </div>

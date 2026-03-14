@@ -30,6 +30,7 @@ function Header_page() {
     "saleable_form",
     "saleable_report",
     "applicant_form",
+    "applicant_report",
     "reset_password",
     "user_create_form",
   ];
