@@ -79,18 +79,6 @@ const Applicant_Form_page = () => {
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
-            // // بررسی Final Price
-            // if (!formData["Final Price"] || formData["Final Price"].trim() === "") {
-            //     const addFinalPrice = window.confirm(
-            //         "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟"
-            //     );
-            //     if (addFinalPrice) {
-            //         // تمرکز روی فیلد Final Price تا کاربر مقدار وارد کند
-            //         const finalInput = document.querySelector('input[placeholder="Enter Final Price"]');
-            //         finalInput?.focus();
-            //         return; // توقف Submit تا کاربر مقدار وارد کند
-            //     }
-            // }
 
             const confirmSubmit = window.confirm("آیا مطمئن هستید که فورم ثبت شود؟");
             if (!confirmSubmit) return;
@@ -137,17 +125,6 @@ const Applicant_Form_page = () => {
 
         if(Object.keys(newErrors).length > 0) return;
 
-        // // بررسی Final Price
-        // if (!formData["Final Price"] || formData["Final Price"].trim() === "") {
-        //     const addFinalPrice = window.confirm(
-        //         "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟"
-        //     );
-        //     if (addFinalPrice) {
-        //         const finalInput = document.querySelector('input[placeholder="Enter Final Price"]');
-        //         finalInput?.focus();
-        //         return; // توقف Update تا کاربر مقدار وارد کند
-        //     }
-        // }
 
         const confirmUpdate = window.confirm("آیا مطمئن هستید که معلومات اپدیت شود؟");
         if (!confirmUpdate) return;
@@ -311,7 +288,6 @@ const Applicant_Form_page = () => {
     
             ))}
     
-            
     
           </div>
     

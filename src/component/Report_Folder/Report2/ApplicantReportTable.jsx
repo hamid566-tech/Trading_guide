@@ -1,4 +1,4 @@
-const ReportTable = ({ columns, data }) => {
+const ApplicantReportTable = ({ columns, data }) => {
   return (
     <div className="w-full overflow-x-auto border border-white/20 rounded-xl">
       <table className="min-w-full text-sm text-left table-auto">
@@ -49,4 +49,4 @@ const ReportTable = ({ columns, data }) => {
   );
 };
 
-export default ReportTable;
+export default ApplicantReportTable;

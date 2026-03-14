@@ -1,14 +1,57 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ApplicantReportHeader from '../../Report_Folder/Report2/ApplicantReportHeader'
+import ApplicantReportFilters from '../../Report_Folder/Report2/ApplicantReportFilters';
+import ApplicantReportTable from '../../Report_Folder/Report2/ApplicantReportTable';
 
 const Applicant_Report_page = () => {
+
+      const [filters, setFilters] = useState({});
+      const [filteredData, setFilteredData] = useState([]);
+      const handleChange = (e) => {setFilters({ ...filters, [e.target.name]: e.target.value });};
+      const totalRecords = filteredData.length;
+    
+      const fields = [
+        { name: "name", label: "Name", type: "text" },
+        { name: "fname", label: "Fname", type: "text" },
+        { name: "tazkira", label: "Tazkira", type: "text" },
+        { name: "phone", label: "Phone", type: "text" },
+        { name: "property_type", label: "Property Type", type: "text" },
+        { name: "property_location", label: "Property Location", type: "text" },
+        { name: "startDate", label: "Start Date", type: "text" },
+        { name: "endDate", label: "End Date", type: "text" },
+      ];
+
+      const columns = [
+        { header: "ID", accessor: "id" },
+        { header: "Name", accessor: "name" },
+        { header: "F/Name", accessor: "fname" },
+        { header: "Tazkira", accessor: "tazkira" },
+        { header: "Phone", accessor: "phone" },
+        { header: "Date", accessor: "date" },
+        { header: "Property Type", accessor: "property_type" },
+        { header: "Property Location", accessor: "property_location" },
+      ];
+
+      const handleSearch = async () => {
+      const queryFilters = { ...filters };
+      const query = new URLSearchParams(queryFilters).toString();
+
+      try {
+        const res = await fetch(`http://localhost:5000/api/applicant?${query}`);
+        const result = await res.json();
+        if (result.success) setFilteredData(result.data);
+      } catch (error) {
+        console.error("Search Error:", error);
+      }
+    };
+
   return (
     <div className="mt-24 max-w-full px-4 sm:px-6 lg:px-8">
       <div className="bg-white/10 backdrop-blur-xl rounded-2xl text-white shadow-2xl border border-white/20 p-6">
         
-        <ApplicantReportHeader title="Mortgag Report 📊" reportId="r_002" />
+        <ApplicantReportHeader title="Applicant Report 📊" reportId="r_002" />
 
-        <ReportFilters fields={fields} filters={filters} onChange={handleChange} />
+        <ApplicantReportFilters fields={fields} filters={filters} onChange={handleChange} />
 
         <div className="flex flex-col sm:flex-row justify-center gap-4 mb-4">
           <button
@@ -27,9 +70,8 @@ const Applicant_Report_page = () => {
           </button>
         </div>
 
-        <ReportTable columns={columns} data={filteredData} />
+        <ApplicantReportTable columns={columns} data={filteredData} />
 
-        <div className="mt-4 flex flex-col sm:flex-row justify-end gap-4 flex-wrap">
           <div className="flex flex-col items-center">
             <label className="text-white text-sm mb-1">Total Records</label>
             <input
@@ -39,27 +81,7 @@ const Applicant_Report_page = () => {
               className="bg-white/20 text-white p-2 rounded-lg w-28 text-center"
             />
           </div>
-
-          <div className="flex flex-col items-center">
-            <label className="text-white text-sm mb-1">Total Price</label>
-            <input
-              type="text"
-              readOnly
-              value={totalPrice.toLocaleString()}
-              className="bg-white/20 text-white p-2 rounded-lg w-32 text-center"
-            />
-          </div>
-
-          <div className="flex flex-col items-center">
-            <label className="text-white text-sm mb-1">Total Final Price</label>
-            <input
-              type="text"
-              readOnly
-              value={totalFinalPrice.toLocaleString()}
-              className="bg-white/20 text-white p-2 rounded-lg w-32 text-center"
-            />
-          </div>
-        </div>
+         
       </div>
     </div>
   )

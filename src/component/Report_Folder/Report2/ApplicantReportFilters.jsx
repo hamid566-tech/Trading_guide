@@ -4,7 +4,7 @@ import persian from "react-date-object/calendars/persian";
 import persian_en from "react-date-object/locales/persian_en";
 
 
-const ReportFilters = ({ fields, filters, onChange }) => {
+const ApplicantReportFilters = ({ fields, filters, onChange }) => {
 
 
   // تغییر فیلدهای متنی
@@ -34,28 +34,7 @@ const ReportFilters = ({ fields, filters, onChange }) => {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
       {fields.map((field) => {
 
-        // SELECT
-        if (field.type === "select") {
-          return (
-            <select
-              key={field.name}
-              name={field.name}
-              value={filters[field.name] || ""}
-              onChange={onChange}
-              className="bg-white/20 backdrop-blur-md border border-white/30 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white w-full"
-            >
-              <option value="">{field.label}</option>
-
-              {field.options.map((opt) => (
-                <option key={opt} value={opt} className="text-gray-800">
-                  {opt}
-                </option>
-              ))}
-
-            </select>
-          );
-        }
-
+       
         // DATE PICKER (تقویم شمسی)
         if (field.name === "startDate" || field.name === "endDate") {
           return (
@@ -90,4 +69,4 @@ const ReportFilters = ({ fields, filters, onChange }) => {
   );
 };
 
-export default ReportFilters;
+export default ApplicantReportFilters;
