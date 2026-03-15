@@ -38,20 +38,21 @@ const Mortgage_Form_page = () => {
         {label:"Final Price", type:"text", placeholder:"Enter Final Price", required:false},
     ]);
 
-    const handleSearch=async ()=>{
+    const handleSearch = async () => {
+
+        // اگر ID خالی باشد
         if(!id.trim()){
-            setIDError('ضرورت به ID است');
-            setMode("");
+            alert("⚠️ لطفاً اول ID را وارد کنید");
             return;
         }
-        else{
-            setIDError('');
-        }
+
         try{
+
             const res = await fetch(`http://localhost:5000/api/mortgage/${id}`);
             const data = await res.json();
 
-            if(data.success) {
+            if(data.success){
+
                 setFormData({
                     "Name": data.mortgage.name || "",
                     "FName": data.mortgage.fname || "",
@@ -74,22 +75,34 @@ const Mortgage_Form_page = () => {
                     "Price": data.mortgage.price || "",
                     "Final Price": data.mortgage.final_price || ""
                 });
+
                 setStatus(data.mortgage.status || "");
-                setMode('edit');
-            }else {
-                alert("ID پیدا نشد ❌");
+                setMode("edit");
+
+            }else{
+                alert("❌ این ID در سیستم پیدا نشد");
                 setFormData({});
                 setStatus("");
                 setMode("");
             }
-        } catch (error) {
-            console.error("Error:", error);
+
+        }catch(error){
+            console.error("Error:",error);
+            alert("❌ مشکل در اتصال سرور");
         }
-    }
+
+    };
 
     const handleSubmit = () => {
-        if (id.trim()) {
-            alert("⚠️ فیلد ID باید خالی باشد تا فورم ثبت شود.");
+        if(id.trim()){
+            const confirmMsg = window.confirm(
+            "فیلد ID باید خالی باشد.\nآیا میخواهید صفحه دوباره تازه (Reload) شود؟"
+            );
+
+            if(confirmMsg){
+                window.location.reload();
+            }
+
             return;
         }
 
@@ -147,6 +160,18 @@ const Mortgage_Form_page = () => {
     const handleUpdate = async () => {
         if(!id.trim()) {
             alert("اول ID را جستجو کن ⚠️");
+            return;
+        }
+        
+        if(mode !== "edit"){
+            const confirmMsg = window.confirm(
+            "شما در حالت جستجو نیستید.\nآیا میخواهید صفحه دوباره تازه شود؟"
+            );
+
+            if(confirmMsg){
+                window.location.reload();
+            }
+
             return;
         }
 
@@ -207,6 +232,19 @@ const Mortgage_Form_page = () => {
             alert("اول ID را جستجو کن ⚠️");
             return;
         }
+
+        if(mode !== "edit"){
+            const confirmMsg = window.confirm(
+            "اطلاعات جستجو نشده است.\nآیا میخواهید صفحه دوباره تازه شود؟"
+            );
+
+            if(confirmMsg){
+                window.location.reload();
+            }
+
+            return;
+        }
+
         const confirmDelete = window.confirm("آیا مطمئن هستید که این رکورد حذف شود؟");
         if(!confirmDelete) return;
         
@@ -264,7 +302,6 @@ const Mortgage_Form_page = () => {
         </div>
 
 
-
       <h2 className="text-xl sm:text-2xl font-bold mt-15 md:mt-0 mb-10 text-center">
         Mortgage Form
       </h2>
@@ -298,8 +335,7 @@ const Mortgage_Form_page = () => {
 
                     <button
                     onClick={handleSearch}
-                    disabled={mode === "submit"}
-                    className={`px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 ${mode === "submit" ? "opacity-50 cursor-not-allowed" : "hover:scale-105"} transition duration-300 flex items-center justify-center`}>
+                    className={`px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 hover:scale-105 transition duration-300 flex items-center justify-center cursor-pointer`}>
                     <Search size={18} color="white" />
                     </button>
                 </div>
@@ -326,9 +362,6 @@ const Mortgage_Form_page = () => {
             </div>
 
         </div>
-
-
-
 
       {/* Form Fields */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -382,8 +415,6 @@ const Mortgage_Form_page = () => {
 
             ))}
 
-        
-
       </div>
 
       {/* Submit Button */}
@@ -391,24 +422,21 @@ const Mortgage_Form_page = () => {
         {/* Submit */}
         <button
         onClick={handleSubmit}
-        disabled={mode === "edit" || idError !== ""}
-        className={`w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold ${mode === "edit" || idError !=="" ? "opacity-50 cursor-not-allowed" : "hover:scale-105 hover:shadow-green-500/40transition duration-300 shadow-lg cursor-pointer"} `}>
+        className={`w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold hover:scale-105 hover:shadow-green-500/40transition duration-300 shadow-lg cursor-pointer `}>
             Submit
         </button>
 
         {/* Update */}
         <button 
         onClick={handleUpdate}
-        disabled={mode !== "edit"}
-        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${mode !== "edit" ? "bg-gray-400 cursor-not-allowed opacity-50" : "bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer"}`}>
+        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer`}>
             Update
         </button>
 
         {/* Delete */}
         <button 
         onClick={handleDelete}
-        disabled={mode !== "edit"}
-        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${mode !== "edit" ? "bg-gray-400 opacity-50 cursor-not-allowed" : "bg-linear-to-r from-red-400 to-red-600 hover:scale-105 hover:shadow-red-500/40 cursor-pointer"}`}>
+        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg bg-linear-to-r from-red-400 to-red-600 hover:scale-105 hover:shadow-red-500/40 cursor-pointer`}>
             Delete
         </button>
       </div>

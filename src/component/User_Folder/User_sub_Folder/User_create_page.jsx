@@ -4,36 +4,39 @@ import { useNavigate } from 'react-router-dom';
 
 const User_create_page = () => {
 
-
-    const navigate=useNavigate();
+        const [id,setID]=useState('');
+        const [idError,setIDError] = useState('');
+        const [mode, setMode] = useState('');
+        const [errors, setErrors] = useState({});
+        const navigate=useNavigate();
         
         const [inputFields] = useState([
-        {label:"Name", type:"text", placeholder:"Enter Name"},
-        {label:"FName", type:"text", placeholder:"Enter Father Name"},
-        {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number"},
-        {label:"phone", type:"text", placeholder:"Enter Phone Number"},
-        ]);
+            {label:"Name", type:"text", placeholder:"Enter Name", required:true},
+            {label:"FName", type:"text", placeholder:"Enter Father Name", required:true},
+            {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number", required:true},
+            {label:"phone", type:"text", placeholder:"Enter Phone Number", required:true},
+            ]);
 
         const [checkFields] = useState([
-        {label:"Rent Form"},
-        {label:"Rent Report"},
-        {label:"Mortgage Form"},
-        {label:"Mortgage Report"},
-        {label:"Saleable Form"},
-        {label:"Saleable Report"},
-        {label:"Applicant Form"},
-        {label:"Applicant Report"},
-        {label:"User Create Form"},
-        {label:"User Report"},
-        ]);
+            {label:"Rent Form"},
+            {label:"Rent Report"},
+            {label:"Mortgage Form"},
+            {label:"Mortgage Report"},
+            {label:"Saleable Form"},
+            {label:"Saleable Report"},
+            {label:"Applicant Form"},
+            {label:"Applicant Report"},
+            {label:"User Create Form"},
+            {label:"User Report"},
+            ]);
 
         const [limitation] = useState([
-        {label:"Submit"},
-        {label:"Update"},
-        {label:"Delete"},
-        {label:"Search"},
-        {label:"Print"},
-        ]);
+            {label:"Submit"},
+            {label:"Update"},
+            {label:"Delete"},
+            {label:"Search"},
+            {label:"Print"},
+            ]);
 
 
   return (
@@ -59,34 +62,30 @@ const User_create_page = () => {
                     </div>
                 </div>
         
-        
-        
-              <h2 className="text-xl sm:text-2xl font-bold mt-15 md:mt-0 mb-10 text-center">
-                Applicant Form
-              </h2>
-        
-        
+                <h2 className="text-xl sm:text-2xl font-bold mt-15 md:mt-0 mb-10 text-center">
+                    User Create Form
+                </h2>
+
                 <div className="w-full flex flex-col items-center gap-6 mb-10">
-        
                     <div className="w-full max-w-md">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        
-                        <label className="sm:w-24 sm:text-right text-sm font-semibold">
-                            ID :
-                        </label>
-        
-                        <div className="flex flex-col sm:flex-row w-full gap-3">
-                            <input
-                            type="text"
-                            placeholder="Enter ID"
-                            className="flex-1 px-4 py-2 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                            />
-        
-                            <button
-                            className="px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 hover:scale-105 transition duration-300 flex items-center justify-center">
-                            <Search size={18} color="white" />
-                            </button>
-                        </div>
+            
+                            <label className="sm:w-24 sm:text-right text-sm font-semibold">
+                                ID :
+                            </label>
+            
+                            <div className="flex flex-col sm:flex-row w-full gap-3">
+                                <input
+                                type="text"
+                                placeholder="Enter ID"
+                                className="flex-1 px-4 py-2 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                />
+            
+                                <button
+                                className="px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 hover:scale-105 transition duration-300 flex items-center justify-center">
+                                <Search size={18} color="white" />
+                                </button>
+                            </div>
         
                         </div>
                     </div>
@@ -97,17 +96,15 @@ const User_create_page = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {inputFields.map((t, index) => (
                         <div key={index} className="flex flex-col gap-2">
-                        <label className="text-sm font-semibold">
-                            {t.label}
-                        </label>
+                            <label className="text-sm font-semibold">
+                                {t.label}
+                            </label>
 
-                        <input
-                            type={t.type}
-                            placeholder={t.placeholder}
-                            className="px-4 py-2 rounded-lg bg-white/30 
-                                    placeholder-white/70 text-white
-                                    focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                        />
+                            <input
+                                type={t.type}
+                                placeholder={t.placeholder}
+                                className="px-4 py-2 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            />
                         </div>
                     ))}
                 </div>
@@ -156,10 +153,6 @@ const User_create_page = () => {
                     </div>
                 </div>
 
-
-        
-        
-              
         
               {/* Submit Button */}
               <div className="flex flex-col sm:flex-row justify-center gap-6 mt-10">

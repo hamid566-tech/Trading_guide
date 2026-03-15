@@ -25,14 +25,11 @@ const Applicant_Form_page = () => {
     ]);
 
     const handleSearch=async ()=>{
-        if(!id.trim()){
-            setIDError('ضرورت به ID است');
-            setMode("");
+         if(!id.trim()){
+            alert("⚠️ لطفاً اول ID را وارد کنید");
             return;
         }
-        else{
-            setIDError('');
-        }
+
         try{
             const res = await fetch(`http://localhost:5000/api/applicant/${id}`);
             const data = await res.json();
@@ -61,8 +58,15 @@ const Applicant_Form_page = () => {
     }
 
     const handleSubmit = () => {
-        if (id.trim()) {
-            alert("⚠️ فیلد ID باید خالی باشد تا فورم ثبت شود.");
+        if(id.trim()){
+            const confirmMsg = window.confirm(
+            "فیلد ID باید خالی باشد.\nآیا میخواهید صفحه دوباره تازه (Reload) شود؟"
+            );
+
+            if(confirmMsg){
+                window.location.reload();
+            }
+
             return;
         }
 
@@ -108,6 +112,18 @@ const Applicant_Form_page = () => {
     const handleUpdate = async () => {
         if(!id.trim()) {
             alert("اول ID را جستجو کن ⚠️");
+            return;
+        }
+
+        if(mode !== "edit"){
+            const confirmMsg = window.confirm(
+            "شما در حالت جستجو نیستید.\nآیا میخواهید صفحه دوباره تازه شود؟"
+            );
+
+            if(confirmMsg){
+                window.location.reload();
+            }
+
             return;
         }
 
@@ -157,6 +173,19 @@ const Applicant_Form_page = () => {
             alert("اول ID را جستجو کن ⚠️");
             return;
         }
+
+        if(mode !== "edit"){
+            const confirmMsg = window.confirm(
+            "اطلاعات جستجو نشده است.\nآیا میخواهید صفحه دوباره تازه شود؟"
+            );
+
+            if(confirmMsg){
+                window.location.reload();
+            }
+
+            return;
+        }
+        
         const confirmDelete = window.confirm("آیا مطمئن هستید که این رکورد حذف شود؟");
         if(!confirmDelete) return;
         
@@ -238,8 +267,7 @@ const Applicant_Form_page = () => {
     
                         <button
                         onClick={handleSearch}
-                        disabled={mode === "submit"}
-                        className={`px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 ${mode === "submit" ? "opacity-50 cursor-not-allowed" : "hover:scale-105"} transition duration-300 flex items-center justify-center`}>
+                        className={`px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 hover:scale-105 transition duration-300 flex items-center justify-center`}>
                         <Search size={18} color="white" />
                         </button>
                     </div>
@@ -296,24 +324,21 @@ const Applicant_Form_page = () => {
             {/* Submit */}
             <button 
             onClick={handleSubmit}
-            disabled={mode === "edit" || idError !== ""}
-            className={`w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold ${mode === "edit" || idError !=="" ? "opacity-50 cursor-not-allowed" : "hover:scale-105 hover:shadow-green-500/40transition duration-300 shadow-lg cursor-pointer"} `}>
+            className={`w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold hover:scale-105 hover:shadow-green-500/40transition duration-300 shadow-lg cursor-pointer `}>
                 Submit
             </button>
     
             {/* Update */}
             <button 
             onClick={handleUpdate}
-            disabled={mode !== "edit"}
-            className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${mode !== "edit" ? "bg-gray-400 cursor-not-allowed opacity-50" : "bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer"}`}>
+            className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer`}>
                 Update
             </button>
     
             {/* Delete */}
             <button 
             onClick={handleDelete}
-            disabled={mode !== "edit"}
-            className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${mode !== "edit" ? "bg-gray-400 opacity-50 cursor-not-allowed" : "bg-linear-to-r from-red-400 to-red-600 hover:scale-105 hover:shadow-red-500/40 cursor-pointer"}`}>
+            className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg bg-linear-to-r from-red-400 to-red-600 hover:scale-105 hover:shadow-red-500/40 cursor-pointer`}>
                 Delete
             </button>
           </div>
