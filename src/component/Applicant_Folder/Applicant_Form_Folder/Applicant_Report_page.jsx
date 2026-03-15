@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import ApplicantReportHeader from '../../Report_Folder/Report2/ApplicantReportHeader'
 import ApplicantReportFilters from '../../Report_Folder/Report2/ApplicantReportFilters';
 import ApplicantReportTable from '../../Report_Folder/Report2/ApplicantReportTable';
+import { ApplicantgenerateReportPDF } from '../../Report_Folder/Report2/ApplicantgenerateReportPDF';
 
 const Applicant_Report_page = () => {
 
@@ -62,7 +63,7 @@ const Applicant_Report_page = () => {
           </button>
 
           <button
-            onClick={() => generateReportPDF(columns, filteredData, filters, "Mortgage Report")}
+            onClick={() => ApplicantgenerateReportPDF(columns, filteredData, filters, "Applicant Report")}
             className="relative overflow-hidden px-6 py-2 bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 
             rounded-lg font-semibold text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
           >
@@ -72,7 +73,7 @@ const Applicant_Report_page = () => {
 
         <ApplicantReportTable columns={columns} data={filteredData} />
 
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center mt-5">
             <label className="text-white text-sm mb-1">Total Records</label>
             <input
               type="text"

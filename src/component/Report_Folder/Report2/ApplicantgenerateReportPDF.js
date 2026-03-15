@@ -5,7 +5,7 @@ import "../../../fonts/Vazirmatn-Bold-normal";
 import moment from "moment-jalaali";
 moment.loadPersian({ dialect: "persian-modern" });
 
-export const generateReportPDF = (columns, data, filters, title = "Report") => {
+export const ApplicantgenerateReportPDF = (columns, data, filters, title = "Report") => {
   const doc = new jsPDF({ orientation: "landscape" });
   doc.setFont("Vazirmatn", "normal");
   
@@ -33,8 +33,6 @@ export const generateReportPDF = (columns, data, filters, title = "Report") => {
 
   // ➕ بخش جمع کل‌ها (راست صفحه)
   const totalRecords = data.length;
-  const totalPrice = data.reduce((sum, row) => sum + Number(row.price || 0), 0);
-  const totalFinalPrice = data.reduce((sum, row) => sum + Number(row.final_price || 0),0);
 
   // متن کاملاً به راست تراز شود (10 واحد فاصله از لبه)
 
@@ -44,18 +42,6 @@ export const generateReportPDF = (columns, data, filters, title = "Report") => {
     `Total Records: ${totalRecords}`,
     pageWidth - 10,
     summaryY,
-    { align: "right" }
-  );
-  doc.text(
-    `Total Price: ${totalPrice.toLocaleString()}`,
-    pageWidth - 10,
-    summaryY + 6,
-    { align: "right" }
-  );
-  doc.text(
-    `Total Final Price: ${totalFinalPrice.toLocaleString()}`,
-    pageWidth - 10,
-    summaryY + 12,
     { align: "right" }
   );
 
@@ -73,7 +59,7 @@ export const generateReportPDF = (columns, data, filters, title = "Report") => {
     styles: {
       font: "Vazirmatn",
       fontStyle: "normal",  
-      fontSize: 6,
+      fontSize: 10,
       halign: "center",
       valign: "middle",
       cellWidth: "auto",
