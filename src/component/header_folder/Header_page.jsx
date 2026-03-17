@@ -33,6 +33,7 @@ function Header_page() {
     "applicant_report",
     "reset_password",
     "user_create_form",
+    "user_report_page",
   ];
 
   const isFormPage = disableHeaderPages.some(page =>

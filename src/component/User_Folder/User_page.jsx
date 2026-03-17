@@ -50,6 +50,7 @@ const User_page = () => {
                   </button>
 
                   <button
+                    onClick={()=>navigate('user_report_page')}
                     className="hover:cursor-pointer group flex flex-col items-center justify-center bg-white/10 hover:bg-white/20 rounded-2xl p-6 sm:p-10 min-h-[220px] transition-all duration-300 hover:scale-105 hover:shadow-xl"
                   >
                     <img
