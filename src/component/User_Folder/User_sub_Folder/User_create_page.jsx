@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ArrowLeft, Search } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment-jalaali';
 
@@ -10,6 +10,7 @@ const User_create_page = () => {
     const [mode, setMode] = useState('');
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({});
+    const [showPassword, setShowPassword] = useState(false);
     
     const navigate=useNavigate();
     
@@ -19,6 +20,8 @@ const User_create_page = () => {
         {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number", required:true},
         {label:"phone", type:"text", placeholder:"Enter Phone Number", required:true},
         {label:"Date", type:"text", placeholder:"Enter Date Number", required:true},
+        {label:"User Name", type:"text", placeholder:"Enter Date Number", required:true},
+        {label:"Password", type:"password", placeholder:"Enter Date Number", required:true},
     ]);
 
     const [checkFields] = useState([
@@ -86,6 +89,8 @@ const User_create_page = () => {
         Tazkira:data.user.tazkira,
         phone:data.user.phone,
         Date:data.user.date,
+        "User Name":data.user.user_name,
+        "Password":data.user.password,
 
         "Rent Form":data.user.rent_form,
         "Rent Report":data.user.rent_report,
@@ -373,24 +378,40 @@ const User_create_page = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {inputFields.map((t, index) => (
                         <div key={index} className="flex flex-col gap-2">
+                           
                             <label className="text-sm font-semibold">
                                 {t.label}
                             </label>
 
-                            <input
-                            type={t.type}
-                            placeholder={t.placeholder}
-                            name={t.label}
-                            value={formData[t.label] || ""}
-                            onChange={handleChange}
-                            onFocus={() => {
-                                if (t.label === "Date" && !formData[t.label]) {
-                                    const today = moment().format("jYYYY/jMM/jDD");
-                                    setFormData({...formData,[t.label]:today});
-                                    setErrors(prev => ({...prev, [t.label]: ""}));
-                                }
-                            }}
-                            className={`px-4 py-2 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 ${errors[t.label] ? "focus:ring-red-400 border border-red-400" : "focus:ring-yellow-400"}`}/>
+                            <div className='relative'>
+                                <input
+                                    type={t.label === "Password" ? (showPassword ? "text" : "password") : t.type}
+                                    placeholder={t.placeholder}
+                                    name={t.label}
+                                    value={formData[t.label] || ""}
+                                    onChange={handleChange}
+                                    // readOnly={t.label === "Date"}
+                                    onFocus={() => {
+                                        if (t.label === "Date" && !formData[t.label]) {
+                                            const today = moment().format("jYYYY/jMM/jDD");
+                                            setFormData({...formData,[t.label]:today});
+                                            setErrors(prev => ({...prev, [t.label]: ""}));
+                                        }
+                                    }}
+                                    className={`w-full px-4 py-2 pr-10 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 ${errors[t.label] ? "focus:ring-red-400 border border-red-400" : "focus:ring-yellow-400"}`}
+                                />
+
+                                {/* 👇 button باید اینجا باشد */}
+                                {t.label === "Password" && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white"
+                                    >
+                                        {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
+                                    </button>
+                                )}
+                            </div>
                             {errors[t.label] && (<span className="text-red-400 text-sm">{errors[t.label]}</span>)}
                         </div>
                     ))}

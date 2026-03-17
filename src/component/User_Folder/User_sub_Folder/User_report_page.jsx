@@ -16,9 +16,29 @@ const User_report_page = () => {
         { name: "tazkira", label: "Tazkira", type: "text" },
         { name: "phone", label: "Phone", type: "text" },
         { name: "user_name", label: "User Name", type: "text" },
-        { name: "password", label: "Password", type: "password" },
         { name: "startDate", label: "Start Date", type: "text" },
         { name: "endDate", label: "End Date", type: "text" },
+      ];
+
+      const checkFields = [
+        { label: "Rent Form", name: "rent_form" },
+        { label: "Rent Report", name: "rent_report" },
+        { label: "Mortgage Form", name: "mortgage_form" },
+        { label: "Mortgage Report", name: "mortgage_report" },
+        { label: "Saleable Form", name: "saleable_form" },
+        { label: "Saleable Report", name: "saleable_report" },
+        { label: "Applicant Form", name: "applicant_form" },
+        { label: "Applicant Report", name: "applicant_report" },
+        { label: "User Create Form", name: "user_create_form" },
+        { label: "User Report", name: "user_report" },
+      ];
+
+      const limitationFields = [
+        { label: "Submit", name: "submit" },
+        { label: "Update", name: "update_perm" },
+        { label: "Delete", name: "delete_perm" },
+        { label: "Search", name: "search_perm" },
+        { label: "Print", name: "print_perm" },
       ];
 
       const columns = [
@@ -30,6 +50,21 @@ const User_report_page = () => {
         { header: "Date", accessor: "date" },
         { header: "User Name", accessor: "user_name" },
         { header: "Password", accessor: "password" },
+        { header: "Rent Form", accessor: "rent_form" },
+        { header: "Rent Report", accessor: "rent_report" },
+        { header: "Mortgage Form", accessor: "mortgage_form" },
+        { header: "Mortgage Report", accessor: "mortgage_report" },
+        { header: "Saleable Form", accessor: "saleable_form" },
+        { header: "Saleable Report", accessor: "saleable_report" },
+        { header: "Applicant Form", accessor: "applicant_form" },
+        { header: "Applicant Report", accessor: "applicant_report" },
+        { header: "User Create Form", accessor: "user_create_form" },
+        { header: "User Report", accessor: "user_report" },
+        { header: "Submit", accessor: "submit" },
+        { header: "Update", accessor: "update_perm" },
+        { header: "Delete", accessor: "delete_perm" },
+        { header: "Search", accessor: "search_perm" },
+        { header: "Print", accessor: "print_perm" },
       ];
 
       const handleSearch = async () => {
@@ -45,15 +80,18 @@ const User_report_page = () => {
         }
       };
 
+      
+
   return (
     <div className="mt-24 max-w-full px-4 sm:px-6 lg:px-8">
       <div className="bg-white/10 backdrop-blur-xl rounded-2xl text-white shadow-2xl border border-white/20 p-6">
         
         <UserReportHeader title="User Report 📊" reportId="r_005" />
 
-        <UserReportFilters fields={fields} filters={filters} onChange={handleChange} />
+        <UserReportFilters fields={fields} filters={filters} onChange={handleChange} checkFields={checkFields} limitationFields={limitationFields} />
 
-        <div className="flex flex-col sm:flex-row justify-center gap-4 mb-4">
+
+        <div className="flex flex-col sm:flex-row justify-center gap-4 mb-4 mt-4">
           <button
             onClick={handleSearch}
             className="px-6 py-2 bg-emerald-500 hover:bg-emerald-600 transition-all duration-300 rounded-lg font-semibold text-white shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
