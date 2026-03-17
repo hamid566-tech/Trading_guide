@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { ArrowLeft, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment-jalaali';
 
 const User_create_page = () => {
 
@@ -17,6 +18,7 @@ const User_create_page = () => {
         {label:"FName", type:"text", placeholder:"Enter Father Name", required:true},
         {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number", required:true},
         {label:"phone", type:"text", placeholder:"Enter Phone Number", required:true},
+        {label:"Date", type:"text", placeholder:"Enter Date Number", required:true},
     ]);
 
     const [checkFields] = useState([
@@ -62,49 +64,8 @@ const User_create_page = () => {
         setErrors(prev => ({ ...prev, [name]: "" }));
     };
 
-    const handleSubmit = async () => {
-        // Validation
-        let newErrors = {};
-        inputFields.forEach(field => {
-            const val = formData[field.label]?.trim();
-            if(field.required && !val) {
-                newErrors[field.label] = `${field.label} is required`;
-            }
-            // اگر phone است، بررسی کنیم که عدد باشد
-            if(field.label === "phone" && val && !/^\d+$/.test(val)){
-                newErrors[field.label] = "Phone must contain only numbers";
-            }
-        });
 
-        if(Object.keys(newErrors).length > 0){
-            setErrors(newErrors);
-            return; // جلوی ارسال فرم گرفته می‌شود
-        }
-
-        try {
-            const res = await fetch("http://localhost:5000/api/user_permissions/add",{
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify(formData)
-            });
-
-            const data = await res.json();
-
-            if(data.success){
-                alert("✅ User Created Successfully");
-                setID(data.id);
-                setMode("edit");
-                setErrors({}); // clear errors after success
-            }
-
-        } catch(error){
-            console.log(error);
-            alert("❌ Server Error");
-        }
-    };
-
+    
     const handleSearch = async () => {
 
         if(!id){
@@ -124,6 +85,7 @@ const User_create_page = () => {
         FName:data.user.fname,
         Tazkira:data.user.tazkira,
         phone:data.user.phone,
+        Date:data.user.date,
 
         "Rent Form":data.user.rent_form,
         "Rent Report":data.user.rent_report,
@@ -144,14 +106,201 @@ const User_create_page = () => {
 
         });
 
-        setMode("edit");
+            setMode("edit");
+            setErrors({});
 
         }else{
-        alert("User not found");
+            alert("User not found");
+            setFormData({});
+            setMode("");
+            setErrors({});
         }
 
         }catch(error){
         console.log(error);
+        }
+
+    };
+
+    const handleSubmit = async () => {
+
+        // اگر ID پر باشد یعنی کاربر جدید نیست
+        if(id.trim()){
+            const confirmMsg = window.confirm(
+            "ID must be empty for new user.\nReload page?"
+            );
+
+            if(confirmMsg){
+                window.location.reload();
+            }
+
+            return;
+        }
+
+        // -------- Validation --------
+        let newErrors = {};
+
+        inputFields.forEach(field =>{
+            const val = formData[field.label]?.trim();
+
+            if(field.required && !val){
+                newErrors[field.label] = `${field.label} is required`;
+            }
+
+            if(field.label === "phone" && val && !/^\d+$/.test(val)){
+                newErrors[field.label] = "Phone must contain only numbers";
+            }
+        });
+
+        if(Object.keys(newErrors).length > 0){
+            setErrors(newErrors);
+            return;
+        }
+
+        // -------- Confirmation AFTER validation --------
+        const confirmSave = window.confirm("Are you sure you want to save this user?");
+        if(!confirmSave) return;
+
+        try{
+
+            const res = await fetch("http://localhost:5000/api/user_permissions/add",{
+                method:"POST",
+                headers:{"Content-Type" : "application/json"},
+                body:JSON.stringify(formData)
+            });
+
+            const data = await res.json();
+
+            if(data.success){
+                alert("User saved successfully ✅ ID: " + data.id);
+                setFormData({});   // خالی شدن تمام فیلدها
+                setID("");         // خالی شدن ID
+                setMode("");
+                setErrors({});
+            }
+
+        }catch(error){
+            console.log(error);
+            alert("❌ Server Error");
+        }
+
+    };
+
+    const handleUpdate = async () => {
+
+        if(!id.trim()){
+            alert("⚠️ Please search ID first");
+            return;
+        }
+
+        if(mode !== "edit"){
+            const confirmMsg = window.confirm(
+            "You are not in search mode.\nDo you want to reload the page?"
+            );
+
+            if(confirmMsg){
+                window.location.reload();
+            }
+
+            return;
+        }
+
+        let newErrors = {};
+
+        inputFields.forEach(field =>{
+            const val = formData[field.label]?.trim();
+
+            if(field.required && !val){
+                newErrors[field.label] = `${field.label} is required`;
+            }
+
+            if(field.label === "phone" && val && !/^\d+$/.test(val)){
+                newErrors[field.label] = "Phone must contain only numbers";
+            }
+        });
+
+        setErrors(newErrors);
+
+        if(Object.keys(newErrors).length > 0) return;
+
+        const confirmUpdate = window.confirm("Are you sure you want to update this user?");
+        if(!confirmUpdate) return;
+
+        try{
+
+            const res = await fetch(`http://localhost:5000/api/user_permissions/${id}`,{
+                method:"PUT",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify(formData)
+            });
+
+            const data = await res.json();
+
+            if(data.success){
+                alert("User updated successfully ✅");
+
+                setFormData({});
+                setID("");
+                setMode("");
+                setErrors({});
+
+            }else{
+                alert("Update failed ❌");
+            }
+
+        }catch(error){
+            console.log(error);
+            alert("Server Error ❌");
+        }
+
+    };
+
+    const handleDelete = async () => {
+
+        if(!id.trim()){
+            alert("⚠️ Please search ID first");
+            return;
+        }
+
+        if(mode !== "edit"){
+            const confirmMsg = window.confirm(
+            "User not searched.\nDo you want to reload the page?"
+            );
+
+            if(confirmMsg){
+                window.location.reload();
+            }
+
+            return;
+        }
+
+        const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+        if(!confirmDelete) return;
+
+        try{
+
+            const res = await fetch(`http://localhost:5000/api/user_permissions/${id}`,{
+                method:"DELETE"
+            });
+
+            const data = await res.json();
+
+            if(data.success){
+
+                alert("User deleted successfully ✅");
+
+                setFormData({});
+                setID("");
+                setMode("");
+                setErrors({});
+
+            }else{
+                alert("User not found ❌");
+            }
+
+        }catch(error){
+            console.log(error);
+            alert("Server Error ❌");
         }
 
     };
@@ -197,7 +346,14 @@ const User_create_page = () => {
                                 type="text"
                                 placeholder="Enter ID"
                                 value={id}
-                                onChange={(e)=>setID(e.target.value)}
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/[^0-9]/g, "");
+                                    setID(value);
+                                    if (value.trim()) {
+                                        setMode(""); 
+                                    }
+                                    setIDError("");
+                                }}
                                 className="flex-1 px-4 py-2 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
                                 />
             
@@ -227,6 +383,13 @@ const User_create_page = () => {
                             name={t.label}
                             value={formData[t.label] || ""}
                             onChange={handleChange}
+                            onFocus={() => {
+                                if (t.label === "Date" && !formData[t.label]) {
+                                    const today = moment().format("jYYYY/jMM/jDD");
+                                    setFormData({...formData,[t.label]:today});
+                                    setErrors(prev => ({...prev, [t.label]: ""}));
+                                }
+                            }}
                             className={`px-4 py-2 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 ${errors[t.label] ? "focus:ring-red-400 border border-red-400" : "focus:ring-yellow-400"}`}/>
                             {errors[t.label] && (<span className="text-red-400 text-sm">{errors[t.label]}</span>)}
                         </div>
@@ -294,12 +457,16 @@ const User_create_page = () => {
                 </button>
         
                 {/* Update */}
-                <button className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-blue-400 to-indigo-600 rounded-lg font-semibold hover:scale-105 hover:shadow-blue-500/40 transition duration-300 shadow-lg cursor-pointer">
+                <button 
+                onClick={handleUpdate}
+                className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-blue-400 to-indigo-600 rounded-lg font-semibold hover:scale-105 hover:shadow-blue-500/40 transition duration-300 shadow-lg cursor-pointer">
                     Update
                 </button>
         
                 {/* Delete */}
-                <button className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-red-400 to-red-600 rounded-lg font-semibold hover:scale-105 hover:shadow-red-500/40 transition duration-300 shadow-lg cursor-pointer">
+                <button 
+                onClick={handleDelete}
+                className="w-full sm:w-auto px-8 py-2 bg-linear-to-r from-red-400 to-red-600 rounded-lg font-semibold hover:scale-105 hover:shadow-red-500/40 transition duration-300 shadow-lg cursor-pointer">
                     Delete
                 </button>
               </div>

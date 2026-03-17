@@ -44,13 +44,15 @@ const Applicant_Form_page = () => {
                     "Property Type": data.applicant.property_type || "",
                     "Property Location": data.applicant.property_location || "",
                 });
-                // setStatus(data.mortgage.status || "");
+                
                 setMode('edit');
+                setErrors({});
+
             }else {
                 alert("ID پیدا نشد ❌");
                 setFormData({});
-                // setStatus("");
                 setMode("");
+                setErrors({});
             }
         } catch (error) {
             console.error("Error:", error);
@@ -295,17 +297,20 @@ const Applicant_Form_page = () => {
                             type={t.type}
                             placeholder={t.placeholder}
                             value={formData[t.label] || ""}
-                            onChange={(e)=> {
-                                let value =e.target.value;
+                            onChange={(e) => {
+                                let value = e.target.value;
                                 if(t.label === "Phone"){
                                     value = value.replace(/[^0-9]/g,'');
                                 }
-                                setFormData({...formData,[t.label]:value})}}
+                                setFormData({...formData, [t.label]: value});
+                                setErrors(prev => ({...prev,[t.label]: ""}));
+                            }}
                             readOnly={t.label === "Date"}
                             onFocus={() => {
                                         if (t.label === "Date" && !formData[t.label]) {
                                             const today = moment().format("jYYYY/jMM/jDD");
                                             setFormData({...formData,[t.label]:today});
+                                            setErrors(prev => ({...prev, [t.label]: ""}));
                                         }
                                     }}
                             className={`px-4 py-2 rounded-lg bg-white/30 placeholder-white/40 text-white focus:outline-none ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}/>

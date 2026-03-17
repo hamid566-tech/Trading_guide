@@ -78,12 +78,14 @@ const Rent_Form_page = () => {
                 // ست کردن Status
                 setStatus(data.rent.status || "");
                 setMode("edit");
+                setErrors({});
 
             } else {
                 alert("ID پیدا نشد ❌");
                 setFormData({});
                 setStatus("");
                 setMode("");
+                setErrors({});
             }
 
         } catch (error) {
@@ -396,7 +398,11 @@ const Rent_Form_page = () => {
                     <>
                         <select
                             value={formData[t.label] || ""}
-                            onChange={(e) => setFormData({ ...formData, [t.label]: e.target.value })}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                setFormData({ ...formData, [t.label]: value });
+                                setErrors(prev => ({ ...prev, [t.label]: "" }));
+                            }}
                             className={`px-4 py-2 rounded-lg bg-white/30 text-white ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:outline-none focus:ring-2 focus:ring-yellow-400"}`}
                         >
                             <option value="" className="text-black">
@@ -414,25 +420,29 @@ const Rent_Form_page = () => {
                 ) : (
                     <>
                         <input
-                            type={t.type}
-                            placeholder={t.placeholder}
-                            value={formData[t.label] || ""}
-                            onChange={(e)=> {
-                                let value =e.target.value;
-                                if(t.label === "phone" || t.label === "Price" || t.label === "Final Price"){
-                                    value = value.replace(/[^0-9]/g,'');
-                                }
-                                setFormData({...formData,[t.label]:value})}}
-                            readOnly={t.label === "Date"}
-                            onFocus={() => {
-                                if (t.label === "Date" && !formData[t.label]) {
-                                    const today = moment().format("jYYYY/jMM/jDD");
-                                    setFormData({...formData,[t.label]:today});
-                                }
-                            }}
-                            className={`px-4 py-2 rounded-lg bg-white/30
-                                    placeholder-white/40 text-white
-                                    focus:outline-none ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}
+                        type={t.type}
+                        placeholder={t.placeholder}
+                        value={formData[t.label] || ""}
+                        onChange={(e) => {
+                            let value = e.target.value;
+                            // فقط اعداد برای فیلدهای خاص
+                            if(t.label === "phone" || t.label === "Price" || t.label === "Final Price"){
+                                value = value.replace(/[^0-9]/g,'');
+                            }
+                            // مقدار فرم را بروز کن
+                            setFormData({...formData, [t.label]: value});
+                            // خطا را پاک کن
+                            setErrors(prev => ({...prev,[t.label]: ""}));
+                        }}
+                        readOnly={t.label === "Date"}
+                        onFocus={() => {
+                            if (t.label === "Date" && !formData[t.label]) {
+                                const today = moment().format("jYYYY/jMM/jDD");
+                                setFormData({...formData,[t.label]:today});
+                                setErrors(prev => ({...prev, [t.label]: ""})); // خطا پاک شود
+                            }
+                        }}
+                        className={`px-4 py-2 rounded-lg bg-white/30 placeholder-white/40 text-white focus:outline-none ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}
                         />
 
                         {
