@@ -59,7 +59,7 @@ export const UsergenerateReportPDF = (columns, data, filters, title = "Report") 
     styles: {
       font: "Vazirmatn",
       fontStyle: "normal",  
-      fontSize: 10,
+      fontSize: 6,
       halign: "center",
       valign: "middle",
       cellWidth: "auto",

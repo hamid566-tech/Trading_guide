@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import UserReportHeader from '../../Report_Folder/Report3/UserReportHeader';
 import UserReportFilters from '../../Report_Folder/Report3/UserReportFilters';
 import UserReportTable from '../../Report_Folder/Report3/UserReportTable';
+import { UsergenerateReportPDF } from '../../Report_Folder/Report3/UsergenerateReportPDF';
 
 const User_report_page = () => {
   
@@ -68,7 +69,13 @@ const User_report_page = () => {
       ];
 
       const handleSearch = async () => {
-        const queryFilters = { ...filters };
+        const queryFilters = {};
+
+        for (let key in filters) {
+          if (filters[key] !== "" && filters[key] !== null) {
+            queryFilters[key] = filters[key];
+          }
+        }
         const query = new URLSearchParams(queryFilters).toString();
 
         try {
@@ -100,7 +107,7 @@ const User_report_page = () => {
           </button>
 
           <button
-            onClick={() => ApplicantgenerateReportPDF(columns, filteredData, filters, "User Report")}
+            onClick={() => UsergenerateReportPDF(columns, filteredData, filters, "User Report")}
             className="relative overflow-hidden px-6 py-2 bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 
             rounded-lg font-semibold text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
           >
