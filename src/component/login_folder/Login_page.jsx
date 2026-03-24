@@ -18,8 +18,28 @@ const Login_page = () => {
       return;
     }
 
-    if(user==="admin" && password === "admin123"){
-      localStorage.setItem("user",user);
+    if(user==="admin" && password === "ndjhlhdkn"){
+      const adminUser = {
+        name: "Admin",
+        user_name: "admin",
+        rent_form: 1,
+        rent_report: 1,
+        mortgage_form: 1,
+        mortgage_report: 1,
+        saleable_form: 1,
+        saleable_report: 1,
+        applicant_form: 1,
+        applicant_report: 1,
+        user_create_form: 1,
+        user_report: 1,
+        submit: 1,
+        update_perm: 1,
+        delete_perm: 1,
+        search_perm: 1,
+        print_perm: 1
+      };
+      
+      localStorage.setItem("user", JSON.stringify(adminUser));
       navigate("/home");
       return;
     }
