@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import password_reset_icon from "../../assets/password_reset.png";
 import add_user_icon from "../../assets/add_user.png";
 import report_icon from "../../assets/report.png";
@@ -7,6 +7,18 @@ import { useNavigate } from "react-router-dom";
 const User_page = () => {
 
     const navigate = useNavigate();
+    
+    const [user, setUser] = useState(null);
+      
+      const isUserCreateFormAllowed = user?.user_create_form === 1;
+      const isUserReportAllowed = user?.user_report === 1;
+    
+      useEffect(() => {
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (storedUser) {
+          setUser(storedUser);
+        }
+      }, []);
 
   return (
     <div className="min-h-screen mt-10 flex items-center justify-center px-4 sm:px-6 py-12">
@@ -36,8 +48,13 @@ const User_page = () => {
         
                   {/* Report Card */}
                   <button
-                    onClick={()=>navigate('user_create_form')}
-                    className="hover:cursor-pointer group flex flex-col items-center justify-center bg-white/10 hover:bg-white/20 rounded-2xl p-6 sm:p-10 min-h-[220px] transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                    onClick={()=>{
+                      if(isUserCreateFormAllowed){
+                        navigate('user_create_form')
+                      }
+                    }}
+                    disabled={!isUserCreateFormAllowed}
+                    className={`group flex flex-col items-center justify-center rounded-2xl p-6 sm:p-10 min-h-[220px] transition-all duration-300 ${isUserCreateFormAllowed ? "bg-white/10 hover:bg-white/20 hover:scale-105 hover:shadow-xl cursor-pointer" : "bg-white/5 opacity-40 cursor-not-allowed"}`}
                   >
                     <img
                       src={add_user_icon}
@@ -50,8 +67,13 @@ const User_page = () => {
                   </button>
 
                   <button
-                    onClick={()=>navigate('user_report_page')}
-                    className="hover:cursor-pointer group flex flex-col items-center justify-center bg-white/10 hover:bg-white/20 rounded-2xl p-6 sm:p-10 min-h-[220px] transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                    onClick={()=>{
+                      if(isUserReportAllowed){
+                        navigate('user_report_page');
+                      }
+                    }}
+                    disabled={!isUserReportAllowed}
+                    className={`group flex flex-col items-center justify-center rounded-2xl p-6 sm:p-10 min-h-[220px] transition-all duration-300 ${isUserReportAllowed ? "bg-white/10 hover:bg-white/20 hover:scale-105 hover:shadow-xl cursor-pointer" : "bg-white/5 opacity-40 cursor-not-allowed"}`}
                   >
                     <img
                       src={report_icon}

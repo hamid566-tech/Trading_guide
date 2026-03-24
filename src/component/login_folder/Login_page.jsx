@@ -36,7 +36,7 @@ const Login_page = () => {
       const data =await response.json();
 
       if(data.success) {
-        localStorage.setItem("user",user);
+        localStorage.setItem("user", JSON.stringify(data.user));
         navigate("/home");
       }
       else {

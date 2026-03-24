@@ -53,10 +53,13 @@ function Header_page() {
     }
   };
 
-  useEffect(()=>{
-    const storedUSer=localStorage.getItem('user');
-    setCurrentuser(storedUSer);
-  },[])
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    
+    if (storedUser) {
+      setCurrentuser(storedUser.user_name); 
+    }
+  }, []);
 
   return (
     <header className="fixed top-0 left-0 w-full backdrop-blur-md bg-white/10 border-b border-white/20 shadow-xl z-50">

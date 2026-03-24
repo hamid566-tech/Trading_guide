@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import applicant_icon from "../../assets/applicant.png";
 import report_icon from "../../assets/report.png";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,18 @@ import { useNavigate } from "react-router-dom";
 const Applicant_page = () => {
 
   const navigate = useNavigate();
+
+  const [user, setUser] = useState(null);
+    
+    const isApplicantFormAllowed = user?.applicant_form === 1;
+    const isApplicantReportAllowed = user?.applicant_report === 1;
+  
+    useEffect(() => {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (storedUser) {
+        setUser(storedUser);
+      }
+    }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 py-12">
@@ -20,13 +32,18 @@ const Applicant_page = () => {
         
                   {/* Rent Form Card */}
                   <button
-                    onClick={()=> navigate('applicant_form')}
-                    className="hover:cursor-pointer group flex flex-col items-center justify-center bg-white/10 hover:bg-white/20 rounded-2xl p-6 sm:p-10 min-h-[220px] transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                    onClick={()=> {
+                      if(isApplicantFormAllowed){
+                        navigate('applicant_form');
+                      }
+                    }}
+                    disabled={!isApplicantFormAllowed}
+                    className={`group flex flex-col items-center justify-center rounded-2xl p-6 sm:p-10 min-h-[220px] transition-all duration-300 ${isApplicantFormAllowed ? "bg-white/10 hover:bg-white/20 hover:scale-105 hover:shadow-xl cursor-pointer" : "bg-white/5 opacity-40 cursor-not-allowed"}`}
                   >
                     <img
                       src={applicant_icon}
                       alt="Rent"
-                      className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4 group-hover:scale-110 transition duration-300"
+                      className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4"
                     />
                     <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
                       Applicant Form
@@ -35,13 +52,18 @@ const Applicant_page = () => {
         
                   {/* Report Card */}
                   <button
-                    onClick={()=> navigate('applicant_report')}
-                    className="hover:cursor-pointer group flex flex-col items-center justify-center bg-white/10 hover:bg-white/20 rounded-2xl p-6 sm:p-10 min-h-[220px] transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                    onClick={()=>{
+                      if(isApplicantReportAllowed){
+                        navigate('applicant_report');
+                      }
+                    }}
+                    disabled={!isApplicantReportAllowed}
+                    className={`group flex flex-col items-center justify-center rounded-2xl p-6 sm:p-10 min-h-[220px] transition-all duration-300 ${isApplicantReportAllowed ? "bg-white/10 hover:bg-white/20 hover:scale-105 hover:shadow-xl cursor-pointer" : "bg-white/5 opacity-40 cursor-not-allowed"}`}
                   >
                     <img
                       src={report_icon}
                       alt="Report"
-                      className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4 group-hover:scale-110 transition duration-300"
+                      className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4"
                     />
                     <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
                       Applicant Report
