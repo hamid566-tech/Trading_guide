@@ -390,7 +390,7 @@ const User_create_page = () => {
                                     name={t.label}
                                     value={formData[t.label] || ""}
                                     onChange={handleChange}
-                                    // readOnly={t.label === "Date"}
+                                    readOnly={t.label === "Date"}
                                     onFocus={() => {
                                         if (t.label === "Date" && !formData[t.label]) {
                                             const today = moment().format("jYYYY/jMM/jDD");
