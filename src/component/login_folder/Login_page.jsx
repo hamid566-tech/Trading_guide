@@ -25,12 +25,12 @@ const Login_page = () => {
     }
 
     try{
-      const response = await fetch("http://localhost:5000/api/users/login",{
+      const response = await fetch("http://localhost:5000/api/user_permissions/login",{
         method:"post",
         headers:{
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({user,password})
+        body: JSON.stringify({user_name: user, password})
       });
 
       const data =await response.json();
