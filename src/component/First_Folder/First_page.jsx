@@ -14,7 +14,7 @@ const First_page = () => {
 
 
   return (
-    <div className="min-h-screen flex justify-center items-center w-full">
+    <div className="min-h-screen flex justify-center items-center w-full select-none">
 
       <div className=" w-full max-w-xl bg-white/20 backdrop-blur-md border border-white/30 shadow-2xl rounded-2xl p-10 text-white">
 

@@ -62,7 +62,7 @@ function Header_page() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 w-full backdrop-blur-md bg-white/10 border-b border-white/20 shadow-xl z-50">
+    <header className="fixed top-0 left-0 w-full backdrop-blur-md bg-white/10 border-b border-white/20 shadow-xl z-50 select-none">
       
       <div className="max-w-7xl mx-auto flex items-center justify-between h-20 px-6 text-white">
 

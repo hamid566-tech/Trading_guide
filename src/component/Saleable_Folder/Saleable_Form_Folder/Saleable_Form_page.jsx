@@ -274,7 +274,7 @@ const Saleable_Form_page = () => {
     }, [formData["Final Price"]]);
 
   return (
-    <div className="mt-24 w-full max-w-5xl mx-auto bg-white/20 backdrop-blur-md shadow-2xl rounded-2xl p-6 sm:p-10 text-white border border-white/30">
+    <div className="mt-24 w-full max-w-5xl mx-auto bg-white/20 backdrop-blur-md shadow-2xl rounded-2xl p-6 sm:p-10 text-white border border-white/30 select-none">
             
           {/* Back Button - Left */}
             <div className="fixed top-6 left-6 z-50">

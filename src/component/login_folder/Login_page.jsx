@@ -78,7 +78,7 @@ const Login_page = () => {
   
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-[#012a4a] via-[#01497c] to-[#012a4a] p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-[#012a4a] via-[#01497c] to-[#012a4a] p-4 select-none">
       
       <div className="w-full max-w-md bg-white/30 shadow-2xl rounded-2xl p-8 border border-white/40">
         <h2 className="text-3xl font-bold text-white text-center mb-6">

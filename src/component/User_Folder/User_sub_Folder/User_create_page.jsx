@@ -175,6 +175,11 @@ const User_create_page = () => {
             });
 
             const data = await res.json();
+ 
+            if (!res.ok) {
+                alert(data.message || "❌ Server Error");
+                return;
+            }
 
             if(data.success){
                 alert("User saved successfully ✅ ID: " + data.id);
@@ -241,6 +246,11 @@ const User_create_page = () => {
 
             const data = await res.json();
 
+            if (!res.ok) {
+                alert(data.message || "❌ Server Error");
+                return;
+            }
+            
             if(data.success){
                 alert("User updated successfully ✅");
 
@@ -312,7 +322,7 @@ const User_create_page = () => {
 
 
   return (
-    <div className="mt-24 w-full max-w-5xl mx-auto bg-white/20 backdrop-blur-md shadow-2xl rounded-2xl p-6 sm:p-10 text-white border border-white/30">
+    <div className="mt-24 w-full max-w-5xl mx-auto bg-white/20 backdrop-blur-md shadow-2xl rounded-2xl p-6 sm:p-10 text-white border border-white/30 select-none">
                 
               {/* Back Button - Left */}
                 <div className="fixed top-6 left-6 z-50">
@@ -342,7 +352,7 @@ const User_create_page = () => {
                     <div className="w-full max-w-md">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             
-                            <label className="sm:w-24 sm:text-right text-sm font-semibold">
+                            <label className="sm:w-24 sm:text-right text-sm font-semibold ">
                                 ID :
                             </label>
             
@@ -390,15 +400,16 @@ const User_create_page = () => {
                                     name={t.label}
                                     value={formData[t.label] || ""}
                                     onChange={handleChange}
-                                    readOnly={t.label === "Date"}
+                                    readOnly={t.label === "Date" || (t.label === "User Name" && mode === "edit")}
                                     onFocus={() => {
+                                        
                                         if (t.label === "Date" && !formData[t.label]) {
                                             const today = moment().format("jYYYY/jMM/jDD");
                                             setFormData({...formData,[t.label]:today});
                                             setErrors(prev => ({...prev, [t.label]: ""}));
                                         }
                                     }}
-                                    className={`w-full px-4 py-2 pr-10 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 ${errors[t.label] ? "focus:ring-red-400 border border-red-400" : "focus:ring-yellow-400"}`}
+                                    className={`w-full px-4 py-2 pr-10 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 ${errors[t.label] ? "focus:ring-red-400 border border-red-400" : "focus:ring-yellow-400"} `}
                                 />
 
                                 {/* 👇 button باید اینجا باشد */}

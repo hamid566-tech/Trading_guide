@@ -21,7 +21,7 @@ const Saleable_Page = () => {
     
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 py-12 select-none">
     
           <div className="w-full max-w-6xl bg-white/20 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-10">
     

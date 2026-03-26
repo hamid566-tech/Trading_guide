@@ -24,7 +24,7 @@ import User_report_page from '../User_Folder/User_sub_Folder/User_report_page'
 
 const Home_page = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-linear-to-br from-[#012a4a] via-[#01497c] to-[#012a4a]">
+    <div className="min-h-screen flex flex-col bg-linear-to-br from-[#012a4a] via-[#01497c] to-[#012a4a] select-none">
 
       <Header_page/>
 
