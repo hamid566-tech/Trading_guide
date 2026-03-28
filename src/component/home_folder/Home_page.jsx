@@ -15,9 +15,6 @@ import User_create_page from '../User_Folder/User_sub_Folder/User_create_page'
 import First_page from '../First_Folder/First_page'
 import Rent_Report_page from '../Rent_folder/Rent_form_folder/Rent_Report_page'
 import Mortgage_Report_page from '../Mortagage_folder/Mortgage_Form_Folder/Mortgage_Report_page'
-import Training from '../training/Training'
-import Shamsy_insert from '../training/Shamsy_insert'
-import Shamsy_report from '../training/Shamsy_report'
 import Saleable_Report_page from '../Saleable_Folder/Saleable_Form_Folder/Saleable_Report_page'
 import Applicant_Report_page from '../Applicant_Folder/Applicant_Form_Folder/Applicant_Report_page'
 import User_report_page from '../User_Folder/User_sub_Folder/User_report_page'
@@ -49,9 +46,6 @@ const Home_page = () => {
           <Route path='user/reset_password' element={<User_Reset_password_page/>}/>
           <Route path='user/user_create_form' element={<User_create_page/>}/>
           <Route path='user/user_report_page' element={<User_report_page/>}/>
-          <Route path='train/*' element={<Training/>}/>
-          <Route path='train/shamsy_form' element={<Shamsy_insert/>}/>
-          <Route path='train/shamsy_report' element={<Shamsy_report/>}/>
         </Routes>
       </div>
 

@@ -18,7 +18,6 @@ function Header_page() {
     { name: "Saleable", path: "/home/saleable"  },
     { name: "Applicant", path: "/home/applicant"  },
     { name: "User", path: "/home/user" },
-    { name: "Training", path: "/home/train" },
     
   ];
 
