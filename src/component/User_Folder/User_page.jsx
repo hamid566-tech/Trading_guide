@@ -59,7 +59,7 @@ const User_page = () => {
                     <img
                       src={add_user_icon}
                       alt="Report"
-                      className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4 group-hover:scale-110 transition duration-300"
+                      className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4"
                     />
                     <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
                       User Create Form
@@ -78,7 +78,7 @@ const User_page = () => {
                     <img
                       src={report_icon}
                       alt="Report"
-                      className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4 group-hover:scale-110 transition duration-300"
+                      className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4 "
                     />
                     <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
                       User Report

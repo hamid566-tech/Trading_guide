@@ -10,6 +10,7 @@ const User_report_page = () => {
       const [filteredData, setFilteredData] = useState([]);
       const handleChange = (e) => {setFilters({ ...filters, [e.target.name]: e.target.value });};
       const totalRecords = filteredData.length;
+      const user = JSON.parse(localStorage.getItem("user"));
     
       const fields = [
         { name: "name", label: "Name", type: "text" },
@@ -100,17 +101,18 @@ const User_report_page = () => {
 
         <div className="flex flex-col sm:flex-row justify-center gap-4 mb-4 mt-4">
           <button
-            onClick={handleSearch}
-            className="px-6 py-2 bg-emerald-500 hover:bg-emerald-600 transition-all duration-300 rounded-lg font-semibold text-white shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
-          >
+          onClick={handleSearch}
+          disabled={user?.search_perm === 0}
+          className={`px-6 py-2 rounded-lg font-semibold text-white transition-all duration-300 shadow-lg cursor-pointer
+          ${user?.search_perm === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-emerald-500 hover:bg-emerald-600 hover:scale-105 active:scale-95"}`}>
             🔍 Search
           </button>
 
           <button
-            onClick={() => UsergenerateReportPDF(columns, filteredData, filters, "User Report")}
-            className="relative overflow-hidden px-6 py-2 bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 
-            rounded-lg font-semibold text-white shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
-          >
+          onClick={() => UsergenerateReportPDF(columns, filteredData, filters, "User Report")}
+          disabled={user?.print_perm === 0}
+          className={`relative overflow-hidden px-6 py-2 rounded-lg font-semibold text-white shadow-lg transition-all duration-300
+          ${user?.print_perm === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 hover:scale-105 active:scale-95 cursor-pointer"}`}>
             🖨️ Print Report
           </button>
         </div>

@@ -12,6 +12,7 @@ const Rent_Form_page = () => {
     const [formData, setFormData] = useState({});
     const [status,setStatus] =useState('');
     const [mode, setMode] = useState('');
+    const user = JSON.parse(localStorage.getItem("user"));
 
     const navigate=useNavigate();
     
@@ -464,21 +465,24 @@ const Rent_Form_page = () => {
         {/* Submit */}
         <button 
         onClick={handleSubmit}
-        className={`w-full sm:w-auto px-8 py-2 bg-linear-to-r from-green-400 to-emerald-600 rounded-lg font-semibold hover:scale-105 hover:shadow-green-500/40transition duration-300 shadow-lg cursor-pointer `}>
+        disabled={user?.submit === 0}
+        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg  ${user?.submit === 0 ? "bg-gray-400 cursor-not-allowed" : " cursor-pointer bg-linear-to-r from-green-400 to-emerald-600 hover:scale-105 hover:shadow-green-500/40"}`}>
             Submit
         </button>
 
         {/* Update */}
         <button 
         onClick={handleUpdate}
-        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer`}>
+        disabled={user?.update_perm === 0}
+        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${user?.update_perm === 0 ? "bg-gray-400 cursor-not-allowed": "bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer"}`}>
             Update
         </button>
 
         {/* Delete */}
         <button
         onClick={handleDelete}
-        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg bg-linear-to-r from-red-400 to-red-600 hover:scale-105 hover:shadow-red-500/40 cursor-pointer`}>
+        disabled={user?.delete_perm === 0}
+        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${user?.delete_perm === 0 ? "bg-gray-400 cursor-not-allowed": "bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer"}`}>
             Delete
         </button>
       </div>
