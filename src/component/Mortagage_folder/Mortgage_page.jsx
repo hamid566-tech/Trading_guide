@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import mortgage_icon from "../../assets/mortgage.png";
 import report_icon from "../../assets/report.png";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../context/LanguageContext"; // 👈 مهم
 
 const Mortgage_page = () => {
-    const navigate = useNavigate();
 
-    const [user, setUser] = useState(null);
-    
-    
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);    
     const isMortgageFormAllowed = user?.mortgage_form === 1;
     const isMortgageReportAllowed = user?.mortgage_report === 1;
+    const { t } = useLanguage(); // 👈 اینجا
 
     useEffect(() => {
       const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -26,7 +26,7 @@ const Mortgage_page = () => {
           <div className="w-full max-w-6xl bg-white/20 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-10">
     
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white mb-8 sm:mb-12">
-              Mortgage Management
+              {t.mortgage_management}
             </h2>
     
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 sm:gap-10">
@@ -48,7 +48,7 @@ const Mortgage_page = () => {
                   className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4"
                 />
                 <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
-                  Mortgage Form
+                  {t.mortgage_form}
                 </span>
               </button>
     
@@ -68,7 +68,7 @@ const Mortgage_page = () => {
                   className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4"
                 />
                 <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
-                  Mortgage Report
+                  {t.mortgage_report}
                 </span>
               </button>
     

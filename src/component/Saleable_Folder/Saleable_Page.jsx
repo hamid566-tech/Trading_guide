@@ -2,22 +2,22 @@ import React, { useEffect, useState } from "react";
 import saleable_icon from "../../assets/saleable.png";
 import report_icon from "../../assets/report.png";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../context/LanguageContext"; // 👈 مهم
 
 const Saleable_Page = () => {
     
     const navigate = useNavigate();
-
     const [user, setUser] = useState(null);
-      
-      const isSaleableFormAllowed = user?.saleable_form === 1;
-      const isSaleableReportAllowed = user?.saleable_report === 1;
+    const isSaleableFormAllowed = user?.saleable_form === 1;
+    const isSaleableReportAllowed = user?.saleable_report === 1;
+    const { t } = useLanguage(); // 👈 اینجا
     
-      useEffect(() => {
-        const storedUser = JSON.parse(localStorage.getItem("user"));
-        if (storedUser) {
-          setUser(storedUser);
-        }
-      }, []);
+    useEffect(() => {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (storedUser) {
+        setUser(storedUser);
+      }
+    }, []);
     
 
   return (
@@ -26,7 +26,7 @@ const Saleable_Page = () => {
           <div className="w-full max-w-6xl bg-white/20 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-10">
     
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white mb-8 sm:mb-12">
-              Saleable Management
+              {t.saleable_management}
             </h2>
     
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 sm:gap-10">
@@ -47,7 +47,7 @@ const Saleable_Page = () => {
                   className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4"
                 />
                 <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
-                  Saleable Form
+                  {t.saleable_form}
                 </span>
               </button>
     
@@ -67,7 +67,7 @@ const Saleable_Page = () => {
                   className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4"
                 />
                 <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
-                  Saleable Report
+                  {t.saleable_report}
                 </span>
               </button>
     

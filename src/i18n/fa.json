@@ -1,10 +1,37 @@
 {
-  "rent": "کرایه",
-  "mortgage": "گرو",
-  "saleable": "فروشی",
-  "applicant": "درخواست کننده",
-  "user": "کاربر",
-  "training": "آموزش",
+  "Rent": "کرایه",
+  "Mortgage": "گرو",
+  "Saleable": "فروشی",
+  "Applicant": "درخواست کننده",
+  "User": "کاربر",
   "logout": "خروج",
-  "language": "زبان"
+  "language": "زبان",
+
+  "search_property": "جستجوی ملک",
+  "enter_screen_id": "آیدی صفحه را وارد کنید (مثال: S_A_2)",
+  "search": "جستجو",
+
+  "rent_management": "مدیریت کرایه",
+  "rent_form": "فورم کرایه",
+  "rent_report": "گزارش کرایه",
+
+  "mortgage_management": "مدیریت گرو",
+  "mortgage_form": "فورم گرو",
+  "mortgage_report": "گزارش گرو",
+
+  "saleable_management": "مدیریت فروشی",
+  "saleable_form": "فورم فروشی",
+  "saleable_report": "گزارش فروشی",
+
+  "applicant_management": "مدیریت درخواست کننده",
+  "applicant_form": "فورم درخواست کننده",
+  "applicant_report": "گزارش درخواست کننده",
+
+  "user_management": "مدیریت کاربر",
+  "password_reset": "فورم تغییر رمز",
+  "user_create_form": "فورم ایجاد کاربر",
+  "user_report": "گزارش کاربر"
+
+  
+
 }

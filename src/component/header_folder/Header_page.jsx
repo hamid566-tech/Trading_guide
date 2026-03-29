@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
+// import translations from "../../i18n/translations";
+import { useLanguage } from "../../context/LanguageContext";
 
 
 function Header_page() {
@@ -8,16 +10,23 @@ function Header_page() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const [language, setLanguage] = useState("EN");
+  // const [language, setLanguage] = useState(localStorage.getItem("lang") || "EN");
+  // const t = translations[language];
+  const { language, changeLanguage, t } = useLanguage();
   const [currentuser,setCurrentuser] = useState('');
   const location = useLocation();
 
+  const handleChangeLanguage = (lang) => {
+    changeLanguage(lang);   // از context
+    setLangOpen(false);     // 👈 این را اضافه کن
+  };
+
   const menuItems = [
-    { name: "Rent", path: "/home/rent" },
-    { name: "Mortgage", path: "/home/mortgage"  },
-    { name: "Saleable", path: "/home/saleable"  },
-    { name: "Applicant", path: "/home/applicant"  },
-    { name: "User", path: "/home/user" },
+    { key: "Rent", path: "/home/rent" },
+    { key: "Mortgage", path: "/home/mortgage"  },
+    { key: "Saleable", path: "/home/saleable"  },
+    { key: "Applicant", path: "/home/applicant"  },
+    { key: "User", path: "/home/user" },
     
   ];
 
@@ -40,11 +49,13 @@ function Header_page() {
   );
 
 
-  const changeLanguage = (lang) => {
-    setLanguage(lang);
-    setLangOpen(false);
-    console.log("Selected language:", lang);
-  };
+  // const changeLanguage = (lang) => {
+  //   setLanguage(lang);
+  //   localStorage.setItem("lang", lang);
+  //   document.documentElement.dir = lang === "FA" ? "rtl" : "ltr";
+  //   setLangOpen(false);
+  //   console.log("Selected language:", lang);
+  // };
 
   const handleLogout = () => {
     if (window.confirm("Are you sure you want to logout?")) {
@@ -53,6 +64,9 @@ function Header_page() {
   };
 
   useEffect(() => {
+
+    const lang = localStorage.getItem("lang") || "EN";
+    document.documentElement.dir = lang === "FA" ? "rtl" : "ltr";
     const storedUser = JSON.parse(localStorage.getItem('user'));
     
     if (storedUser) {
@@ -82,7 +96,7 @@ function Header_page() {
             return(
                 <span key={i} className={` transition border-b-2 ${isActive ? 'text-yellow-300 border-yellow-300' : 'border-transparent'} ${isFormPage ? 'opacity-40 cursor-not-allowed' : ' cursor-pointer hover:text-yellow-300 hover:border-yellow-300'}`}
                 onClick={()=>{if(!isFormPage && item.path){ navigate(item.path)}}}>
-                    {item.name}
+                    {t[item.key]}
                 </span>
                 
             );
@@ -106,13 +120,13 @@ function Header_page() {
             {langOpen && (
               <div className="absolute right-0 mt-2 w-24 bg-white text-black rounded-lg shadow-lg">
                 <div
-                  onClick={() => changeLanguage("EN")}
+                  onClick={() => handleChangeLanguage("EN")}
                   className="px-3 py-2 hover:bg-gray-200 cursor-pointer"
                 >
                   English
                 </div>
                 <div
-                  onClick={() => changeLanguage("FA")}
+                  onClick={() => handleChangeLanguage("FA")}
                   className="px-3 py-2 hover:bg-gray-200 cursor-pointer"
                 >
                   فارسی
@@ -133,7 +147,7 @@ function Header_page() {
             onClick={handleLogout}
             className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg transition duration-300 cursor-pointer"
           >
-            Logout
+            {t.logout}
           </button>
         </div>
 
@@ -161,7 +175,7 @@ function Header_page() {
                 onClick={()=>{if(!isFormPage && item.path){ navigate(item.path)}}}
                 className={` transition border-b-2 ${isActive ? 'text-yellow-300 border-yellow-300' : 'border-transparent'} ${isFormPage ? 'opacity-40 cursor-not-allowed' : ' cursor-pointer hover:text-yellow-300 hover:border-yellow-300'}`}
                 >
-                {item.name}
+                  {t[item.key]}
                 </div>
             );
                 
@@ -169,16 +183,16 @@ function Header_page() {
 
           {/* Language Mobile */}
           <div className="pt-3 border-t border-white/30">
-            <div className="font-semibold mb-2">Language</div>
+            <div className="font-semibold mb-2">{t.language}</div>
             <div className="flex gap-4">
               <button
-                onClick={() => changeLanguage("EN")}
+                onClick={() => handleChangeLanguage("EN")}
                 className="px-3 py-1 bg-white/20 rounded"
               >
                 EN
               </button>
               <button
-                onClick={() => changeLanguage("FA")}
+                onClick={() => handleChangeLanguage("FA")}
                 className="px-3 py-1 bg-white/20 rounded curpo"
               >
                 FA
@@ -196,7 +210,7 @@ function Header_page() {
               onClick={handleLogout}
               className="px-3 py-1 bg-red-500 rounded-lg cursor-pointer"
             >
-              Logout
+               {t.logout}
             </button>
           </div>
         </div>

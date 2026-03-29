@@ -2,22 +2,22 @@ import React, { useEffect, useState } from "react";
 import applicant_icon from "../../assets/applicant.png";
 import report_icon from "../../assets/report.png";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../context/LanguageContext"; // 👈 مهم
 
 const Applicant_page = () => {
 
   const navigate = useNavigate();
-
   const [user, setUser] = useState(null);
-    
-    const isApplicantFormAllowed = user?.applicant_form === 1;
-    const isApplicantReportAllowed = user?.applicant_report === 1;
-  
-    useEffect(() => {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      if (storedUser) {
-        setUser(storedUser);
-      }
-    }, []);
+  const isApplicantFormAllowed = user?.applicant_form === 1;
+  const isApplicantReportAllowed = user?.applicant_report === 1;
+  const { t } = useLanguage(); // 👈 اینجا
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 py-12 select-none">
@@ -25,7 +25,7 @@ const Applicant_page = () => {
               <div className="w-full max-w-6xl bg-white/20 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-10">
         
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white mb-8 sm:mb-12">
-                  Applicant Management
+                  {t.applicant_management}
                 </h2>
         
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 sm:gap-10">
@@ -46,7 +46,7 @@ const Applicant_page = () => {
                       className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4"
                     />
                     <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
-                      Applicant Form
+                      {t.applicant_form}
                     </span>
                   </button>
         
@@ -66,7 +66,7 @@ const Applicant_page = () => {
                       className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4"
                     />
                     <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
-                      Applicant Report
+                      {t.applicant_report}
                     </span>
                   </button>
         

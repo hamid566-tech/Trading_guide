@@ -76,6 +76,9 @@ const Login_page = () => {
     }
   },[error])
   
+  useEffect(() => {
+    document.documentElement.dir = "ltr";
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-[#012a4a] via-[#01497c] to-[#012a4a] p-4 select-none">

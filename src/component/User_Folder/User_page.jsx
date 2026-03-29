@@ -3,22 +3,22 @@ import password_reset_icon from "../../assets/password_reset.png";
 import add_user_icon from "../../assets/add_user.png";
 import report_icon from "../../assets/report.png";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../context/LanguageContext"; // 👈 مهم
 
 const User_page = () => {
 
     const navigate = useNavigate();
-    
     const [user, setUser] = useState(null);
-      
-      const isUserCreateFormAllowed = user?.user_create_form === 1;
-      const isUserReportAllowed = user?.user_report === 1;
-    
-      useEffect(() => {
-        const storedUser = JSON.parse(localStorage.getItem("user"));
-        if (storedUser) {
-          setUser(storedUser);
-        }
-      }, []);
+    const isUserCreateFormAllowed = user?.user_create_form === 1;
+    const isUserReportAllowed = user?.user_report === 1;
+    const { t } = useLanguage(); // 👈 اینجا
+  
+    useEffect(() => {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (storedUser) {
+        setUser(storedUser);
+      }
+    }, []);
 
   return (
     <div className="min-h-screen mt-10 flex items-center justify-center px-4 sm:px-6 py-12 select-none">
@@ -26,7 +26,7 @@ const User_page = () => {
               <div className="w-full max-w-6xl bg-white/20 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-10">
         
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white mb-8 sm:mb-12">
-                  User Management
+                  {t.user_management}
                 </h2>
         
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
@@ -42,7 +42,7 @@ const User_page = () => {
                       className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4 group-hover:scale-110 transition duration-300"
                     />
                     <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
-                      Password Reset Form
+                      {t.password_reset}
                     </span>
                   </button>
         
@@ -62,7 +62,7 @@ const User_page = () => {
                       className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4"
                     />
                     <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
-                      User Create Form
+                      {t.user_create_form}
                     </span>
                   </button>
 
@@ -81,7 +81,7 @@ const User_page = () => {
                       className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4 "
                     />
                     <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
-                      User Report
+                      {t.user_report}
                     </span>
                   </button>
         

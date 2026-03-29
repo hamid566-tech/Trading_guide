@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import rent_icon from "../../assets/rent.png";
 import report_icon from "../../assets/report.png";
 import { useNavigate } from "react-router-dom";
+import translations from "../../i18n/translations";
 
 const Rent_page = () => {
 
   const navigate = useNavigate();
-
   const [user, setUser] = useState(null);
-  
   const isRentFormAllowed = user?.rent_form === 1;
   const isRentReportAllowed = user?.rent_report === 1;
+  const [language, setLanguage] = useState(localStorage.getItem("lang") || "EN");
+
+const t = translations[language];
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -26,7 +28,7 @@ const Rent_page = () => {
       <div className="w-full max-w-6xl bg-white/20 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-10">
 
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white mb-8 sm:mb-12">
-          Rent Management
+          {t.rent_management}
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 sm:gap-10">
@@ -47,7 +49,7 @@ const Rent_page = () => {
               className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4"
             />
             <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
-              Rent Form
+              {t.rent_form}
             </span>
           </button>
 
@@ -67,7 +69,7 @@ const Rent_page = () => {
               className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4"
             />
             <span className="text-base sm:text-lg md:text-xl font-semibold text-white">
-              Rent Report
+              {t.rent_report}
             </span>
           </button>
 
