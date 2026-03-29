@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import rent_icon from "../../assets/rent.png";
 import report_icon from "../../assets/report.png";
 import { useNavigate } from "react-router-dom";
-import translations from "../../i18n/translations";
+import { useLanguage } from "../../context/LanguageContext"; // 👈 مهم
 
 const Rent_page = () => {
 
@@ -10,9 +10,8 @@ const Rent_page = () => {
   const [user, setUser] = useState(null);
   const isRentFormAllowed = user?.rent_form === 1;
   const isRentReportAllowed = user?.rent_report === 1;
-  const [language, setLanguage] = useState(localStorage.getItem("lang") || "EN");
+  const { t } = useLanguage(); // 👈 اینجا
 
-const t = translations[language];
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
