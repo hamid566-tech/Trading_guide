@@ -3,6 +3,7 @@ import { ArrowLeft, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import moment from "moment-jalaali";
 import { useEffect } from 'react';
+import { useLanguage } from "../../../context/LanguageContext";
 
 const Rent_Form_page = () => {
 
@@ -13,36 +14,37 @@ const Rent_Form_page = () => {
     const [status,setStatus] =useState('');
     const [mode, setMode] = useState('');
     const user = JSON.parse(localStorage.getItem("user"));
+    const { t } = useLanguage();
 
     const navigate=useNavigate();
     
     const [fields,setFields]=useState([
-        {label:"Name", type:"text", placeholder:"Enter Name", required:true},
-        {label:"FName", type:"text", placeholder:"Enter Father Name", required:true},
-        {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number", required:true},
-        {label:"phone", type:"tel", inputMode:"numeric", placeholder:"Enter Phone Number", required:true},
-        {label:"Address", type:"text", placeholder:"Enter Address Number", required:true},
-        {label:"Rooms", type:"text", placeholder:"Enter Rooms Number", required:true},
-        {label:"Appartment", type:"text", placeholder:"Enter Appartment Number", required:true},
-        {label:"Qawala", type:"text", placeholder:"Enter Qawala", required:true},
-        {label:"Bathrooms", type:"text", placeholder:"Enter Bathroom Number", required:true},
-        {label:"Area", type:"text", placeholder:"Enter Area", required:true},
-        {label:"Nature", type:"text", placeholder:"Enter Nature", required:true},
-        {label:"Appartment Features", type:"text", placeholder:"Enter Appartment Features", required:true},
-        {label:"City Features", type:"text", placeholder:"Enter City Features", required:true},
-        {label:"Date", type:"text", placeholder:"Enter Date", required:true},
-        {label:"Elevator", type:"select", required:true},
-        {label:"Heating", type:"select", required:true},
-        {label:"Electric Meter", type:"select", required:true},
-        {label:"Roof", type:"select", required:true},
-        {label:"Price", type:"text", placeholder:"Enter Price", required:true},
-        {label:"Final Price", type:"text", placeholder:"Enter Final Price", required:false},
+        {label:"name", type:"text", placeholder:"enter_name", required:true},
+        {label:"fname", type:"text", placeholder:"enter_fname", required:true},
+        {label:"tazkira", type:"text", placeholder:"enter_tazkira", required:true},
+        {label:"phone", type:"tel", inputMode:"numeric", placeholder:"enter_phone", required:true},
+        {label:"address", type:"text", placeholder:"enter_address", required:true},
+        {label:"rooms", type:"text", placeholder:"enter_rooms", required:true},
+        {label:"appartment", type:"text", placeholder:"enter_appartment", required:true},
+        {label:"qawala", type:"text", placeholder:"enter_qawala", required:true},
+        {label:"bathrooms", type:"text", placeholder:"enter_bathrooms", required:true},
+        {label:"area", type:"text", placeholder:"enter_area", required:true},
+        {label:"nature", type:"text", placeholder:"enter_nature", required:true},
+        {label:"appartment_features", type:"text", placeholder:"enter_appartment_features", required:true},
+        {label:"city_features", type:"text", placeholder:"enter_city_features", required:true},
+        {label:"date", type:"text", placeholder:"enter_date", required:true},
+        {label:"elevator", type:"select", required:true},
+        {label:"heating", type:"select", required:true},
+        {label:"electric_meter", type:"select", required:true},
+        {label:"roof", type:"select", required:true},
+        {label:"price", type:"text", placeholder:"enter_price", required:true},
+        {label:"final_price", type:"text", placeholder:"enter_final_price", required:false},
     ]);
 
     const handlSearch=async ()=>{
 
         if(!id.trim()){
-            alert("⚠️ لطفاً اول ID را وارد کنید");
+            alert(t.enter_id_warning);
             return;
         }
         
@@ -54,26 +56,26 @@ const Rent_Form_page = () => {
             if (data.success) {
                 // 👇 اینجا فورم را با معلومات دیتابیس پر می‌کنیم
                 setFormData({
-                    "Name": data.rent.name || "",
-                    "FName": data.rent.fname || "",
-                    "Tazkira": data.rent.tazkira || "",
-                    "phone": data.rent.phone || "",
-                    "Address": data.rent.address || "",
-                    "Rooms": data.rent.rooms || "",
-                    "Appartment": data.rent.appartment || "",
-                    "Qawala": data.rent.qawala || "",
-                    "Bathrooms": data.rent.bathrooms || "",
-                    "Area": data.rent.area || "",
-                    "Nature": data.rent.nature || "",
-                    "Appartment Features": data.rent.appartment_features || "",
-                    "City Features": data.rent.city_features || "",
-                    "Date": data.rent.date || "",
-                    "Elevator": data.rent.elevator || "",
-                    "Heating": data.rent.heating || "",
-                    "Electric Meter": data.rent.electric_meter || "",
-                    "Roof": data.rent.roof || "",
-                    "Price": data.rent.price || "",
-                    "Final Price": data.rent.final_price || ""
+                    name: data.rent.name || "",
+                    fname: data.rent.fname || "",
+                    tazkira: data.rent.tazkira || "",
+                    phone: data.rent.phone || "",
+                    address: data.rent.address || "",
+                    rooms: data.rent.rooms || "",
+                    appartment: data.rent.appartment || "",
+                    qawala: data.rent.qawala || "",
+                    bathrooms: data.rent.bathrooms || "",
+                    area: data.rent.area || "",
+                    nature: data.rent.nature || "",
+                    appartment_features: data.rent.appartment_features || "",
+                    city_features: data.rent.city_features || "",
+                    date: data.rent.date || "",
+                    elevator: data.rent.elevator || "",
+                    heating: data.rent.heating || "",
+                    electric_meter: data.rent.electric_meter || "",
+                    roof: data.rent.roof || "",
+                    price: data.rent.price || "",
+                    final_price: data.rent.final_price || ""
                 });
 
                 // ست کردن Status
@@ -123,13 +125,13 @@ const Rent_Form_page = () => {
 
         if (Object.keys(newErrors).length === 0) {
             // بررسی Final Price
-            if (!formData["Final Price"] || formData["Final Price"].trim() === "") {
+            if (!formData["final_price"] || formData["final_price"].trim() === "") {
                 const addFinalPrice = window.confirm(
                     "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟"
                 );
                 if (addFinalPrice) {
                     // تمرکز روی فیلد Final Price تا کاربر مقدار وارد کند
-                    const finalInput = document.querySelector('input[placeholder="Enter Final Price"]');
+                    const finalInput = document.querySelector('input[name="final_price"]');
                     finalInput?.focus();
                     return; // توقف Submit تا کاربر مقدار وارد کند
                 }
@@ -193,7 +195,7 @@ const Rent_Form_page = () => {
         if(Object.keys(newErrors).length > 0) return;
 
         // بررسی Final Price
-        if (!formData["Final Price"] || formData["Final Price"].trim() === "") {
+        if (!formData["final_price"] || formData["final_price"].trim() === "") {
             const addFinalPrice = window.confirm(
                 "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟"
             );
@@ -281,12 +283,12 @@ const Rent_Form_page = () => {
 
     useEffect(() => {
         // وقتی Final Price تغییر کرد
-        if (formData["Final Price"] && formData["Final Price"].trim() !== "") {
+        if (formData["final_price"] && formData["final_price"].trim() !== "") {
             setStatus("unavailable"); // اگر پر باشد، وضعیت unavailable
         } else {
             setStatus("available"); // اگر خالی باشد، وضعیت available
         }
-    }, [formData["Final Price"]]);
+    }, [formData["final_price"]]);
 
 
   return (
@@ -316,7 +318,7 @@ const Rent_Form_page = () => {
 
 
       <h2 className="text-xl sm:text-2xl font-bold mt-15 md:mt-0 mb-10 text-center">
-        Rent Form
+        {t.rent_form}
       </h2>
 
 
@@ -326,14 +328,14 @@ const Rent_Form_page = () => {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
 
                     <label className="sm:w-24 text-sm font-semibold">
-                        ID :
+                        {t.id} :
                     </label>
 
                     <div className="flex flex-col sm:flex-row w-full gap-3">
                         
                         <input
                         type="text"
-                        placeholder="Enter ID"
+                        placeholder={t.enter_id}
                         value={id}
                         onChange={(e) => {
                             const value = e.target.value.replace(/[^0-9]/g, "");
@@ -353,8 +355,9 @@ const Rent_Form_page = () => {
 
                         <button 
                         onClick={handlSearch}
-                        className={`px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 hover:scale-105 transition duration-300 flex items-center justify-center cursor-pointer`}>
+                        className={`px-4 py-2 gap-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 hover:scale-105 transition duration-300 flex items-center justify-center cursor-pointer`}>
                         <Search size={18} color="white" />
+                        {t.search}
                         </button>
                     </div>
 
@@ -366,7 +369,7 @@ const Rent_Form_page = () => {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
 
                     <label className="sm:w-24 text-sm font-semibold">
-                        Status :
+                        {t.status} :
                     </label>
 
                     <input
@@ -387,68 +390,69 @@ const Rent_Form_page = () => {
       {/* Form Fields */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         
-        {fields.map((t, index) => (
+        {fields.map((field, index) => (
 
             <div key={index} className="flex flex-col gap-2">
 
                 <label className="text-sm font-semibold text-[#fbfbfb]">
-                {t.label} :
+                    {t[field.label]} :
                 </label>
 
-                {t.type === "select" ? (
+                {field.type === "select" ? (
                     <>
                         <select
-                            value={formData[t.label] || ""}
+                            value={formData[field.label] || ""}
                             onChange={(e) => {
                                 const value = e.target.value;
-                                setFormData({ ...formData, [t.label]: value });
-                                setErrors(prev => ({ ...prev, [t.label]: "" }));
+                                setFormData({ ...formData, [field.label]: value });
+                                setErrors(prev => ({ ...prev, [field.label]: "" }));
                             }}
-                            className={`px-4 py-2 rounded-lg bg-white/30 text-white ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:outline-none focus:ring-2 focus:ring-yellow-400"}`}
+                            className={`px-4 py-2 rounded-lg bg-white/30 text-white ${errors[field.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:outline-none focus:ring-2 focus:ring-yellow-400"}`}
                         >
                             <option value="" className="text-black">
-                            Select {t.label}
+                            {t.select} {t[field.label]}
                             </option>
-                            <option value="Yes" className="text-black">Yes</option>
-                            <option value="No" className="text-black">No</option>
+                            <option value="Yes" className="text-black">{t.yes}</option>
+                            <option value="No" className="text-black">{t.no}</option>
                         </select>
                         {
-                            errors[t.label] && (
-                                <p className='text-red-400 text-sm font-medium'>{errors[t.label]}</p>
+                            errors[field.label] && (
+                                <p className='text-red-400 text-sm font-medium'>{errors[field.label]}</p>
                             )
                         }
                     </>
                 ) : (
                     <>
                         <input
-                        type={t.type}
-                        placeholder={t.placeholder}
-                        value={formData[t.label] || ""}
+                        name={field.label}
+                        type={field.type}
+                        placeholder={t[field.placeholder]}
+                        value={formData[field.label] || ""}
                         onChange={(e) => {
                             let value = e.target.value;
                             // فقط اعداد برای فیلدهای خاص
-                            if(t.label === "phone" || t.label === "Price" || t.label === "Final Price"){
+                            if(field.label === "phone" || field.label === "price" || field.label === "final_price"){
                                 value = value.replace(/[^0-9]/g,'');
                             }
                             // مقدار فرم را بروز کن
-                            setFormData({...formData, [t.label]: value});
+                            setFormData({...formData, [field.label]: value});
                             // خطا را پاک کن
-                            setErrors(prev => ({...prev,[t.label]: ""}));
+                            setErrors(prev => ({...prev,[field.label]: ""}));
                         }}
-                        readOnly={t.label === "Date"}
+                        readOnly={field.label === "date"}
                         onFocus={() => {
-                            if (t.label === "Date" && !formData[t.label]) {
+                            if (field.label === "date" && !formData[field.label]) {
                                 const today = moment().format("jYYYY/jMM/jDD");
-                                setFormData({...formData,[t.label]:today});
-                                setErrors(prev => ({...prev, [t.label]: ""})); // خطا پاک شود
+                                setFormData({...formData,[field.label]:today});
+                                setErrors(prev => ({...prev, [field.label]: ""})); // خطا پاک شود
                             }
                         }}
-                        className={`px-4 py-2 rounded-lg bg-white/30 placeholder-white/40 text-white focus:outline-none ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}
+                        className={`px-4 py-2 rounded-lg bg-white/30 placeholder-white/40 text-white focus:outline-none ${errors[field.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}
                         />
 
                         {
-                            errors[t.label] && (
-                                <p className='text-red-400 text-sm font-medium'>{errors[t.label]}</p>
+                            errors[field.label] && (
+                                <p className='text-red-400 text-sm font-medium'>{errors[field.label]}</p>
                             )
                         }
                     </>
@@ -466,24 +470,24 @@ const Rent_Form_page = () => {
         <button 
         onClick={handleSubmit}
         disabled={user?.submit === 0}
-        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg  ${user?.submit === 0 ? "bg-gray-400 cursor-not-allowed" : " cursor-pointer bg-linear-to-r from-green-400 to-emerald-600 hover:scale-105 hover:shadow-green-500/40"}`}>
-            Submit
+        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${user?.submit === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-linear-to-r from-emerald-400 via-green-500 to-emerald-600 hover:scale-105 hover:shadow-emerald-400/40 cursor-pointer"}`}>
+            {t.submit}
         </button>
 
         {/* Update */}
         <button 
         onClick={handleUpdate}
         disabled={user?.update_perm === 0}
-        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${user?.update_perm === 0 ? "bg-gray-400 cursor-not-allowed": "bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer"}`}>
-            Update
+        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${user?.update_perm === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-linear-to-r from-blue-400 via-indigo-500 to-purple-600 hover:scale-105 hover:shadow-indigo-400/40 cursor-pointer"}`}>
+            {t.update}
         </button>
 
         {/* Delete */}
         <button
         onClick={handleDelete}
         disabled={user?.delete_perm === 0}
-        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${user?.delete_perm === 0 ? "bg-gray-400 cursor-not-allowed": "bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer"}`}>
-            Delete
+        className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${user?.delete_perm === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-linear-to-r from-rose-500 via-red-600 to-red-800 hover:scale-105 hover:shadow-red-500/40 cursor-pointer"}`}>
+            {t.delete}
         </button>
       </div>
 

@@ -30,7 +30,59 @@
   "user_management": "مدیریت کاربر",
   "password_reset": "فورم تغییر رمز",
   "user_create_form": "فورم ایجاد کاربر",
-  "user_report": "گزارش کاربر"
+  "user_report": "گزارش کاربر",
+
+  "id": "آی‌دی",
+  "enter_id": "آی‌دی را وارد کنید",
+  "status": "وضعیت",
+
+  "name": "نام",
+  "enter_name": "نام را وارد کنید",
+  "fname": "نام پدر",
+  "enter_fname": "نام پدر را وارد کنید",
+  "tazkira": "تذکره",
+  "enter_tazkira": "نمبر تذکره را وارد کنید",
+  "phone": "شماره تماس",
+  "enter_phone": "شماره تماس را وارد کنید",
+  "address": "آدرس",
+  "enter_address": "آدرس را وارد کنید",
+  "rooms": "اتاق‌ها",
+  "enter_rooms": "تعداد اتاق را وارد کنید",
+  "appartment": "آپارتمان",
+  "enter_appartment": "شماره آپارتمان را وارد کنید",
+  "qawala": "قواله",
+  "enter_qawala": "قواله را وارد کنید",
+  "bathrooms": "حمام‌ها",
+  "enter_bathrooms": "تعداد حمام را وارد کنید",
+  "area": "مساحت",
+  "enter_area": "مساحت را وارد کنید",
+  "nature": "نوعیت",
+  "enter_nature": "نوعیت را وارد کنید",
+  "appartment_features": "ویژگی‌های آپارتمان",
+  "enter_appartment_features": "ویژگی‌ها را وارد کنید",
+  "city_features": "ویژگی‌های شهری",
+  "enter_city_features": "ویژگی‌ها را وارد کنید",
+  "date": "تاریخ",
+  "enter_date": "تاریخ را وارد کنید",
+
+  "elevator": "آسانسور",
+  "heating": "گرمایش",
+  "electric_meter": "متر برق",
+  "roof": "بام",
+
+  "price": "قیمت",
+  "enter_price": "قیمت را وارد کنید",
+  "final_price": "قیمت نهایی",
+  "enter_final_price": "قیمت نهایی را وارد کنید",
+
+  "yes": "بلی",
+  "no": "نخیر",
+  "select": "انتخاب",
+
+  "submit": "ثبت",
+  "update": "آپدیت",
+  "delete": "حذف"
+
 
   
 

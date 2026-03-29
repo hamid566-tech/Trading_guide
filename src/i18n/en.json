@@ -30,7 +30,59 @@
   "user_management": "User Management",
   "password_reset": "Password Reset Form",
   "user_create_form": "User Create Form",
-  "user_report": "User Report"
+  "user_report": "User Report",
+
+  "id": "ID",
+  "enter_id": "Enter ID",
+  "status": "Status",
+
+  "name": "Name",
+  "enter_name": "Enter Name",
+  "fname": "Father Name",
+  "enter_fname": "Enter Father Name",
+  "tazkira": "Tazkira",
+  "enter_tazkira": "Enter Tazkira Number",
+  "phone": "Phone",
+  "enter_phone": "Enter Phone Number",
+  "address": "Address",
+  "enter_address": "Enter Address",
+  "rooms": "Rooms",
+  "enter_rooms": "Enter Rooms",
+  "appartment": "Apartment",
+  "enter_appartment": "Enter Apartment",
+  "qawala": "Qawala",
+  "enter_qawala": "Enter Qawala",
+  "bathrooms": "Bathrooms",
+  "enter_bathrooms": "Enter Bathrooms",
+  "area": "Area",
+  "enter_area": "Enter Area",
+  "nature": "Nature",
+  "enter_nature": "Enter Nature",
+  "appartment_features": "Apartment Features",
+  "enter_appartment_features": "Enter Apartment Features",
+  "city_features": "City Features",
+  "enter_city_features": "Enter City Features",
+  "date": "Date",
+  "enter_date": "Enter Date",
+
+  "elevator": "Elevator",
+  "heating": "Heating",
+  "electric_meter": "Electric Meter",
+  "roof": "Roof",
+
+  "price": "Price",
+  "enter_price": "Enter Price",
+  "final_price": "Final Price",
+  "enter_final_price": "Enter Final Price",
+
+  "yes": "Yes",
+  "no": "No",
+  "select": "Select",
+
+  "submit": "Submit",
+  "update": "Update",
+  "delete": "Delete"
+
 
   
 }
