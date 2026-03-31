@@ -1,12 +1,14 @@
+import { useLanguage } from "../../../context/LanguageContext";
 const ReportTable = ({ columns, data }) => {
+  const { t } = useLanguage();
   return (
-    <div className="w-full overflow-x-auto border border-white/20 rounded-xl">
+    <div className="w-full h-[400px] overflow-y-auto overflow-x-auto border border-white/20 rounded-xl">
       <table className="min-w-full text-sm text-left table-auto">
-        <thead className="bg-white/20 sticky top-0 backdrop-blur-md">
+        <thead className="bg-white/20 sticky top-0 z-10 backdrop-blur-md">
           <tr>
             {columns.map((col) => (
               <th key={col.accessor} className="p-3 whitespace-nowrap">
-                {col.header}
+                {t[col.header]}
               </th>
             ))}
           </tr>
@@ -27,7 +29,7 @@ const ReportTable = ({ columns, data }) => {
                             : "bg-gray-400 text-gray-800"
                           }`}
                       >
-                        {row.status}
+                        {t[row.status]}
                       </span>
                     ) : (
                       row[col.accessor]

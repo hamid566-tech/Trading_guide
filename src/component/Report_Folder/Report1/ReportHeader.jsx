@@ -2,12 +2,13 @@ import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import moment from "moment-jalaali";
+import { useLanguage } from "../../../context/LanguageContext";
 
 
 const ReportHeader = ({ title, reportId }) => {
   const navigate = useNavigate();
-
   const today = moment().format("jYYYY/jMM/jDD  HH:mm");
+  const { t } = useLanguage(); // t.language => "fa" یا "en"
 
   return (
     <div className="relative mb-10">

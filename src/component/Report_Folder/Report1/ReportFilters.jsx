@@ -2,11 +2,13 @@ import React from "react";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_en from "react-date-object/locales/persian_en";
+import { useLanguage } from "../../../context/LanguageContext";
 
 // moment.loadPersian({ dialect: "persian-modern" });
 
 const ReportFilters = ({ fields, filters, onChange }) => {
 
+  const { t } = useLanguage();
 
   // تغییر فیلدهای متنی
   const handleTextChange = (name, value) => {
@@ -43,15 +45,23 @@ const ReportFilters = ({ fields, filters, onChange }) => {
               name={field.name}
               value={filters[field.name] || ""}
               onChange={onChange}
-              className="bg-white/20 backdrop-blur-md border border-white/30 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white w-full"
-            >
-              <option value="">{field.label}</option>
-
-              {field.options.map((opt) => (
-                <option key={opt} value={opt} className="text-gray-800">
-                  {opt}
-                </option>
-              ))}
+              className="bg-white/10 border border-white/30 text-white p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-yellow-400 hover:bg-white/20 transition-all duration-200">
+              
+                <option value="">{t.select} {t[field.label]}</option>
+                {/* برای گزینه‌های بلی/نخیر */}
+                {["elevator", "heating", "electric_meter", "roof"].includes(field.name) ? (
+                  <>
+                    <option value="Yes" className="text-gray-800">{t.language === "fa" ? "بلی" : "Yes"}</option>
+                    <option value="No" className="text-gray-800">{t.language === "fa" ? "نخیر" : "No"}</option>
+                  </>
+                ) : (
+                  // برای بقیه select ها
+                  field.options.map((opt) => (
+                    <option key={opt} value={opt} className="text-gray-800">
+                      {t[opt] || opt}
+                    </option>
+                  ))
+                )}
 
             </select>
           );
@@ -65,10 +75,10 @@ const ReportFilters = ({ fields, filters, onChange }) => {
               calendar={persian}
               locale={persian_en}
               format="YYYY/MM/DD"
-              value={filters[field.name] || ""}
+              value={filters[field.name] || null} 
               onChange={(date) => handleDateChange(field.name, date)}
               inputClass="bg-white/20 backdrop-blur-md border border-white/30 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-white/70 w-full"
-              placeholder={field.label}
+              placeholder={t[field.label]}
             />
           );
         }
@@ -79,7 +89,7 @@ const ReportFilters = ({ fields, filters, onChange }) => {
             key={field.name}
             type="text"
             name={field.name}
-            placeholder={field.label}
+            placeholder={t[field.label]}
             value={filters[field.name] || ""}
             onChange={(e) => handleTextChange(field.name, e.target.value)}
             className="bg-white/20 backdrop-blur-md border border-white/30 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-white/70 w-full"

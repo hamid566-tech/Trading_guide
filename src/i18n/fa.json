@@ -81,9 +81,33 @@
 
   "submit": "ثبت",
   "update": "آپدیت",
-  "delete": "حذف"
+  "delete": "حذف",
 
+  "available": "موجود",
+  "unavailable": "ناموجود",
+  "print_report": "چاپ گزارش",
+  "total_records": "تعداد رکوردها",
+  "total_price": "مجموع قیمت",
+  "total_final_price": "مجموع قیمت نهایی",
+  "startDate": "تاریخ شروع",
+  "endDate": "تاریخ ختم",
 
+  "field_required": "این فیلد لازمی است",
+  "id_not_found": "ID پیدا نشد ❌",
+  "search_id": "اول ID را جستجو کن ⚠️",
+  "server_error": "❌ مشکل در اتصال سرور",
+  "update_failed": "اپدیت انجام نشد ❌",
+  "confirm_reload": "فیلد ID باید خالی باشد.\nآیا میخواهید صفحه دوباره تازه شود؟",
+  "confirm_reload_update": "فیلد ID باید جستجو گرد.\nآیا میخواهید صفحه دوباره تازه شود؟",
+  "confirm_submit": "آیا مطمئن هستید که فورم ثبت شود؟",
+  "confirm_update": "آیا مطمئن هستید که معلومات آپدیت شود؟",
+  "confirm_delete": "آیا مطمئن هستید که این رکورد حذف شود؟",
+  "final_price_empty": "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟",
+  "form_successfully_saved": "فورم موفقانه ثبت شد ✅ ID: ",
+  "information_update": "معلومات موفقانه اپدیت شد ✅",
+  "record_delete": "رکورد موفقانه حذف شد ✅",
+  "error_saving_information": "خطا در ثبت معلومات ❌",
+  "record_not_found": "مشکل در اتصال به سرور ❌"
   
 
 }

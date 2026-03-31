@@ -84,25 +84,22 @@ const Rent_Form_page = () => {
                 setErrors({});
 
             } else {
-                alert("ID پیدا نشد ❌");
+                alert(t.id_not_found);
                 setFormData({});
-                setStatus("");
                 setMode("");
                 setErrors({});
             }
 
         } catch (error) {
             console.error("Error:", error);
-            alert("❌ مشکل در اتصال سرور");
+            alert(t.server_error);
         }
 
     }
 
     const handleSubmit = () => {
         if(id.trim()){
-            const confirmMsg = window.confirm(
-            "فیلد ID باید خالی باشد.\nآیا میخواهید صفحه دوباره تازه (Reload) شود؟"
-            );
+            const confirmMsg = window.confirm(t.confirm_reload);
 
             if(confirmMsg){
                 window.location.reload();
@@ -117,27 +114,23 @@ const Rent_Form_page = () => {
         // ولیدیشن بقیه فیلدهای ضروری
         fields.forEach((field) => {
             if (field.required && (!formData[field.label] || !formData[field.label].trim())) {
-                newErrors[field.label] = "این فیلد لازمی است";
+                newErrors[field.label] = "field_required";
             }
         });
 
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length === 0) {
-            // بررسی Final Price
             if (!formData["final_price"] || formData["final_price"].trim() === "") {
-                const addFinalPrice = window.confirm(
-                    "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟"
-                );
+                const addFinalPrice = window.confirm(t.final_price_empty);
                 if (addFinalPrice) {
-                    // تمرکز روی فیلد Final Price تا کاربر مقدار وارد کند
                     const finalInput = document.querySelector('input[name="final_price"]');
                     finalInput?.focus();
                     return; // توقف Submit تا کاربر مقدار وارد کند
                 }
             }
 
-            const confirmSubmit = window.confirm("آیا مطمئن هستید که فورم ثبت شود؟");
+            const confirmSubmit = window.confirm(t.confirm_submit);
             if (!confirmSubmit) return;
 
             fetch("http://localhost:5000/api/rents/add", {
@@ -148,30 +141,28 @@ const Rent_Form_page = () => {
             .then(res => res.json())
             .then(data => {
                 if(data.success){
-                    alert("فورم موفقانه ثبت شد ✅ ID: " + data.id);
+                    alert(t.form_successfully_saved + data.id);
                     setFormData({});
                     setStatus("");
                 }else {
-                    alert("خطا در ثبت معلومات ❌");
+                    alert(t.error_saving_information);
                 }
             })
             .catch(err => {
                 console.error("Error: ",err);
-                alert("مشکل در اتصال به سرور ❌");
+                alert(t.server_error);
             });
         }
     }
 
     const handleUpdate = async () => {
         if(!id.trim()) {
-            alert("اول ID را جستجو کن ⚠️");
+            alert(t.search_id);
             return;
         }
 
         if(mode !== "edit"){
-            const confirmMsg = window.confirm(
-            "شما در حالت جستجو نیستید.\nآیا میخواهید صفحه دوباره تازه شود؟"
-            );
+            const confirmMsg = window.confirm(t.confirm_reload_update);
 
             if(confirmMsg){
                 window.location.reload();
@@ -186,7 +177,7 @@ const Rent_Form_page = () => {
         // ولیدیشن فیلدهای ضروری
         fields.forEach((field)=>{
             if (field.required && (!formData[field.label] || !formData[field.label].trim())) {
-                newErrors[field.label] = "این فیلد لازمی است";
+                newErrors[field.label] = "field_required";
             }
         });
 
@@ -196,9 +187,7 @@ const Rent_Form_page = () => {
 
         // بررسی Final Price
         if (!formData["final_price"] || formData["final_price"].trim() === "") {
-            const addFinalPrice = window.confirm(
-                "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟"
-            );
+            const addFinalPrice = window.confirm(t.final_price_empty);
             if (addFinalPrice) {
                 const finalInput = document.querySelector('input[placeholder="Enter Final Price"]');
                 finalInput?.focus();
@@ -206,7 +195,7 @@ const Rent_Form_page = () => {
             }
         }
 
-        const confirmUpdate = window.confirm("آیا مطمئن هستید که معلومات اپدیت شود؟");
+        const confirmUpdate = window.confirm(t.confirm_update);
         if (!confirmUpdate) return;
 
         try {
@@ -217,32 +206,30 @@ const Rent_Form_page = () => {
             });
             const data = await res.json();
             if(data.success) {
-                alert("معلومات موفقانه اپدیت شد ✅");
+                alert(t.information_update);
                 setFormData({});
                 setStatus("");
                 setID("");
                 setMode("");
                 setErrors({});
             } else {
-                alert("اپدیت انجام نشد ❌");
+                alert(t.update_failed);
             }
         } catch (error) {
             console.error("Error:",error);
-            alert("مشکل در اتصال به سرور ❌");
+            alert(t.server_error);
         }
     }
 
     const handleDelete = async () => {
 
     if (!id.trim()) {
-        alert("اول ID را جستجو کن ⚠️");
+        alert(t.search_id);
         return;
     }
     
     if(mode !== "edit"){
-        const confirmMsg = window.confirm(
-        "اطلاعات جستجو نشده است.\nآیا میخواهید صفحه دوباره تازه شود؟"
-        );
+        const confirmMsg = window.confirm(t.confirm_reload_update);
 
         if(confirmMsg){
             window.location.reload();
@@ -251,7 +238,7 @@ const Rent_Form_page = () => {
         return;
     }
 
-    const confirmDelete = window.confirm("آیا مطمئن هستید که این رکورد حذف شود؟");
+    const confirmDelete = window.confirm(t.confirm_delete);
 
     if (!confirmDelete) return;
 
@@ -264,7 +251,7 @@ const Rent_Form_page = () => {
         const data = await res.json();
 
         if (data.success) {
-            alert("رکورد موفقانه حذف شد ✅");
+            alert(t.record_delete);
 
             setFormData({});
             setStatus("");
@@ -284,11 +271,11 @@ const Rent_Form_page = () => {
     useEffect(() => {
         // وقتی Final Price تغییر کرد
         if (formData["final_price"] && formData["final_price"].trim() !== "") {
-            setStatus("unavailable"); // اگر پر باشد، وضعیت unavailable
+            setStatus(t.unavailable); // اگر پر باشد، وضعیت unavailable
         } else {
-            setStatus("available"); // اگر خالی باشد، وضعیت available
+            setStatus(t.available); // اگر خالی باشد، وضعیت available
         }
-    }, [formData["final_price"]]);
+    }, [formData["final_price"], t]);
 
 
   return (
@@ -296,20 +283,19 @@ const Rent_Form_page = () => {
     <div className="mt-24 w-full max-w-5xl mx-auto bg-white/20 backdrop-blur-md shadow-2xl rounded-2xl p-6 sm:p-10 text-white border border-white/30 select-none">
         
       {/* Back Button - Left */}
-        <div className="fixed top-6 left-6 z-50">
+        <div className={`fixed top-6 ${document.documentElement.dir === "rtl" ? "right-6" : "left-6"} z-50`}>
             <button
-                onClick={() => navigate(-1)}
-                className="group relative p-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg hover:bg-white/20 hover:shadow-yellow-400/40 active:scale-90 transition-all duration-300 cursor-pointer"
-            >
+            onClick={() => navigate(-1)}
+            className="group relative p-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg hover:bg-white/20 hover:shadow-yellow-400/40 active:scale-90 transition-all duration-300 cursor-pointer">
                 <ArrowLeft
                 size={20}
-                className="text-white group-hover:-translate-x-1 transition-transform duration-300"
+                className={`text-white transition-transform duration-300 ${document.documentElement.dir === "rtl" ? "rotate-180 group-hover:translate-x-1" : "group-hover:-translate-x-1"}`}
                 />
             </button>
             </div>
 
             {/* ID Badge - Right */}
-            <div className="fixed top-6 right-6 z-50">
+            <div className={`fixed top-6 ${document.documentElement.dir === "rtl" ? "left-6" : "right-6"} z-50`}>
             <div className="px-4 py-2 text-white font-semibold">
                 S_A_1
             </div>
@@ -376,7 +362,7 @@ const Rent_Form_page = () => {
                     type="text"
                     value={status}
                     readOnly
-                    className="w-full px-4 py-2 rounded-lg bg-white/20 text-white opacity-70 cursor-not-allowed focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg bg-white/20 text-white opacity-70 focus:outline-none pointer-events-none "
                     />
 
                 </div>
@@ -412,12 +398,12 @@ const Rent_Form_page = () => {
                             <option value="" className="text-black">
                             {t.select} {t[field.label]}
                             </option>
-                            <option value="Yes" className="text-black">{t.yes}</option>
-                            <option value="No" className="text-black">{t.no}</option>
+                            <option value="Yes" className="text-black">{t.language === "fa" ? "بلی" : "Yes"}</option>
+                            <option value="No" className="text-black">{t.language === "fa" ? "نخیر" : "No"}</option>
                         </select>
                         {
                             errors[field.label] && (
-                                <p className='text-red-400 text-sm font-medium'>{errors[field.label]}</p>
+                                <p className='text-red-400 text-sm font-medium'>{t[errors[field.label]]}</p>
                             )
                         }
                     </>
@@ -452,7 +438,7 @@ const Rent_Form_page = () => {
 
                         {
                             errors[field.label] && (
-                                <p className='text-red-400 text-sm font-medium'>{errors[field.label]}</p>
+                                <p className='text-red-400 text-sm font-medium'>{t[errors[field.label]]}</p>
                             )
                         }
                     </>
