@@ -106,7 +106,8 @@
   "form_successfully_saved": "Form submitted successfully ✅ ID: ",
   "information_update": "Information updated successfully ✅",
   "record_delete": "Record deleted successfully ✅",
-  "error_saving_information": "Error saving information ❌"
+  "error_saving_information": "Error saving information ❌",
+  "record_not_found": "Record not found ❌"
 
 
   

@@ -14,7 +14,7 @@ const Rent_Form_page = () => {
     const [status,setStatus] =useState('');
     const [mode, setMode] = useState('');
     const user = JSON.parse(localStorage.getItem("user"));
-    const { t } = useLanguage();
+    const { t , language} = useLanguage();
 
     const navigate=useNavigate();
     
@@ -143,7 +143,7 @@ const Rent_Form_page = () => {
                 if(data.success){
                     alert(t.form_successfully_saved + data.id);
                     setFormData({});
-                    setStatus("");
+                    setStatus("available");
                 }else {
                     alert(t.error_saving_information);
                 }
@@ -208,7 +208,7 @@ const Rent_Form_page = () => {
             if(data.success) {
                 alert(t.information_update);
                 setFormData({});
-                setStatus("");
+                setStatus("available");
                 setID("");
                 setMode("");
                 setErrors({});
@@ -259,24 +259,34 @@ const Rent_Form_page = () => {
             setMode("");
 
         } else {
-            alert("رکورد پیدا نشد ❌");
+            alert(t.record_not_found);
         }
 
     } catch (error) {
         console.error("Error:", error);
-        alert("مشکل در اتصال به سرور ❌");
+        alert(t.server_error);
     }
 };
 
     useEffect(() => {
         // وقتی Final Price تغییر کرد
         if (formData["final_price"] && formData["final_price"].trim() !== "") {
-            setStatus(t.unavailable); // اگر پر باشد، وضعیت unavailable
+            setStatus("unavailable"); // اگر پر باشد، وضعیت unavailable
         } else {
-            setStatus(t.available); // اگر خالی باشد، وضعیت available
+            setStatus("available"); // اگر خالی باشد، وضعیت available
         }
     }, [formData["final_price"], t]);
 
+    const yesNoOptions = [
+        { value: "Yes", labelEn: "Yes", labelFa: "بلی" },
+        { value: "No", labelEn: "No", labelFa: "نخیر" }
+    ];
+
+    const getStatusLabel = () => {
+        if(status === "available") return t.available;
+        if(status === "unavailable") return t.unavailable;
+        return "";
+    };
 
   return (
     
@@ -360,7 +370,7 @@ const Rent_Form_page = () => {
 
                     <input
                     type="text"
-                    value={status}
+                    value={getStatusLabel()}
                     readOnly
                     className="w-full px-4 py-2 rounded-lg bg-white/20 text-white opacity-70 focus:outline-none pointer-events-none "
                     />
@@ -389,17 +399,17 @@ const Rent_Form_page = () => {
                         <select
                             value={formData[field.label] || ""}
                             onChange={(e) => {
-                                const value = e.target.value;
-                                setFormData({ ...formData, [field.label]: value });
+                                setFormData({ ...formData, [field.label]: e.target.value });
                                 setErrors(prev => ({ ...prev, [field.label]: "" }));
                             }}
                             className={`px-4 py-2 rounded-lg bg-white/30 text-white ${errors[field.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:outline-none focus:ring-2 focus:ring-yellow-400"}`}
                         >
-                            <option value="" className="text-black">
-                            {t.select} {t[field.label]}
-                            </option>
-                            <option value="Yes" className="text-black">{t.language === "fa" ? "بلی" : "Yes"}</option>
-                            <option value="No" className="text-black">{t.language === "fa" ? "نخیر" : "No"}</option>
+                            <option value="">{t.select} {t[field.label]}</option>
+                            {yesNoOptions.map((option) => (
+                                <option key={option.value} value={option.value} className="text-gray-800">
+                                    {language === "FA" ? option.labelFa : option.labelEn}
+                                </option>
+                            ))}
                         </select>
                         {
                             errors[field.label] && (
