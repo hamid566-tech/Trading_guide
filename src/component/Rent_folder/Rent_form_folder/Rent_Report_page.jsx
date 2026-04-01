@@ -66,15 +66,15 @@ const handleSearch = async () => {
 
   const mappedFilters = { ...filters };
 
-  // تبدیل مقادیر select به yes/no
-  ["heating","elevator","roof","electric_meter"].forEach(field => {
-    if(mappedFilters[field]){
-      if(t.language === "fa"){
-        mappedFilters[field] = mappedFilters[field] === "بلی" ? "yes" : 
-                               mappedFilters[field] === "نخیر" ? "no" : mappedFilters[field];
-      }
-    }
-  });
+  // // تبدیل مقادیر select به yes/no
+  // ["heating","elevator","roof","electric_meter"].forEach(field => {
+  //   if(mappedFilters[field]){
+  //     if(t.language === "fa"){
+  //       mappedFilters[field] = mappedFilters[field] === "بلی" ? "yes" : 
+  //                              mappedFilters[field] === "نخیر" ? "no" : mappedFilters[field];
+  //     }
+  //   }
+  // });
 
   // حذف moment و تبدیل تاریخ
    const query = new URLSearchParams(mappedFilters).toString();

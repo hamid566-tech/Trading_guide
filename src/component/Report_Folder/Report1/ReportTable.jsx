@@ -31,7 +31,9 @@ const ReportTable = ({ columns, data }) => {
                       >
                         {t[row.status]}
                       </span>
-                    ) : (
+                    ) : ["elevator","heating","electric_meter","roof"].includes(col.accessor) ? (
+                      t[row[col.accessor]?.toLowerCase()]
+                    ): (
                       row[col.accessor]
                     )}
                   </td>

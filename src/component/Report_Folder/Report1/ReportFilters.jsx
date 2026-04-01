@@ -51,8 +51,8 @@ const ReportFilters = ({ fields, filters, onChange }) => {
                 {/* برای گزینه‌های بلی/نخیر */}
                 {["elevator", "heating", "electric_meter", "roof"].includes(field.name) ? (
                   <>
-                    <option value="Yes" className="text-gray-800">{t.language === "fa" ? "بلی" : "Yes"}</option>
-                    <option value="No" className="text-gray-800">{t.language === "fa" ? "نخیر" : "No"}</option>
+                    <option value="Yes" className="text-gray-800">{t.yes}</option>
+                    <option value="No" className="text-gray-800">{t.no}</option>
                   </>
                 ) : (
                   // برای بقیه select ها
