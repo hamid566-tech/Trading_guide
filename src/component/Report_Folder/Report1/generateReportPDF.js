@@ -3,105 +3,140 @@ import autoTable from "jspdf-autotable";
 import "../../../fonts/Vazirmatn-Regular-normal";
 import "../../../fonts/Vazirmatn-Bold-normal";
 import moment from "moment-jalaali";
+// وارد کردن کتابخانه جدید
+import reshape from "arabic-persian-reshaper";
+
 moment.loadPersian({ dialect: "persian-modern" });
 
-export const generateReportPDF = (columns, data, filters, title = "Report") => {
+export const generateReportPDF = (columns, data, filters, title = "Report", t, language) => {
+  const isRTL = language === "FA";
   const doc = new jsPDF({ orientation: "landscape" });
+
+  // if (isRTL) {
+  //   doc.setR2L(true);
+  // }
+
+  // تابع اصلاح متن برای نمایش درست در PDF
+  const fixText = (text) => {
+    if (!text) return "";
+    // const str = String(text);
+    // // اگر زبان فارسی/دری است، حروف را بازسازی کن
+    // if (isRTL) {
+    //   return reshape(str);
+    // }
+    // return str;
+
+  return String(text);
+  };
+
   doc.setFont("Vazirmatn", "normal");
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const rightX = pageWidth - 10;
+  const leftX = 10;
   
-  const pageWidth = doc.internal.pageSize.getWidth(); // اندازه عرض صفحه
-  const today = moment().format("jYYYY/jMM/jDD HH:mm");
+  // تاریخ و زمان
+  const todayRaw = moment().format("jYYYY/jMM/jDD HH:mm");
+  const today = fixText(todayRaw);
 
-  // 📅 تاریخ (بالا سمت چپ)
+  // معکوس کردن ستون‌ها برای RTL
+  const tableColumns = isRTL ? [...columns].reverse() : columns;
+
+  const translateValue = (value, t) => {
+    if (!value) return "";
+    const val = String(value).toLowerCase();
+    if (val === "yes") return t.yes;
+    if (val === "no") return t.no;
+    if (val === "available") return t.available;
+    if (val === "unavailable") return t.unavailable;
+    return value;
+  };
+
+  // 📅 تاریخ (بالا)
   doc.setFontSize(10);
-  doc.text(today, 10, 25);
+  doc.text(today, isRTL ? rightX : leftX, 25, { align: isRTL ? "right" : "left" });
 
-  // 📌 عنوان (مرکز صفحه)
-  doc.setFontSize(12);
-  doc.text(title, pageWidth / 2, 10, { align: "center" });
+  // 📌 عنوان
+  doc.setFontSize(14);
+  doc.text(fixText(title), pageWidth / 2, 10, { align: "center" });
 
-  // 🧾 بخش فیلترها
+  // 🧾 بخش فیلترها و جمع کل
   doc.setFontSize(10);
-  let currentY = 33; // موقعیت شروع عمودی
+  let currentY = 33;
+  const alignX = isRTL ? 10 : pageWidth - 10;
+  const alignX1 = isRTL ? pageWidth - 10 : 10 ;
 
+  // نمایش فیلترها
   Object.keys(filters).forEach((key) => {
     if (filters[key]) {
-      doc.text(`${key} : ${filters[key]}`, 14, currentY);
-      currentY += 6;
+      const filterLabel = fixText(`${t[key]} : ${translateValue(filters[key], t)}`);
+      doc.text(filterLabel, isRTL ? pageWidth - 10 : 10, currentY, { align: isRTL ? "right" : "left" });
+      currentY += 7;
     }
   });
 
-  // ➕ بخش جمع کل‌ها (راست صفحه)
+  // محاسبات مالی
   const totalRecords = data.length;
   const totalPrice = data.reduce((sum, row) => sum + Number(row.price || 0), 0);
-  const totalFinalPrice = data.reduce((sum, row) => sum + Number(row.final_price || 0),0);
+  const totalfinalPrice = data.reduce((sum, row) => sum + Number(row.final_price || 0), 0);
+  
+  doc.text(fixText(`${t.total_records}: ${totalRecords}`), isRTL ? 10 : pageWidth - 10, currentY, { align: isRTL ? "left" :"right"  });
+  doc.text(fixText(`${t.total_price}: ${totalPrice.toLocaleString()}`), isRTL ? leftX : rightX, currentY + 7, { align: isRTL ?  "left" :"right" });
+  doc.text(fixText(`${t.total_final_price}: ${totalfinalPrice.toLocaleString()}`), isRTL ? leftX : rightX, currentY + 14, { align: isRTL ?  "left" :"right"  });
 
-  // متن کاملاً به راست تراز شود (10 واحد فاصله از لبه)
-
-  const summaryY = 33;
-
-  doc.text(
-    `Total Records: ${totalRecords}`,
-    pageWidth - 10,
-    summaryY,
-    { align: "right" }
-  );
-  doc.text(
-    `Total Price: ${totalPrice.toLocaleString()}`,
-    pageWidth - 10,
-    summaryY + 6,
-    { align: "right" }
-  );
-  doc.text(
-    `Total Final Price: ${totalFinalPrice.toLocaleString()}`,
-    pageWidth - 10,
-    summaryY + 12,
-    { align: "right" }
+  // 📊 آماده‌سازی داده‌های جدول
+  const tableData = data.map(row =>
+    tableColumns.map(col => {
+      let value = row[col.accessor];
+      // ترجمه مقادیر خاص
+      if (["status", "elevator", "heating", "electric_meter", "roof"].includes(col.accessor)) {
+        value = translateValue(value, t);
+      }
+      return fixText(value); 
+    })
   );
 
-  // 📊 داده‌های جدول
-  const tableData = data.map(row => columns.map(col => row[col.accessor]));
+  const tableHeaders = [tableColumns.map(col => fixText(t[col.header]))];
 
   autoTable(doc, {
-    startY: currentY + 22, // شروع زیر فیلترها و جمع کل‌ها
-    head: [columns.map(col => col.header)],
+    startY: currentY + 20,
+    head: tableHeaders,
     body: tableData,
     theme: "grid",
-    margin: { left: 10, right: 10 },
-    tableWidth: "auto",
-
     styles: {
-      font: "Vazirmatn",
-      fontStyle: "normal",  
-      fontSize: 6,
-      halign: "center",
-      valign: "middle",
-      cellWidth: "auto",
-      overflow: "linebreak",
-      minCellHeight: 8,
+      font: "Vazirmatn", // استفاده اجباری از وزیر برای نمایش فارسی
+      fontSize: 7,
+      halign: isRTL ? "right" : "left",
       cellPadding: 2,
-      lineWidth: 0.1,
-      lineColor: [0, 0, 0],
-      textColor: 0,
+      // overflow: "wrap", // 🔥 خیلی مهم
     },
     headStyles: {
-      font: "Vazirmatn",
+      halign: isRTL ? "right" : "left", // 👈 خیلی مهم
+      fillColor: [245, 245, 245],
+      textColor: 20,
+      fontSize: 7,
       fontStyle: "bold",
-      fillColor: [240, 240, 240],
-      textColor: 0,
+      // overflow: "wrap",
     },
-    didDrawPage: function () {
-      const pageCount = doc.getNumberOfPages();
-      const pageSize = doc.internal.pageSize;
+    columnStyles: tableColumns.reduce((acc, col) => {
+      acc[col.accessor] = { cellWidth: 'wrap', minCellWidth: 30 };
+      return acc;
+    }, {}),
+    // bodyStyles: {
+    //   valign: "middle",
+    // },
+    tableWidth: 'auto',
+
+    didDrawPage: function (data) {
+      // const pageCount = doc.getNumberOfPages();
+      const pageNumber = doc.internal.getCurrentPageInfo().pageNumber;
+      const footer = isRTL ? `صفحه ${pageNumber} از {total_pages}` : `Page ${pageNumber} of {total_pages}`;
       doc.setFontSize(9);
-      doc.text(
-        `Page ${doc.internal.getCurrentPageInfo().pageNumber} of ${pageCount}`,
-        pageSize.width / 2,
-        pageSize.height - 10,
-        { align: "center" }
-      );
+      doc.text(fixText(footer), pageWidth / 2, doc.internal.pageSize.height - 10, { align: "center" });
     },
   });
+  
+      // بعد از تمام جدول:
+      doc.putTotalPages('{total_pages}');
 
   doc.save(`${title}.pdf`);
 };

@@ -14,7 +14,7 @@ const Rent_Report_page = () => {
   const totalPrice = filteredData.reduce((sum, row) => sum + Number(row.price || 0),0);
   const totalFinalPrice = filteredData.reduce((sum, row) => sum + Number(row.final_price || 0),0);
   const user = JSON.parse(localStorage.getItem("user"));
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const fields = [
     { name: "name", label: "name", type: "text" },
@@ -94,7 +94,7 @@ const handleSearch = async () => {
     <div className="mt-24 max-w-full px-4 sm:px-6 lg:px-8 select-none">
       <div className="bg-white/10 backdrop-blur-xl rounded-2xl text-white shadow-2xl border border-white/20 p-6">
        
-        <ReportHeader title={t.rent_report + " 📊"} reportId="r_001" />
+        <ReportHeader title={t.rent_report + " 📊"} reportId="r_001" language={language} />
 
         <ReportFilters fields={fields} filters={filters} onChange={handleChange} />
 
@@ -107,7 +107,7 @@ const handleSearch = async () => {
           </button>
 
           <button
-          onClick={() => generateReportPDF(columns, filteredData, filters, "Rent Report")}
+          onClick={() => generateReportPDF(columns, filteredData, filters, t.rent_report, t, language)}
           disabled={user?.print_perm === 0}
           className={`relative overflow-hidden px-6 py-2 rounded-lg font-semibold text-white shadow-lg transition-all duration-300 ${user?.print_perm === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 hover:scale-105 active:scale-95 cursor-pointer"}`}>
             🖨️ {t.print_report}
