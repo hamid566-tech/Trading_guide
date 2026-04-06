@@ -65,8 +65,8 @@ function Header_page() {
 
   useEffect(() => {
 
-    const lang = localStorage.getItem("lang") || "EN";
-    document.documentElement.dir = lang === "FA" ? "rtl" : "ltr";
+    // const lang = localStorage.getItem("lang") || "EN";
+    // document.documentElement.dir = lang === "FA" ? "rtl" : "ltr";
     const storedUser = JSON.parse(localStorage.getItem('user'));
     
     if (storedUser) {

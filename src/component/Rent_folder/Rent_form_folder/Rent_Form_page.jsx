@@ -298,8 +298,7 @@ const Rent_Form_page = () => {
             className="group relative p-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg hover:bg-white/20 hover:shadow-yellow-400/40 active:scale-90 transition-all duration-300 cursor-pointer">
                 <ArrowLeft
                 size={20}
-                className={`text-white transition-transform duration-300 ${document.documentElement.dir === "rtl" ? "rotate-180 group-hover:translate-x-1" : "group-hover:-translate-x-1"}`}
-                />
+                className={`text-white transition-transform duration-300 ${document.documentElement.dir === "rtl" ? "rotate-180 group-hover:translate-x-1" : "group-hover:-translate-x-1"}`}/>
             </button>
         </div>
 
@@ -344,9 +343,7 @@ const Rent_Form_page = () => {
                         className="flex-1 px-4 py-2 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
                         />
                         
-                        {
-                        idError && <p className=' text-red-300 text-sm mt-1'>{idError}</p>
-                        }
+                        {idError && <p className=' text-red-300 text-sm mt-1'>{idError}</p>}
 
                         <button 
                         onClick={handlSearch}
@@ -402,12 +399,15 @@ const Rent_Form_page = () => {
                             setErrors(prev => ({ ...prev, [field.label]: "" }));
                         }}
                         className={`px-4 py-2 rounded-lg bg-white/30 text-white ${errors[field.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:outline-none focus:ring-2 focus:ring-yellow-400"}`}>
+                            
                             <option value="">{t.select} {t[field.label]}</option>
+                            
                             {yesNoOptions.map((option) => (
                                 <option key={option.value} value={option.value} className="text-gray-800">
                                     {language === "FA" ? option.labelFa : option.labelEn}
                                 </option>
                             ))}
+                            
                         </select>
                         {errors[field.label] && (<p className='text-red-400 text-sm font-medium'>{t[errors[field.label]]}</p>)}
                     </>

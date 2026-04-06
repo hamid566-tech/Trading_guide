@@ -102,12 +102,16 @@ export const generateReportPDF = (columns, data, filters, title = "Report", t, l
     head: tableHeaders,
     body: tableData,
     theme: "grid",
+
+    
+    tableWidth: 'full',
+    margin: { left: 5, right: 5 },
+
     styles: {
       font: "Vazirmatn", // استفاده اجباری از وزیر برای نمایش فارسی
       fontSize: 7,
       halign: isRTL ? "right" : "left",
       cellPadding: 2,
-      // overflow: "wrap", // 🔥 خیلی مهم
     },
     headStyles: {
       halign: isRTL ? "right" : "left", // 👈 خیلی مهم
@@ -115,16 +119,11 @@ export const generateReportPDF = (columns, data, filters, title = "Report", t, l
       textColor: 20,
       fontSize: 7,
       fontStyle: "bold",
-      // overflow: "wrap",
     },
     columnStyles: tableColumns.reduce((acc, col) => {
       acc[col.accessor] = { cellWidth: 'wrap', minCellWidth: 30 };
       return acc;
     }, {}),
-    // bodyStyles: {
-    //   valign: "middle",
-    // },
-    tableWidth: 'auto',
 
     didDrawPage: function (data) {
       // const pageCount = doc.getNumberOfPages();

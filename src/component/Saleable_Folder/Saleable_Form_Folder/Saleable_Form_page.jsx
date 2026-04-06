@@ -3,46 +3,48 @@ import { ArrowLeft, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment-jalaali';
 import { useEffect } from 'react';
+import { useLanguage } from "../../../context/LanguageContext";
 
 
 const Saleable_Form_page = () => {
 
     const [id,setID]=useState('');
     const [idError,setIDError] = useState('');
-    const [mode, setMode] = useState('');
-    const [status,setStatus] =useState('');
-    const [formData, setFormData] = useState({});
     const [errors, setErrors] = useState({});
+    const [formData, setFormData] = useState({});
+    const [status,setStatus] =useState('');
+    const [mode, setMode] = useState('');
     const user = JSON.parse(localStorage.getItem("user"));
+    const { t , language} = useLanguage();
 
     const navigate=useNavigate();
     
     const [fields,setFields]=useState([
-        {label:"Name", type:"text", placeholder:"Enter Name", required:true},
-        {label:"FName", type:"text", placeholder:"Enter Father Name", required:true},
-        {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number", required:true},
-        {label:"phone", type:"tel", inputMode:"numeric", placeholder:"Enter Phone Number", required:true},
-        {label:"Address", type:"text", placeholder:"Enter Address Number", required:true},
-        {label:"Rooms", type:"text", placeholder:"Enter Rooms Number", required:true},
-        {label:"Appartment", type:"text", placeholder:"Enter Appartment Number", required:true},
-        {label:"Qawala", type:"text", placeholder:"Enter Qawala", required:true},
-        {label:"Bathrooms", type:"text", placeholder:"Enter Bathroom Number", required:true},
-        {label:"Area", type:"text", placeholder:"Enter Area", required:true},
-        {label:"Nature", type:"text", placeholder:"Enter Nature", required:true},
-        {label:"Appartment Features", type:"text", placeholder:"Enter Appartment Features", required:true},
-        {label:"City Features", type:"text", placeholder:"Enter City Features", required:true},
-        {label:"Date", type:"text", placeholder:"Enter Date", required:true},
-        {label:"Elevator", type:"select", required:true},
-        {label:"Heating", type:"select", required:true},
-        {label:"Electric Meter", type:"select", required:true},
-        {label:"Roof", type:"select", required:true},
-        {label:"Price", type:"text", placeholder:"Enter Price", required:true},
-        {label:"Final Price", type:"text", placeholder:"Enter Final Price", required:false},
+        {label:"name", type:"text", placeholder:"enter_name", required:true},
+        {label:"fname", type:"text", placeholder:"enter_fname", required:true},
+        {label:"tazkira", type:"text", placeholder:"enter_tazkira", required:true},
+        {label:"phone", type:"tel", inputMode:"numeric", placeholder:"enter_phone", required:true},
+        {label:"address", type:"text", placeholder:"enter_address", required:true},
+        {label:"rooms", type:"text", placeholder:"enter_rooms", required:true},
+        {label:"appartment", type:"text", placeholder:"enter_appartment", required:true},
+        {label:"qawala", type:"text", placeholder:"enter_qawala", required:true},
+        {label:"bathrooms", type:"text", placeholder:"enter_bathrooms", required:true},
+        {label:"area", type:"text", placeholder:"enter_area", required:true},
+        {label:"nature", type:"text", placeholder:"enter_nature", required:true},
+        {label:"appartment_features", type:"text", placeholder:"enter_appartment_features", required:true},
+        {label:"city_features", type:"text", placeholder:"enter_city_features", required:true},
+        {label:"date", type:"text", placeholder:"enter_date", required:true},
+        {label:"elevator", type:"select", required:true},
+        {label:"heating", type:"select", required:true},
+        {label:"electric_meter", type:"select", required:true},
+        {label:"roof", type:"select", required:true},
+        {label:"price", type:"text", placeholder:"enter_price", required:true},
+        {label:"final_price", type:"text", placeholder:"enter_final_price", required:false},
     ]);
 
     const handleSearch=async ()=>{
         if(!id.trim()){
-            alert("⚠️ لطفاً اول ID را وارد کنید");
+            alert(t.enter_id_warning);
             return;
         }
 
@@ -52,47 +54,45 @@ const Saleable_Form_page = () => {
 
             if(data.success) {
                 setFormData({
-                    "Name": data.saleable.name || "",
-                    "FName": data.saleable.fname || "",
-                    "Tazkira": data.saleable.tazkira || "",
-                    "phone": data.saleable.phone || "",
-                    "Address": data.saleable.address || "",
-                    "Rooms": data.saleable.rooms || "",
-                    "Appartment": data.saleable.appartment || "",
-                    "Qawala": data.saleable.qawala || "",
-                    "Bathrooms": data.saleable.bathrooms || "",
-                    "Area": data.saleable.area || "",
-                    "Nature": data.saleable.nature || "",
-                    "Appartment Features": data.saleable.appartment_features || "",
-                    "City Features": data.saleable.city_features || "",
-                    "Date": data.saleable.date || "",
-                    "Elevator": data.saleable.elevator || "",
-                    "Heating": data.saleable.heating || "",
-                    "Electric Meter": data.saleable.electric_meter || "",
-                    "Roof": data.saleable.roof || "",
-                    "Price": data.saleable.price || "",
-                    "Final Price": data.saleable.final_price || ""
+                    name: data.saleable.name || "",
+                    fname: data.saleable.fname || "",
+                    tazkira: data.saleable.tazkira || "",
+                    phone: data.saleable.phone || "",
+                    address: data.saleable.address || "",
+                    rooms: data.saleable.rooms || "",
+                    appartment: data.saleable.appartment || "",
+                    qawala: data.saleable.qawala || "",
+                    bathrooms: data.saleable.bathrooms || "",
+                    area: data.saleable.area || "",
+                    nature: data.saleable.nature || "",
+                    appartment_features: data.saleable.appartment_features || "",
+                    city_features: data.saleable.city_features || "",
+                    date: data.saleable.date || "",
+                    elevator: data.saleable.elevator || "",
+                    heating: data.saleable.heating || "",
+                    electric_meter: data.saleable.electric_meter || "",
+                    roof: data.saleable.roof || "",
+                    price: data.saleable.price || "",
+                    final_price: data.saleable.final_price || ""
                 });
                 setStatus(data.saleable.status || "");
                 setMode('edit');
                 setErrors({});
             }else {
-                alert("ID پیدا نشد ❌");
+                alert(t.id_not_found);
                 setFormData({});
-                setStatus("");
                 setMode("");
                 setErrors({});
             }
         } catch (error) {
             console.error("Error:", error);
+            alert(t.server_error);
         }
     }
 
     const handleSubmit = () => {
         if(id.trim()){
-            const confirmMsg = window.confirm(
-            "فیلد ID باید خالی باشد.\nآیا میخواهید صفحه دوباره تازه (Reload) شود؟"
-            );
+            const confirmMsg = window.confirm(t.confirm_reload);
 
             if(confirmMsg){
                 window.location.reload();
@@ -107,7 +107,7 @@ const Saleable_Form_page = () => {
         // ولیدیشن بقیه فیلدهای ضروری
         fields.forEach((field) => {
             if (field.required && (!formData[field.label] || !formData[field.label].trim())) {
-                newErrors[field.label] = "این فیلد لازمی است";
+                newErrors[field.label] = "field_required";
             }
         });
 
@@ -115,19 +115,17 @@ const Saleable_Form_page = () => {
 
         if (Object.keys(newErrors).length === 0) {
             // بررسی Final Price
-            if (!formData["Final Price"] || formData["Final Price"].trim() === "") {
-                const addFinalPrice = window.confirm(
-                    "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟"
-                );
+            if (!formData["final_price"] || formData["final_price"].trim() === "") {
+                const addFinalPrice = window.confirm(t.final_price_empty);
                 if (addFinalPrice) {
                     // تمرکز روی فیلد Final Price تا کاربر مقدار وارد کند
-                    const finalInput = document.querySelector('input[placeholder="Enter Final Price"]');
+                    const finalInput = document.querySelector('input[name="final_price"]');
                     finalInput?.focus();
                     return; // توقف Submit تا کاربر مقدار وارد کند
                 }
             }
 
-            const confirmSubmit = window.confirm("آیا مطمئن هستید که فورم ثبت شود؟");
+            const confirmSubmit = window.confirm(t.confirm_submit);
             if (!confirmSubmit) return;
 
             fetch("http://localhost:5000/api/saleable/add", {
@@ -138,31 +136,28 @@ const Saleable_Form_page = () => {
             .then(res => res.json())
             .then(data => {
                 if(data.success){
-                    alert("فورم موفقانه ثبت شد ✅ ID: " + data.id);
+                    alert(t.form_successfully_saved + data.id);
                     setFormData({});
-                    setStatus("");
+                    setStatus("available");
                 }else {
-                    alert("خطا در ثبت معلومات ❌");
+                    alert(t.error_saving_information);
                 }
             })
             .catch(err => {
                 console.error("Error: ",err);
-                alert("مشکل در اتصال به سرور ❌");
+                alert(t.server_error);
             });
         }
     }
 
     const handleUpdate = async () => {
         if(!id.trim()) {
-            alert("اول ID را جستجو کن ⚠️");
+            alert(t.search_id);
             return;
         }
 
         if(mode !== "edit"){
-            const confirmMsg = window.confirm(
-            "شما در حالت جستجو نیستید.\nآیا میخواهید صفحه دوباره تازه شود؟"
-            );
-
+            const confirmMsg = window.confirm(t.confirm_reload_update);
             if(confirmMsg){
                 window.location.reload();
             }
@@ -176,7 +171,7 @@ const Saleable_Form_page = () => {
         // ولیدیشن فیلدهای ضروری
         fields.forEach((field)=>{
             if (field.required && (!formData[field.label] || !formData[field.label].trim())) {
-                newErrors[field.label] = "این فیلد لازمی است";
+                newErrors[field.label] = "field_required";
             }
         });
 
@@ -185,10 +180,8 @@ const Saleable_Form_page = () => {
         if(Object.keys(newErrors).length > 0) return;
 
         // بررسی Final Price
-        if (!formData["Final Price"] || formData["Final Price"].trim() === "") {
-            const addFinalPrice = window.confirm(
-                "Final Price خالی است. آیا می‌خواهید Final Price اضافه شود؟"
-            );
+        if (!formData["final_price"] || formData["final_price"].trim() === "") {
+            const addFinalPrice = window.confirm(t.final_price_empty);
             if (addFinalPrice) {
                 const finalInput = document.querySelector('input[placeholder="Enter Final Price"]');
                 finalInput?.focus();
@@ -196,7 +189,7 @@ const Saleable_Form_page = () => {
             }
         }
 
-        const confirmUpdate = window.confirm("آیا مطمئن هستید که معلومات اپدیت شود؟");
+        const confirmUpdate = window.confirm(t.confirm_update);
         if (!confirmUpdate) return;
 
         try {
@@ -207,31 +200,29 @@ const Saleable_Form_page = () => {
             });
             const data = await res.json();
             if(data.success) {
-                alert("معلومات موفقانه اپدیت شد ✅");
+                alert(t.information_update);
                 setFormData({});
-                setStatus("");
+                setStatus("available");
                 setID("");
                 setMode("");
                 setErrors({});
             } else {
-                alert("اپدیت انجام نشد ❌");
+                alert(t.update_failed);
             }
         } catch (error) {
             console.error("Error:",error);
-            alert("مشکل در اتصال به سرور ❌");
+            alert(t.server_error);
         }
     }
 
     const handleDelete = async () =>{
         if(!id.trim()){
-            alert("اول ID را جستجو کن ⚠️");
+            alert(t.search_id);
             return;
         }
 
         if(mode !== "edit"){
-            const confirmMsg = window.confirm(
-            "اطلاعات جستجو نشده است.\nآیا میخواهید صفحه دوباره تازه شود؟"
-            );
+            const confirmMsg = window.confirm(t.confirm_reload_update);
 
             if(confirmMsg){
                 window.location.reload();
@@ -240,7 +231,7 @@ const Saleable_Form_page = () => {
             return;
         }
         
-        const confirmDelete = window.confirm("آیا مطمئن هستید که این رکورد حذف شود؟");
+        const confirmDelete = window.confirm(t.confirm_delete);
         if(!confirmDelete) return;
         
         try{
@@ -249,17 +240,17 @@ const Saleable_Form_page = () => {
             });
             const data = await res.json();
             if(data.success){
-            alert("رکورد موفقانه حذف شد ✅");
+            alert(t.record_delete);
             setFormData({});
             setStatus("");
             setID("");
             setMode("");
             } else{
-                alert("رکورد پیدا نشد ❌");
+                alert(t.record_not_found);
             }
         } catch (error){
             console.error("Error:",error);
-            alert("مشکل در اتصال به سرور ❌");
+            alert(t.server_error);
         }
     }
 
@@ -267,31 +258,40 @@ const Saleable_Form_page = () => {
 
     useEffect(() => {
     // وقتی Final Price تغییر کرد
-    if (formData["Final Price"] && formData["Final Price"].trim() !== "") {
+    if (formData["final_price"] && formData["final_price"].trim() !== "") {
         setStatus("unavailable"); // اگر پر باشد، وضعیت unavailable
     } else {
         setStatus("available"); // اگر خالی باشد، وضعیت available
     }
-    }, [formData["Final Price"]]);
+    }, [formData["final_price"]]);
+
+    const yesNoOptions = [
+        { value: "Yes", labelEn: "Yes", labelFa: "بلی" },
+        { value: "No", labelEn: "No", labelFa: "نخیر" }
+    ];
+
+    const getStatusLabel = () => {
+        if(status === "available") return t.available;
+        if(status === "unavailable") return t.unavailable;
+        return "";
+    };
 
   return (
     <div className="mt-24 w-full max-w-5xl mx-auto bg-white/20 backdrop-blur-md shadow-2xl rounded-2xl p-6 sm:p-10 text-white border border-white/30 select-none">
             
           {/* Back Button - Left */}
-            <div className="fixed top-6 left-6 z-50">
+            <div className={`fixed top-6 ${document.documentElement.dir === "rtl" ? "right-6" : "left-6"} z-50`}>
                 <button
-                    onClick={() => navigate(-1)}
-                    className="group relative p-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg hover:bg-white/20 hover:shadow-yellow-400/40 active:scale-90 transition-all duration-300 cursor-pointer"
-                >
+                onClick={() => navigate(-1)}
+                className="group relative p-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg hover:bg-white/20 hover:shadow-yellow-400/40 active:scale-90 transition-all duration-300 cursor-pointer">
                     <ArrowLeft
                     size={20}
-                    className="text-white group-hover:-translate-x-1 transition-transform duration-300"
-                    />
+                    className={`text-white transition-transform duration-300 ${document.documentElement.dir === "rtl" ? "rotate-180 group-hover:translate-x-1" : "group-hover:-translate-x-1"}`}/>
                 </button>
-                </div>
+            </div>
     
                 {/* ID Badge - Right */}
-                <div className="fixed top-6 right-6 z-50">
+            <div className={`fixed top-6 ${document.documentElement.dir === "rtl" ? "left-6" : "right-6"} z-50`}>
                 <div className="px-4 py-2 text-white font-semibold">
                     S_A_3
                 </div>
@@ -300,7 +300,7 @@ const Saleable_Form_page = () => {
     
     
           <h2 className="text-xl sm:text-2xl font-bold mt-15 md:mt-0 mb-10 text-center">
-            saleable Form
+            {t.saleable_form}
           </h2>
     
     
@@ -310,7 +310,7 @@ const Saleable_Form_page = () => {
                     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
     
                     <label className="sm:w-24 text-sm font-semibold">
-                        ID :
+                        {t.id} :
                     </label>
     
                     <div className="flex flex-col sm:flex-row w-full gap-3">
@@ -334,6 +334,7 @@ const Saleable_Form_page = () => {
                         onClick={handleSearch}
                         className={`px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 hover:scale-105 transition duration-300 flex items-center justify-center cursor-pointer`}>
                         <Search size={18} color="white" />
+                        {t.search}
                         </button>
                     </div>
     
@@ -345,12 +346,12 @@ const Saleable_Form_page = () => {
                     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
     
                         <label className="sm:w-24 text-sm font-semibold">
-                            Status :
+                            {t.status} :
                         </label>
     
                         <input
                         type="text"
-                        value={status}
+                        value={getStatusLabel()}
                         readOnly
                         className="w-full px-4 py-2 rounded-lg bg-white/20 text-white opacity-70 cursor-not-allowed focus:outline-none"
                         />
@@ -366,60 +367,66 @@ const Saleable_Form_page = () => {
           {/* Form Fields */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            {fields.map((t, index) => (
+            {fields.map((field, index) => (
 
             <div key={index} className="flex flex-col gap-2">
 
                 <label className="text-sm font-semibold">
-                {t.label}
+                    {t[field.label]} :
                 </label>
 
-                {t.type === "select" ? (
+                {field.type === "select" ? (
 
                 <>
                     <select
-                    value={formData[t.label] || ""}
+                    value={formData[field.label] || ""}
                     onChange={(e) => {
-                        const value = e.target.value;
-                        setFormData({ ...formData, [t.label]: value });
-                        setErrors(prev => ({ ...prev, [t.label]: "" }));
+                        setFormData({ ...formData, [field.label]:  e.target.value });
+                        setErrors(prev => ({ ...prev, [field.label]: "" }));
                     }}
-                    className={`px-4 py-2 rounded-lg bg-white/30 text-white ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:outline-none focus:ring-2 focus:ring-yellow-400"}`}>
-                        <option value="" className="text-black"> Select {t.label}</option>
-                        <option value="Yes" className="text-black">Yes</option>
-                        <option value="No" className="text-black">No</option>
+                    className={`px-4 py-2 rounded-lg bg-white/30 text-white ${errors[field.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:outline-none focus:ring-2 focus:ring-yellow-400"}`}>
+                        
+                        <option value="">{t.select} {t[field.label]}</option>
+                            
+                            {yesNoOptions.map((option) => (
+                                <option key={option.value} value={option.value} className="text-gray-800">
+                                    {language === "FA" ? option.labelFa : option.labelEn}
+                                </option>
+                            ))}
+
                     </select>
-                    {errors[t.label] && (<p className='text-red-400 text-sm font-medium'>{errors[t.label]}</p>)}
+                    {errors[field.label] && (<p className='text-red-400 text-sm font-medium'>{t[errors[field.label]]}</p>)}
                 </>
 
                 ) : (
 
                 <>
                     <input
-                    type={t.type}
-                    placeholder={t.placeholder}
-                    value={formData[t.label] || ""}
+                    name={field.label}
+                    type={field.type}
+                    placeholder={t[field.placeholder]}
+                    value={formData[field.label] || ""}
                     onChange={(e) => {
                         let value = e.target.value;
                         // فقط اعداد برای فیلدهای خاص
-                        if(t.label === "phone" || t.label === "Price" || t.label === "Final Price"){
+                        if(field.label === "phone" || field.label === "price" || field.label === "final_price"){
                             value = value.replace(/[^0-9]/g,'');
                         }
                         // مقدار فرم را بروز کن
-                        setFormData({...formData, [t.label]: value});
+                        setFormData({...formData, [field.label]: value});
                         // خطا را پاک کن
-                        setErrors(prev => ({...prev,[t.label]: ""}));
+                        setErrors(prev => ({...prev,[field.label]: ""}));
                     }}
-                    readOnly={t.label === "Date"}
+                    readOnly={field.label === "date"}
                     onFocus={() => {
-                                if (t.label === "Date" && !formData[t.label]) {
+                                if (field.label === "date" && !formData[field.label]) {
                                     const today = moment().format("jYYYY/jMM/jDD");
-                                    setFormData({...formData,[t.label]:today});
-                                    setErrors(prev => ({...prev, [t.label]: ""}));
+                                    setFormData({...formData,[field.label]:today});
+                                    setErrors(prev => ({...prev, [field.label]: ""}));
                                 }
                             }}
-                    className={`px-4 py-2 rounded-lg bg-white/30 placeholder-white/40 text-whitefocus:outline-none ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}/>
-                    {errors[t.label] && (<p className='text-red-400 text-sm font-medium'>{errors[t.label]}</p>)}
+                    className={`px-4 py-2 rounded-lg bg-white/30 placeholder-white/40 text-whitefocus:outline-none ${errors[field.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}/>
+                    {errors[field.label] && (<p className='text-red-400 text-sm font-medium'>{t[errors[field.label]]}</p>)}
                 </>
                 )}
 
@@ -438,7 +445,7 @@ const Saleable_Form_page = () => {
             onClick={handleSubmit}
             disabled={user?.submit === 0}
             className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg  ${user?.submit === 0 ? "bg-gray-400 cursor-not-allowed" : " cursor-pointer bg-linear-to-r from-green-400 to-emerald-600 hover:scale-105 hover:shadow-green-500/40"}`}>
-                Submit
+                {t.submit}
             </button>
     
             {/* Update */}
@@ -446,15 +453,15 @@ const Saleable_Form_page = () => {
             onClick={handleUpdate}
             disabled={user?.update_perm === 0}
             className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${user?.update_perm === 0 ? "bg-gray-400 cursor-not-allowed": "bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer"}`}>
-                Update
+                {t.update}
             </button>
     
             {/* Delete */}
             <button 
             onClick={handleDelete}
             disabled={user?.delete_perm === 0}
-            className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${user?.delete_perm === 0 ? "bg-gray-400 cursor-not-allowed": "bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer"}`}>
-                Delete
+            className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${user?.delete_perm === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-linear-to-r from-rose-500 via-red-600 to-red-800 hover:scale-105 hover:shadow-red-500/40 cursor-pointer"}`}>
+                {t.delete}
             </button>
           </div>
     
