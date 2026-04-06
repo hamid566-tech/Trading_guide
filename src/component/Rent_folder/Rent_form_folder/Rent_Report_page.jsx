@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import ReportHeader from "../../Report_Folder/Report1/ReportHeader";
 import ReportFilters from "../../Report_Folder/Report1/ReportFilters";
 import ReportTable from "../../Report_Folder/Report1/ReportTable";
 import { generateReportPDF } from "../../Report_Folder/Report1/generateReportPDF";
-import ReportHeader from "../../Report_Folder/Report1/ReportHeader";
 import { useLanguage } from "../../../context/LanguageContext";
 
 const Rent_Report_page = () => {
@@ -64,22 +64,10 @@ const Rent_Report_page = () => {
 
 const handleSearch = async () => {
 
-  const mappedFilters = { ...filters };
+   const queryFilters = { ...filters };
 
-  // // تبدیل مقادیر select به yes/no
-  // ["heating","elevator","roof","electric_meter"].forEach(field => {
-  //   if(mappedFilters[field]){
-  //     if(t.language === "fa"){
-  //       mappedFilters[field] = mappedFilters[field] === "بلی" ? "yes" : 
-  //                              mappedFilters[field] === "نخیر" ? "no" : mappedFilters[field];
-  //     }
-  //   }
-  // });
-
-  // حذف moment و تبدیل تاریخ
-   const query = new URLSearchParams(mappedFilters).toString();
-
-  
+   // حذف moment و تبدیل تاریخ
+   const query = new URLSearchParams(queryFilters).toString();
 
   try {
     const res = await fetch(`http://localhost:5000/api/rents?${query}`);

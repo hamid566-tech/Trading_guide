@@ -252,7 +252,6 @@ const Rent_Form_page = () => {
 
         if (data.success) {
             alert(t.record_delete);
-
             setFormData({});
             setStatus("");
             setID("");
@@ -302,10 +301,10 @@ const Rent_Form_page = () => {
                 className={`text-white transition-transform duration-300 ${document.documentElement.dir === "rtl" ? "rotate-180 group-hover:translate-x-1" : "group-hover:-translate-x-1"}`}
                 />
             </button>
-            </div>
+        </div>
 
             {/* ID Badge - Right */}
-            <div className={`fixed top-6 ${document.documentElement.dir === "rtl" ? "left-6" : "right-6"} z-50`}>
+        <div className={`fixed top-6 ${document.documentElement.dir === "rtl" ? "left-6" : "right-6"} z-50`}>
             <div className="px-4 py-2 text-white font-semibold">
                 S_A_1
             </div>
@@ -397,13 +396,12 @@ const Rent_Form_page = () => {
                 {field.type === "select" ? (
                     <>
                         <select
-                            value={formData[field.label] || ""}
-                            onChange={(e) => {
-                                setFormData({ ...formData, [field.label]: e.target.value });
-                                setErrors(prev => ({ ...prev, [field.label]: "" }));
-                            }}
-                            className={`px-4 py-2 rounded-lg bg-white/30 text-white ${errors[field.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:outline-none focus:ring-2 focus:ring-yellow-400"}`}
-                        >
+                        value={formData[field.label] || ""}
+                        onChange={(e) => {
+                            setFormData({ ...formData, [field.label]: e.target.value });
+                            setErrors(prev => ({ ...prev, [field.label]: "" }));
+                        }}
+                        className={`px-4 py-2 rounded-lg bg-white/30 text-white ${errors[field.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:outline-none focus:ring-2 focus:ring-yellow-400"}`}>
                             <option value="">{t.select} {t[field.label]}</option>
                             {yesNoOptions.map((option) => (
                                 <option key={option.value} value={option.value} className="text-gray-800">
@@ -411,11 +409,7 @@ const Rent_Form_page = () => {
                                 </option>
                             ))}
                         </select>
-                        {
-                            errors[field.label] && (
-                                <p className='text-red-400 text-sm font-medium'>{t[errors[field.label]]}</p>
-                            )
-                        }
+                        {errors[field.label] && (<p className='text-red-400 text-sm font-medium'>{t[errors[field.label]]}</p>)}
                     </>
                 ) : (
                     <>
@@ -446,11 +440,7 @@ const Rent_Form_page = () => {
                         className={`px-4 py-2 rounded-lg bg-white/30 placeholder-white/40 text-white focus:outline-none ${errors[field.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}
                         />
 
-                        {
-                            errors[field.label] && (
-                                <p className='text-red-400 text-sm font-medium'>{t[errors[field.label]]}</p>
-                            )
-                        }
+                        {errors[field.label] && (<p className='text-red-400 text-sm font-medium'>{t[errors[field.label]]}</p>)}
                     </>
 
                 )}
