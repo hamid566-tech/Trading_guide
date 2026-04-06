@@ -5,7 +5,11 @@
     <link rel="icon" type="image/svg+xml" href="/Trading_guide/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>frontend</title>
-    <script type="module" crossorigin src="/Trading_guide/assets/index-BwWUmxAI.js"></script>
+    <script>
+      const lang = localStorage.getItem("lang") || "EN";
+      document.documentElement.dir = lang === "FA" ? "rtl" : "ltr";
+    </script>
+    <script type="module" crossorigin src="/Trading_guide/assets/index-CSqtsaNu.js"></script>
     <link rel="stylesheet" crossorigin href="/Trading_guide/assets/index-BxelHklE.css">
   </head>
   <body>
