@@ -92,6 +92,7 @@
   "startDate": "Start Date",
   "endDate": "End Date",
 
+  "enter_id_warning": "Please enter ID first ⚠️",
   "field_required": "This field is required",
   "id_not_found": "ID not found ❌",
   "search_id": "First, search the ID ⚠️",
@@ -107,7 +108,12 @@
   "information_update": "Information updated successfully ✅",
   "record_delete": "Record deleted successfully ✅",
   "error_saving_information": "Error saving information ❌",
-  "record_not_found": "Record not found ❌"
+  "record_not_found": "Record not found ❌",
+
+  "property_type": "Property Type",
+  "enter_property_type": "Enter Property Type",
+  "property_location": "Property Location",
+  "enter_property_location": "Enter Property Location"
 
   
 }

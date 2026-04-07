@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { ArrowLeft, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment-jalaali';
+import { useLanguage } from "../../../context/LanguageContext";
 
 const Applicant_Form_page = () => {
 
@@ -12,22 +13,23 @@ const Applicant_Form_page = () => {
     const [formData, setFormData] = useState({});
     const [errors, setErrors] = useState({});
     const user = JSON.parse(localStorage.getItem("user"));
+    const { t, language } = useLanguage();
 
     const navigate=useNavigate();
 
     const [fields,setFields]=useState([
-        {label:"Name", type:"text", placeholder:"Enter Name", required:true},
-        {label:"FName", type:"text", placeholder:"Enter Father Name", required:true},
-        {label:"Tazkira", type:"text", placeholder:"Enter Tazkira Number", required:true},
-        {label:"Phone", type:"text", placeholder:"Enter Phone Number", required:true},
-        {label:"Date", type:"text", placeholder:"Enter Date Number", required:true},
-        {label:"Property Type", type:"text", placeholder:"Enter Property Type", required:true},
-        {label:"Property Location", type:"text", placeholder:"Enter Property Location", required:true},
+        {label:"name", type:"text", placeholder:"enter_name", required:true},
+        {label:"fname", type:"text", placeholder:"enter_fname", required:true},
+        {label:"tazkira", type:"text", placeholder:"enter_tazkira", required:true},
+        {label:"phone", type:"text", placeholder:"enter_phone", required:true},
+        {label:"date", type:"text", placeholder:"enter_date", required:true},
+        {label:"property_type", type:"text", placeholder:"enter_property_type", required:true},
+        {label:"property_location", type:"text", placeholder:"enter_property_location", required:true},
     ]);
 
     const handleSearch=async ()=>{
          if(!id.trim()){
-            alert("⚠️ لطفاً اول ID را وارد کنید");
+            alert(t.enter_id_warning);
             return;
         }
 
@@ -37,20 +39,20 @@ const Applicant_Form_page = () => {
 
             if(data.success) {
                 setFormData({
-                    "Name": data.applicant.name || "",
-                    "FName": data.applicant.fname || "",
-                    "Tazkira": data.applicant.tazkira || "",
-                    "Phone": data.applicant.phone || "",
-                    "Date": data.applicant.date || "",
-                    "Property Type": data.applicant.property_type || "",
-                    "Property Location": data.applicant.property_location || "",
+                    name: data.applicant.name || "",
+                    fname: data.applicant.fname || "",
+                    tazkira: data.applicant.tazkira || "",
+                    phone: data.applicant.phone || "",
+                    date: data.applicant.date || "",
+                    property_type: data.applicant.property_type || "",
+                    property_location: data.applicant.property_location || "",
                 });
                 
                 setMode('edit');
                 setErrors({});
 
             }else {
-                alert("ID پیدا نشد ❌");
+                alert(t.id_not_found);
                 setFormData({});
                 setMode("");
                 setErrors({});
@@ -62,9 +64,7 @@ const Applicant_Form_page = () => {
 
     const handleSubmit = () => {
         if(id.trim()){
-            const confirmMsg = window.confirm(
-            "فیلد ID باید خالی باشد.\nآیا میخواهید صفحه دوباره تازه (Reload) شود؟"
-            );
+            const confirmMsg = window.confirm(t.confirm_reload);
 
             if(confirmMsg){
                 window.location.reload();
@@ -79,7 +79,7 @@ const Applicant_Form_page = () => {
         // ولیدیشن بقیه فیلدهای ضروری
         fields.forEach((field) => {
             if (field.required && (!formData[field.label] || !formData[field.label].trim())) {
-                newErrors[field.label] = "این فیلد لازمی است";
+                newErrors[field.label] = "field_required";
             }
         });
 
@@ -87,7 +87,7 @@ const Applicant_Form_page = () => {
 
         if (Object.keys(newErrors).length === 0) {
 
-            const confirmSubmit = window.confirm("آیا مطمئن هستید که فورم ثبت شود؟");
+            const confirmSubmit = window.confirm(t.confirm_submit);
             if (!confirmSubmit) return;
 
             fetch("http://localhost:5000/api/applicant/add", {
@@ -98,30 +98,28 @@ const Applicant_Form_page = () => {
             .then(res => res.json())
             .then(data => {
                 if(data.success){
-                    alert("فورم موفقانه ثبت شد ✅ ID: " + data.id);
+                    alert(t.form_successfully_saved + data.id);
                     setFormData({});
                     setStatus("");
                 }else {
-                    alert("خطا در ثبت معلومات ❌");
+                    alert(t.error_saving_information);
                 }
             })
             .catch(err => {
                 console.error("Error: ",err);
-                alert("مشکل در اتصال به سرور ❌");
+                alert(t.server_error);
             });
         }
     }
 
     const handleUpdate = async () => {
         if(!id.trim()) {
-            alert("اول ID را جستجو کن ⚠️");
+            alert(t.search_id);
             return;
         }
 
         if(mode !== "edit"){
-            const confirmMsg = window.confirm(
-            "شما در حالت جستجو نیستید.\nآیا میخواهید صفحه دوباره تازه شود؟"
-            );
+            const confirmMsg = window.confirm(t.confirm_reload_update);
 
             if(confirmMsg){
                 window.location.reload();
@@ -136,7 +134,7 @@ const Applicant_Form_page = () => {
         // ولیدیشن فیلدهای ضروری
         fields.forEach((field)=>{
             if (field.required && (!formData[field.label] || !formData[field.label].trim())) {
-                newErrors[field.label] = "این فیلد لازمی است";
+                newErrors[field.label] = "field_required";
             }
         });
 
@@ -145,7 +143,7 @@ const Applicant_Form_page = () => {
         if(Object.keys(newErrors).length > 0) return;
 
 
-        const confirmUpdate = window.confirm("آیا مطمئن هستید که معلومات اپدیت شود؟");
+        const confirmUpdate = window.confirm(t.confirm_update);
         if (!confirmUpdate) return;
 
         try {
@@ -156,31 +154,28 @@ const Applicant_Form_page = () => {
             });
             const data = await res.json();
             if(data.success) {
-                alert("معلومات موفقانه اپدیت شد ✅");
+                alert(t.information_update);
                 setFormData({});
-                // setStatus("");
                 setID("");
                 setMode("");
                 setErrors({});
             } else {
-                alert("اپدیت انجام نشد ❌");
+                alert(t.update_failed);
             }
         } catch (error) {
             console.error("Error:",error);
-            alert("مشکل در اتصال به سرور ❌");
+            alert(t.server_error);
         }
     }
 
     const handleDelete = async () =>{
         if(!id.trim()){
-            alert("اول ID را جستجو کن ⚠️");
+            alert(t.search_id);
             return;
         }
 
         if(mode !== "edit"){
-            const confirmMsg = window.confirm(
-            "اطلاعات جستجو نشده است.\nآیا میخواهید صفحه دوباره تازه شود؟"
-            );
+            const confirmMsg = window.confirm(t.confirm_reload_update);
 
             if(confirmMsg){
                 window.location.reload();
@@ -189,7 +184,8 @@ const Applicant_Form_page = () => {
             return;
         }
         
-        const confirmDelete = window.confirm("آیا مطمئن هستید که این رکورد حذف شود؟");
+        const confirmDelete = window.confirm(t.confirm_delete);
+
         if(!confirmDelete) return;
         
         try{
@@ -198,17 +194,17 @@ const Applicant_Form_page = () => {
             });
             const data = await res.json();
             if(data.success){
-            alert("رکورد موفقانه حذف شد ✅");
+            alert(t.record_delete);
             setFormData({});
-            // setStatus("");
             setID("");
             setMode("");
+            setErrors({});
             } else{
-                alert("رکورد پیدا نشد ❌");
+                alert(t.record_not_found);
             }
         } catch (error){
             console.error("Error:",error);
-            alert("مشکل در اتصال به سرور ❌");
+            alert(t.server_error);
         }
     }
   
@@ -216,20 +212,19 @@ const Applicant_Form_page = () => {
     <div className="mt-24 w-full max-w-5xl mx-auto bg-white/20 backdrop-blur-md shadow-2xl rounded-2xl p-6 sm:p-10 text-white border border-white/30 select-none">
             
           {/* Back Button - Left */}
-            <div className="fixed top-6 left-6 z-50">
+            <div className={`fixed top-6 ${document.documentElement.dir === "rtl" ? "right-6" : "left-6"} z-50`}>
                 <button
                     onClick={() => navigate(-1)}
                     className="group relative p-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg hover:bg-white/20 hover:shadow-yellow-400/40 active:scale-90 transition-all duration-300 cursor-pointer"
                 >
                     <ArrowLeft
                     size={20}
-                    className="text-white group-hover:-translate-x-1 transition-transform duration-300"
-                    />
+                    className={`text-white transition-transform duration-300 ${document.documentElement.dir === "rtl" ? "rotate-180 group-hover:translate-x-1" : "group-hover:-translate-x-1"}`}/>
                 </button>
                 </div>
     
                 {/* ID Badge - Right */}
-                <div className="fixed top-6 right-6 z-50">
+                <div className={`fixed top-6 ${document.documentElement.dir === "rtl" ? "left-6" : "right-6"} z-50`}>
                 <div className="px-4 py-2 text-white font-semibold">
                     S_A_4
                 </div>
@@ -238,7 +233,7 @@ const Applicant_Form_page = () => {
     
     
           <h2 className="text-xl sm:text-2xl font-bold mt-15 md:mt-0 mb-10 text-center">
-            Applicant Form
+            {t.applicant_form}
           </h2>
     
     
@@ -248,13 +243,13 @@ const Applicant_Form_page = () => {
                     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
     
                     <label className="sm:w-24 sm:text-right text-sm font-semibold">
-                        ID :
+                        {t.id} :
                     </label>
     
                     <div className="flex flex-col sm:flex-row w-full gap-3">
                         <input
                         type="text"
-                        placeholder="Enter ID"
+                        placeholder={t.enter_id}
                         value={id}
                         onChange={(e) => {
                             const value = e.target.value.replace(/[^0-9]/g, "");
@@ -269,9 +264,10 @@ const Applicant_Form_page = () => {
                         {idError && <p className=' text-red-300 text-sm mt-1'>{idError}</p>}
     
                         <button
-                        onClick={handleSearch}
-                        className={`px-4 py-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 hover:scale-105 transition duration-300 flex items-center justify-center`}>
-                        <Search size={18} color="white" />
+                            onClick={handleSearch}
+                            className={`px-4 py-2 gap-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 hover:scale-105 transition duration-300 flex items-center justify-center cursor-pointer`}>
+                            <Search size={18} color="white" />
+                            {t.search}
                         </button>
                     </div>
     
@@ -286,37 +282,37 @@ const Applicant_Form_page = () => {
           {/* Form Fields */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            {fields.map((t, index) => (
+            {fields.map((field, index) => (
     
                     <div key={index} className="flex flex-col gap-2">
     
                             <label className="text-sm font-semibold">
-                            {t.label}
+                            {t[field.label]} :
                             </label>
     
                             <input
-                            type={t.type}
-                            placeholder={t.placeholder}
-                            value={formData[t.label] || ""}
+                            type={field.type}
+                            placeholder={t[field.placeholder]}
+                            value={formData[field.label] || ""}
                             onChange={(e) => {
                                 let value = e.target.value;
-                                if(t.label === "Phone"){
+                                if(field.label === "phone"){
                                     value = value.replace(/[^0-9]/g,'');
                                 }
-                                setFormData({...formData, [t.label]: value});
-                                setErrors(prev => ({...prev,[t.label]: ""}));
+                                setFormData({...formData, [field.label]: value});
+                                setErrors(prev => ({...prev,[field.label]: ""}));
                             }}
-                            readOnly={t.label === "Date"}
+                            readOnly={field.label === "date"}
                             onFocus={() => {
-                                        if (t.label === "Date" && !formData[t.label]) {
+                                        if (field.label === "date" && !formData[field.label]) {
                                             const today = moment().format("jYYYY/jMM/jDD");
-                                            setFormData({...formData,[t.label]:today});
-                                            setErrors(prev => ({...prev, [t.label]: ""}));
+                                            setFormData({...formData,[field.label]:today});
+                                            setErrors(prev => ({...prev, [field.label]: ""}));
                                         }
                                     }}
-                            className={`px-4 py-2 rounded-lg bg-white/30 placeholder-white/40 text-white focus:outline-none ${errors[t.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}/>
+                            className={`px-4 py-2 rounded-lg bg-white/30 placeholder-white/40 text-white focus:outline-none ${errors[field.label] ? "border-2 border-red-600 shadow-lg shadow-red-500/40" : "focus:ring-2 focus:ring-yellow-400" } `}/>
                             
-                            {errors[t.label] && (<p className='text-red-400 text-sm font-medium'>{errors[t.label]}</p>)}
+                            {errors[field.label] && (<p className='text-red-400 text-sm font-medium'>{t.field_required}</p>)}
                             
                     </div>
     
@@ -332,7 +328,7 @@ const Applicant_Form_page = () => {
             onClick={handleSubmit}
             disabled={user?.submit === 0}
             className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg  ${user?.submit === 0 ? "bg-gray-400 cursor-not-allowed" : " cursor-pointer bg-linear-to-r from-green-400 to-emerald-600 hover:scale-105 hover:shadow-green-500/40"}`}>
-                Submit
+                {t.submit}
             </button>
     
             {/* Update */}
@@ -340,7 +336,7 @@ const Applicant_Form_page = () => {
             onClick={handleUpdate}
             disabled={user?.update_perm === 0}
             className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${user?.update_perm === 0 ? "bg-gray-400 cursor-not-allowed": "bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer"}`}>
-                Update
+                {t.update}
             </button>
     
             {/* Delete */}
@@ -348,7 +344,7 @@ const Applicant_Form_page = () => {
             onClick={handleDelete}
             disabled={user?.delete_perm === 0}
             className={`w-full sm:w-auto px-8 py-2 rounded-lg font-semibold transition duration-300 shadow-lg ${user?.delete_perm === 0 ? "bg-gray-400 cursor-not-allowed": "bg-linear-to-r from-blue-400 to-indigo-600 hover:scale-105 hover:shadow-blue-500/40 cursor-pointer"}`}>
-                Delete
+                {t.delete}
             </button>
           </div>
     
