@@ -1,4 +1,7 @@
+import { useLanguage } from "../../../context/LanguageContext";
+
 const ApplicantReportTable = ({ columns, data }) => {
+  const { t } = useLanguage();
   return (
     <div className="w-full overflow-x-auto border border-white/20 rounded-xl">
       <table className="min-w-full text-sm text-left table-auto">
@@ -6,7 +9,7 @@ const ApplicantReportTable = ({ columns, data }) => {
           <tr>
             {columns.map((col) => (
               <th key={col.accessor} className="p-3 whitespace-nowrap">
-                {col.header}
+                {t[col.header]}
               </th>
             ))}
           </tr>
@@ -27,7 +30,7 @@ const ApplicantReportTable = ({ columns, data }) => {
                             : "bg-gray-400 text-gray-800"
                           }`}
                       >
-                        {row.status}
+                        {t[row.status]}
                       </span>
                     ) : (
                       row[col.accessor]
@@ -39,7 +42,7 @@ const ApplicantReportTable = ({ columns, data }) => {
           ) : (
             <tr>
               <td colSpan={columns.length} className="p-6 text-center">
-                No Data Found
+                {t.no_data}
               </td>
             </tr>
           )}

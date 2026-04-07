@@ -3,8 +3,6 @@ import autoTable from "jspdf-autotable";
 import "../../../fonts/Vazirmatn-Regular-normal";
 import "../../../fonts/Vazirmatn-Bold-normal";
 import moment from "moment-jalaali";
-// وارد کردن کتابخانه جدید
-import reshape from "arabic-persian-reshaper";
 
 moment.loadPersian({ dialect: "persian-modern" });
 
@@ -12,21 +10,10 @@ export const generateReportPDF = (columns, data, filters, title = "Report", t, l
   const isRTL = language === "FA";
   const doc = new jsPDF({ orientation: "landscape" });
 
-  // if (isRTL) {
-  //   doc.setR2L(true);
-  // }
-
-  // تابع اصلاح متن برای نمایش درست در PDF
+ 
   const fixText = (text) => {
     if (!text) return "";
-    // const str = String(text);
-    // // اگر زبان فارسی/دری است، حروف را بازسازی کن
-    // if (isRTL) {
-    //   return reshape(str);
-    // }
-    // return str;
-
-  return String(text);
+    return String(text);
   };
 
   doc.setFont("Vazirmatn", "normal");

@@ -3,6 +3,7 @@ import ApplicantReportHeader from '../../Report_Folder/Report2/ApplicantReportHe
 import ApplicantReportFilters from '../../Report_Folder/Report2/ApplicantReportFilters';
 import ApplicantReportTable from '../../Report_Folder/Report2/ApplicantReportTable';
 import { ApplicantgenerateReportPDF } from '../../Report_Folder/Report2/ApplicantgenerateReportPDF';
+import { useLanguage } from "../../../context/LanguageContext";
 
 const Applicant_Report_page = () => {
 
@@ -11,27 +12,28 @@ const Applicant_Report_page = () => {
       const handleChange = (e) => {setFilters({ ...filters, [e.target.name]: e.target.value });};
       const totalRecords = filteredData.length;
       const user = JSON.parse(localStorage.getItem("user"));
+      const { t, language } = useLanguage();
     
       const fields = [
-        { name: "name", label: "Name", type: "text" },
-        { name: "fname", label: "Fname", type: "text" },
-        { name: "tazkira", label: "Tazkira", type: "text" },
-        { name: "phone", label: "Phone", type: "text" },
-        { name: "property_type", label: "Property Type", type: "text" },
-        { name: "property_location", label: "Property Location", type: "text" },
-        { name: "startDate", label: "Start Date", type: "text" },
-        { name: "endDate", label: "End Date", type: "text" },
+        { name: "name", label: "name", type: "text" },
+        { name: "fname", label: "fname", type: "text" },
+        { name: "tazkira", label: "tazkira", type: "text" },
+        { name: "phone", label: "phone", type: "text" },
+        { name: "property_type", label: "property_type", type: "text" },
+        { name: "property_location", label: "property_location", type: "text" },
+        { name: "startDate", label: "startDate", type: "text" },
+        { name: "endDate", label: "endDate", type: "text" },
       ];
 
       const columns = [
-        { header: "ID", accessor: "id" },
-        { header: "Name", accessor: "name" },
-        { header: "F/Name", accessor: "fname" },
-        { header: "Tazkira", accessor: "tazkira" },
-        { header: "Phone", accessor: "phone" },
-        { header: "Date", accessor: "date" },
-        { header: "Property Type", accessor: "property_type" },
-        { header: "Property Location", accessor: "property_location" },
+        { header: "id", accessor: "id" },
+        { header: "name", accessor: "name" },
+        { header: "fname", accessor: "fname" },
+        { header: "tazkira", accessor: "tazkira" },
+        { header: "phone", accessor: "phone" },
+        { header: "date", accessor: "date" },
+        { header: "property_type", accessor: "property_type" },
+        { header: "property_location", accessor: "property_location" },
       ];
 
       const handleSearch = async () => {
@@ -51,7 +53,7 @@ const Applicant_Report_page = () => {
     <div className="mt-24 max-w-full px-4 sm:px-6 lg:px-8 select-none">
       <div className="bg-white/10 backdrop-blur-xl rounded-2xl text-white shadow-2xl border border-white/20 p-6">
         
-        <ApplicantReportHeader title="Applicant Report 📊" reportId="r_002" />
+        <ApplicantReportHeader title={t.applicant_report + " 📊"}  reportId="r_002" language={language} />
 
         <ApplicantReportFilters fields={fields} filters={filters} onChange={handleChange} />
 
@@ -60,21 +62,21 @@ const Applicant_Report_page = () => {
           onClick={handleSearch}
           disabled={user?.search_perm === 0}
           className={`px-6 py-2 rounded-lg font-semibold text-white transition-all duration-300 shadow-lg cursor-pointer ${user?.search_perm === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-emerald-500 hover:bg-emerald-600 hover:scale-105 active:scale-95"}`}>
-            🔍 Search
+            🔍 {t.search}
           </button>
 
           <button
-          onClick={() => ApplicantgenerateReportPDF(columns, filteredData, filters, "Applicant Report")}
+          onClick={() => ApplicantgenerateReportPDF(columns, filteredData, filters, t.applicant_report, t, language)}
           disabled={user?.print_perm === 0}
           className={`relative overflow-hidden px-6 py-2 rounded-lg font-semibold text-white shadow-lg transition-all duration-300 ${user?.print_perm === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 hover:scale-105 active:scale-95 cursor-pointer"}`}>
-            🖨️ Print Report
+            🖨️  {t.print_report}
           </button>
         </div>
 
         <ApplicantReportTable columns={columns} data={filteredData} />
 
           <div className="flex flex-col items-center mt-5">
-            <label className="text-white text-sm mb-1">Total Records</label>
+            <label className="text-white text-sm mb-1">{t.total_records}</label>
             <input
               type="text"
               readOnly

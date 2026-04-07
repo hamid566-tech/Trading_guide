@@ -2,32 +2,35 @@ import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import moment from "moment-jalaali";
+import { useLanguage } from "../../../context/LanguageContext";
 
 
-const ApplicantReportHeader = ({ title, reportId }) => {
+const ApplicantReportHeader = ({ title, reportId, language }) => {
+
   const navigate = useNavigate();
-
   const today = moment().format("jYYYY/jMM/jDD  HH:mm");
+  const { t  } = useLanguage(); // t.language => "fa" یا "en"
+  const isRTL = language === "FA" || language === "DA"; // FA=فارسی، DA=دری
 
   return (
     <div className="relative mb-10">
 
       {/* Back Button */}
-      <div className="fixed top-6 left-6 z-50">
+      <div className={`fixed top-6 ${document.documentElement.dir === "rtl" ? "right-6" : "left-6"} z-50`}>
         <button
           onClick={() => navigate(-1)}
           className="group p-3 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg hover:bg-white/20 hover:scale-95 transition-all cursor-pointer"
         >
           <ArrowLeft
             size={20}
-            className="text-white group-hover:-translate-x-1 transition"
+            className={`text-white transition-transform duration-300 ${isRTL ? "rotate-180 group-hover:translate-x-1" : "group-hover:-translate-x-1"}`}
           />
         </button>
       </div>
 
       {/* Report ID */}
       {reportId && (
-        <div className="fixed top-6 right-6 px-4 py-2 text-white font-semibold">
+        <div className={`fixed top-6 ${document.documentElement.dir === "rtl" ? "left-6" : "right-6"} px-4 py-2 text-white font-semibold`}>
           {reportId}
         </div>
       )}
