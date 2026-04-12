@@ -113,6 +113,35 @@
   "property_type": "نوع ملک",
   "enter_property_type": "نوع ملک را وارد کنید",
   "property_location": "موقعیت ملک",
-  "enter_property_location": "موقعیت ملک را وارد کنید"
+  "enter_property_location": "موقعیت ملک را وارد کنید",
+
+  "user_name": "نام کاربری",
+  "enter_user_name": "نام کاربری را وارد کنید",
+  "password": "رمز عبور",
+  "enter_password": "رمز عبور را وارد کنید",
+  "user_permissions": "صلاحیت‌های کاربر",
+  "invalid_phone": "شماره تماس باید فقط عدد باشد",
+
+  "update_perm": "آپدیت",
+  "delete_perm": "حذف",
+  "search_perm": "جستجو",
+  "print_perm": "چاپ",
+
+  
+  "previous_password": "رمز قبلی",
+  "enter_previous_password": "رمز قبلی را وارد کنید",
+
+  "new_password": "رمز جدید",
+  "enter_new_password": "رمز جدید را وارد کنید",
+
+  "repeat_password": "تکرار رمز جدید",
+  "enter_repeat_password": "تکرار رمز جدید را وارد کنید",
+
+  "save": "ذخیره",
+  "password_not_match": "رمز جدید و تکرار آن یکسان نیست ❌",
+  "fill_fields": "لطفاً تمام فیلدها را پر کنید ⚠️",
+  "wrong_credentials": "نام کاربری یا رمز قبلی اشتباه است ❌",
+  "password_updated": "رمز موفقانه تغییر شد ✅",
+  "update_failed_password": "تغییر رمز موفق نشد ❌"
   
 }

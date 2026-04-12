@@ -79,7 +79,7 @@ const Mortgage_Report_page = () => {
     <div className="mt-24 max-w-full px-4 sm:px-6 lg:px-8 select-none">
       <div className="bg-white/10 backdrop-blur-xl rounded-2xl text-white shadow-2xl border border-white/20 p-6">
         
-        <ReportHeader title={t.mortgage_report + " 📊"} reportId="r_002" />
+        <ReportHeader title={t.mortgage_report + " 📊"} reportId="r_002" language={language}/>
 
         <ReportFilters fields={fields} filters={filters} onChange={handleChange} />
 

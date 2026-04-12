@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from "../../../context/LanguageContext";
+
 
 const User_Reset_password_page = () => {
 
+    const { t, language } = useLanguage();
     const navigate = useNavigate();
 
     const [fields] = useState([
-        {label:"User", name:"user", type:"text", placeholder:"Enter User"},
-        {label:"Previous Password", name:"previousPassword", type:"password", placeholder:"Enter Previous Password"},
-        {label:"New Password", name:"newPassword", type:"password", placeholder:"Enter New password"},
-        {label:"Repeat New Password", name:"repeatPassword", type:"password", placeholder:"Enter Repeat New Password"},
+        {label:"user_name", name:"user", type:"text", placeholder:"enter_user_name"},
+        {label:"previous_password", name:"previousPassword", type:"password", placeholder:"enter_previous_password"},
+        {label:"new_password", name:"newPassword", type:"password", placeholder:"enter_new_password"},
+        {label:"repeat_password", name:"repeatPassword", type:"password", placeholder:"enter_repeat_password"},
     ]);
 
     const [formData, setFormData] = useState({
@@ -39,12 +42,12 @@ const User_Reset_password_page = () => {
 
     const handleSave = async () => {
         if (formData.newPassword !== formData.repeatPassword) {
-            alert("❌ New Password and Repeat Password do not match");
+            alert(t.password_not_match);
             return;
         }
 
         if (!formData.user || !formData.previousPassword || !formData.newPassword) {
-            alert("⚠️ Please fill all fields");
+            alert(t.fill_fields);
             return;
         }
 
@@ -64,7 +67,7 @@ const User_Reset_password_page = () => {
             const checkData = await checkRes.json();
 
             if (!checkData.success) {
-                alert("❌ Username or Previous Password is incorrect");
+                alert(t.wrong_credentials);
                 return;
             }
 
@@ -83,7 +86,7 @@ const User_Reset_password_page = () => {
             const updateData = await updateRes.json();
 
             if (updateData.success) {
-                alert("✅ Password updated successfully");
+                alert(t.password_updated);
                 setFormData({
                     user: "",
                     previousPassword: "",
@@ -94,12 +97,12 @@ const User_Reset_password_page = () => {
             // (اختیاری) بستن eye ها
                 setShowPasswords({});
             } else {
-                alert("❌ Failed to update password");
+                alert(t.update_failed_password);
             }
 
         } catch (error) {
             console.error(error);
-            alert("⚠️ Server error");
+            alert(t.server_error);
         }
     };
 
@@ -107,57 +110,55 @@ const User_Reset_password_page = () => {
         <div className="mt-24 w-full max-w-2xl mx-auto bg-white/20 backdrop-blur-md shadow-2xl rounded-2xl p-6 sm:p-10 text-white border border-white/30 select-none">
 
             {/* Back Button */}
-            <div className="fixed top-6 left-6 z-50">
+            <div className={`fixed top-6 ${document.documentElement.dir === "rtl" ? "right-6" : "left-6"} z-50`}>
                 <button
-                    onClick={() => navigate(-1)}
-                    className="group p-3 rounded-full bg-white/10 border border-white/20 hover:bg-white/20 transition cursor-pointer"
-                >
-                    <ArrowLeft size={20} className="text-white group-hover:-translate-x-1 transition"/>
+                onClick={() => navigate(-1)}
+                className="group p-3 rounded-full bg-white/10 border border-white/20 hover:bg-white/20 transition cursor-pointer">
+                    <ArrowLeft size={20} className={`text-white transition ${document.documentElement.dir === "rtl"? "rotate-180 group-hover:translate-x-1": "group-hover:-translate-x-1"}`}/>
                 </button>
             </div>
 
             {/* ID Badge */}
-            <div className="fixed top-6 right-6 z-50">
+            <div className={`fixed top-6 ${document.documentElement.dir === "rtl" ? "left-6" : "right-6"} z-50`}>
                 <div className="px-4 py-2 font-semibold">
                     S_A_5
                 </div>
             </div>
 
             <h2 className="text-xl sm:text-2xl font-bold mb-10 text-center">
-                Password Reset Form
+                {t.password_reset}
             </h2>
 
             {/* Fields */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {fields.map((t, index) => (
+                {fields.map((field, index) => (
                     <div key={index} className="flex flex-col gap-2">
 
                         <label className="text-sm font-semibold">
-                            {t.label}
+                            {t[field.label]}
                         </label>
 
                         <div className="relative">
                             <input
                                 type={
-                                    t.type === "password"
-                                        ? (showPasswords[t.name] ? "text" : "password")
-                                        : t.type
+                                    field.type === "password"
+                                        ? (showPasswords[field.name] ? "text" : "password")
+                                        : field.type
                                 }
-                                name={t.name}
-                                placeholder={t.placeholder}
-                                value={formData[t.name]}
+                                name={field.name}
+                                placeholder={t[field.placeholder]}
+                                value={formData[field.name]}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 pr-10 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                className="w-full px-4 py-2 rounded-lg bg-white/30 placeholder-white/70 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
                             />
 
                             {/* Eye Icon */}
-                            {t.type === "password" && (
+                            {field.type === "password" && (
                                 <button
-                                    type="button"
-                                    onClick={() => togglePassword(t.name)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white"
-                                >
-                                    {showPasswords[t.name] ? <EyeOff size={18}/> : <Eye size={18}/>}
+                                type="button"
+                                onClick={() => togglePassword(field.name)}
+                                className={`absolute ${document.documentElement.dir === "rtl" ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 text-white/70 hover:text-white`}>
+                                    {showPasswords[field.name] ? <EyeOff size={18}/> : <Eye size={18}/>}
                                 </button>
                             )}
                         </div>

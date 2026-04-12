@@ -113,7 +113,35 @@
   "property_type": "Property Type",
   "enter_property_type": "Enter Property Type",
   "property_location": "Property Location",
-  "enter_property_location": "Enter Property Location"
+  "enter_property_location": "Enter Property Location",
+
+  "user_name": "User Name",
+  "enter_user_name": "Enter User Name",
+  "password": "Password",
+  "enter_password": "Enter Password",
+  "user_permissions": "User Permissions",
+  "invalid_phone": "Phone must contain only numbers",
+
+  "update_perm": "Update",
+  "delete_perm": "Delete",
+  "search_perm": "Search",
+  "print_perm": "Print",
+
+  "previous_password": "Previous Password",
+  "enter_previous_password": "Enter Previous Password",
+
+  "new_password": "New Password",
+  "enter_new_password": "Enter New Password",
+
+  "repeat_password": "Repeat New Password",
+  "enter_repeat_password": "Enter Repeat New Password",
+
+  "save": "Save",
+  "password_not_match": "New Password and Repeat Password do not match ❌",
+  "fill_fields": "Please fill all fields ⚠️",
+  "wrong_credentials": "Username or Previous Password is incorrect ❌",
+  "password_updated": "Password updated successfully ✅",
+  "update_failed_password": "Failed to update password ❌"
 
   
 }
