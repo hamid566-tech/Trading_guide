@@ -2,8 +2,11 @@ import React from "react";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_en from "react-date-object/locales/persian_en";
+import { useLanguage } from "../../../context/LanguageContext";
 
 const UserReportFilters = ({ fields, filters, onChange, checkFields, limitationFields }) => {
+
+  const { t } = useLanguage();
 
   // تغییر فیلدهای متنی
   const handleTextChange = (name, value) => {
@@ -59,7 +62,7 @@ const UserReportFilters = ({ fields, filters, onChange, checkFields, limitationF
       {/* Check Fields */}
       {checkFields && (
         <div className="p-4 bg-white/10 rounded-xl border border-white/20">
-          <h3 className="text-white font-bold mb-2 text-center py-3">Permissions</h3>
+          <h3 className="text-white text-lg font-bold mb-2 text-center py-3">{t.user_permissions}</h3>
           <div className="grid grid-cols-1 px-5 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {checkFields.map((item) => (
               <label key={item.name} className="flex items-center gap-2 cursor-pointer text-white">
@@ -79,7 +82,7 @@ const UserReportFilters = ({ fields, filters, onChange, checkFields, limitationF
       {/* Limitation Fields */}
       {limitationFields && (
         <div className="p-4 bg-white/10 rounded-xl border border-white/20">
-          <h3 className="text-white font-bold mb-2 text-center py-3">Limitations</h3>
+          <h3 className="text-white text-lg font-bold mb-2 text-center py-3">{t.user_limitations}</h3>
           <div className="grid grid-cols-1 px-5 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {limitationFields.map((item) => (
               <label key={item.name} className="flex items-center gap-2 cursor-pointer text-white">

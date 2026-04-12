@@ -1,4 +1,7 @@
+import { useLanguage } from "../../../context/LanguageContext";
 const UserReportTable = ({ columns, data }) => {
+
+  const { t } = useLanguage();
   // List of columns that are "boolean/permission" type
   const booleanColumns = [
     "rent_form", "rent_report",
@@ -12,13 +15,13 @@ const UserReportTable = ({ columns, data }) => {
   ];
 
   return (
-    <div className="w-full overflow-x-auto border border-white/20 rounded-xl">
+    <div className="w-full h-[400px] overflow-y-auto overflow-x-auto border border-white/20 rounded-xl">
       <table className="min-w-full text-sm text-left table-auto">
         <thead className="bg-white/20 sticky top-0 backdrop-blur-md">
           <tr>
             {columns.map((col) => (
               <th key={col.accessor} className="p-3 whitespace-normal wrap-break-words max-w-[150px]">
-                {col.header}
+                {t[col.header]}
               </th>
             ))}
           </tr>
@@ -55,7 +58,7 @@ const UserReportTable = ({ columns, data }) => {
           ) : (
             <tr>
               <td colSpan={columns.length} className="p-6 text-center">
-                No Data Found
+                {t.no_data_found}
               </td>
             </tr>
           )}

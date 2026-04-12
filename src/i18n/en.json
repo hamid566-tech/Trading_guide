@@ -120,6 +120,7 @@
   "password": "Password",
   "enter_password": "Enter Password",
   "user_permissions": "User Permissions",
+  "user_limitations": "User Limatations",
   "invalid_phone": "Phone must contain only numbers",
 
   "update_perm": "Update",
@@ -141,7 +142,11 @@
   "fill_fields": "Please fill all fields ⚠️",
   "wrong_credentials": "Username or Previous Password is incorrect ❌",
   "password_updated": "Password updated successfully ✅",
-  "update_failed_password": "Failed to update password ❌"
+  "update_failed_password": "Failed to update password ❌",
 
+  
+  "user_already_exist": "This user already exists.",
+  
+  "no_data_found": "No Data Found"
   
 }

@@ -43,7 +43,7 @@ const ReportTable = ({ columns, data }) => {
           ) : (
             <tr>
               <td colSpan={columns.length} className="p-6 text-center">
-                No Data Found
+                {t.no_data_found}
               </td>
             </tr>
           )}

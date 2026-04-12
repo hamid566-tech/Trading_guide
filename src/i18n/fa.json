@@ -120,6 +120,7 @@
   "password": "رمز عبور",
   "enter_password": "رمز عبور را وارد کنید",
   "user_permissions": "صلاحیت‌های کاربر",
+  "user_limitations": "محدودیت های کاربر",
   "invalid_phone": "شماره تماس باید فقط عدد باشد",
 
   "update_perm": "آپدیت",
@@ -127,7 +128,7 @@
   "search_perm": "جستجو",
   "print_perm": "چاپ",
 
-  
+
   "previous_password": "رمز قبلی",
   "enter_previous_password": "رمز قبلی را وارد کنید",
 
@@ -142,6 +143,11 @@
   "fill_fields": "لطفاً تمام فیلدها را پر کنید ⚠️",
   "wrong_credentials": "نام کاربری یا رمز قبلی اشتباه است ❌",
   "password_updated": "رمز موفقانه تغییر شد ✅",
-  "update_failed_password": "تغییر رمز موفق نشد ❌"
+  "update_failed_password": "تغییر رمز موفق نشد ❌",
+
+  
+  "user_already_exist": "این کاربر قبلاً ثبت شده است.",
+
+  "no_data_found": "دیتا یافت نشد"
   
 }
