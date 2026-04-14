@@ -113,7 +113,6 @@ export const generateReportPDF = (columns, data, filters, title = "Report", t, l
     }, {}),
 
     didDrawPage: function (data) {
-      // const pageCount = doc.getNumberOfPages();
       const pageNumber = doc.internal.getCurrentPageInfo().pageNumber;
       const footer = isRTL ? `صفحه ${pageNumber} از {total_pages}` : `Page ${pageNumber} of {total_pages}`;
       doc.setFontSize(9);
